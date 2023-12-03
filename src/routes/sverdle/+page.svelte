@@ -1,69 +1,81 @@
 <script lang="ts">
-	import { confetti } from '@neoconfetti/svelte';
 	import { enhance } from '$app/forms';
-	import type { PageData, ActionData } from './$types';
+	import { confetti } from '@neoconfetti/svelte';
+	import type { ActionData, PageData } from './$types';
 	import { reduced_motion } from './reduced-motion';
 
-	export let data: PageData;
+	interface IProps {
+		data: PageData;
+		form: ActionData;
+	}
 
-	export let form: ActionData;
+	let { data, form } = $props<IProps>();
 
 	/** Whether or not the user has won */
-	$: won = data.answers.at(-1) === 'xxxxx';
+	let won = $derived(data.answers.at(-1) === 'xxxxx');
 
 	/** The index of the current guess */
-	$: i = won ? -1 : data.answers.length;
+	let i = $derived(won ? -1 : data.answers.length);
+
+	/** The current guess */
+	let currentGuess = $derived(data.guesses[i] || '');
 
 	/** Whether the current guess can be submitted */
-	$: submittable = data.guesses[i]?.length === 5;
+	let submittable = $derived(currentGuess.length === 5);
 
 	/**
 	 * A map of classnames for all letters that have been guessed,
 	 * used for styling the keyboard
 	 */
-	let classnames: Record<string, 'exact' | 'close' | 'missing'>;
-
-	/**
-	 * A map of descriptions for all letters that have been guessed,
-	 * used for adding text for assistive technology (e.g. screen readers)
-	 */
-	let description: Record<string, string>;
-
-	$: {
-		classnames = {};
-		description = {};
-
-		data.answers.forEach((answer, i) => {
+	let classnames: Record<string, 'exact' | 'close' | 'missing'> = $derived(
+		data.answers.reduce((acc: Record<string, 'exact' | 'close' | 'missing'>, answer, i) => {
 			const guess = data.guesses[i];
 
 			for (let i = 0; i < 5; i += 1) {
 				const letter = guess[i];
 
 				if (answer[i] === 'x') {
-					classnames[letter] = 'exact';
-					description[letter] = 'correct';
-				} else if (!classnames[letter]) {
-					classnames[letter] = answer[i] === 'c' ? 'close' : 'missing';
-					description[letter] = answer[i] === 'c' ? 'present' : 'absent';
+					acc[letter] = 'exact';
+				} else if (!acc[letter]) {
+					acc[letter] = answer[i] === 'c' ? 'close' : 'missing';
 				}
 			}
-		});
-	}
+			return acc;
+		}, {})
+	);
+
+	/**
+	 * A map of descriptions for all letters that have been guessed,
+	 * used for adding text for assistive technology (e.g. screen readers)
+	 */
+	let description: Record<string, string> = $derived(
+		data.answers.reduce((acc: Record<string, string>, answer, i) => {
+			const guess = data.guesses[i];
+
+			for (let i = 0; i < 5; i += 1) {
+				const letter = guess[i];
+
+				if (answer[i] === 'x') {
+					acc[letter] = 'correct';
+				} else if (!classnames[letter]) {
+					acc[letter] = answer[i] === 'c' ? 'present' : 'absent';
+				}
+			}
+			return acc;
+		}, {})
+	);
 
 	/**
 	 * Modify the game state without making a trip to the server,
 	 * if client-side JavaScript is enabled
 	 */
 	function update(event: MouseEvent) {
-		const guess = data.guesses[i];
-		const key = (event.target as HTMLButtonElement).getAttribute(
-			'data-key'
-		);
+		const key = (event.target as HTMLButtonElement).getAttribute('data-key');
 
 		if (key === 'backspace') {
-			data.guesses[i] = guess.slice(0, -1);
+			data.guesses[i] = data.guesses[i].slice(0, -1);
 			if (form?.badGuess) form.badGuess = false;
-		} else if (guess.length < 5) {
+		} else if (currentGuess.length < 5) {
 			data.guesses[i] += key;
 		}
 	}
@@ -75,13 +87,15 @@
 	function keydown(event: KeyboardEvent) {
 		if (event.metaKey) return;
 
+		if (event.key === 'Enter' && !submittable) return;
+
 		document
 			.querySelector(`[data-key="${event.key}" i]`)
 			?.dispatchEvent(new MouseEvent('click', { cancelable: true }));
 	}
 </script>
 
-<svelte:window on:keydown={keydown} />
+<svelte:window onkeydown={keydown} />
 
 <svelte:head>
 	<title>Sverdle</title>
@@ -103,14 +117,15 @@
 	<a class="how-to-play" href="/sverdle/how-to-play">How to play</a>
 
 	<div class="grid" class:playing={!won} class:bad-guess={form?.badGuess}>
-		{#each Array(6) as _, row}
+		{#each Array.from(Array(6).keys()) as row (row)}
 			{@const current = row === i}
 			<h2 class="visually-hidden">Row {row + 1}</h2>
 			<div class="row" class:current>
-				{#each Array(5) as _, column}
+				{#each Array.from(Array(5).keys()) as column (column)}
+					{@const guess = current ? currentGuess : data.guesses[row]}
 					{@const answer = data.answers[row]?.[column]}
-					{@const value = data.guesses[row]?.[column] ?? ''}
-					{@const selected = current && column === data.guesses[row].length}
+					{@const value = guess?.[column] ?? ''}
+					{@const selected = current && column === guess.length}
 					{@const exact = answer === 'x'}
 					{@const close = answer === 'c'}
 					{@const missing = answer === '_'}
@@ -163,7 +178,7 @@
 								on:click|preventDefault={update}
 								data-key={letter}
 								class={classnames[letter]}
-								disabled={data.guesses[i].length === 5}
+								disabled={submittable}
 								formaction="?/update"
 								name="key"
 								value={letter}

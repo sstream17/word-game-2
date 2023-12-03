@@ -1,4 +1,4 @@
-import adapter from '@sveltejs/adapter-static';
+import adapter from '@sveltejs/adapter-auto';
 import { vitePreprocess } from '@sveltejs/kit/vite';
 
 const isDevEnvironment = process.argv.includes('dev');
@@ -9,14 +9,12 @@ const config = {
 	// for more information about preprocessors
 	preprocess: vitePreprocess(),
 
+	compilerOptions: {
+		runes: true
+	},
+
 	kit: {
-		adapter: adapter({
-			pages: 'build',
-			assets: 'build',
-			fallback: undefined,
-			precompress: false,
-			strict: true
-		}),
+		adapter: adapter(),
 		paths: {
 			base: isDevEnvironment ? '' : process.env.BASE_PATH,
 		}
