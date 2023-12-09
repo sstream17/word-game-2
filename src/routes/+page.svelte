@@ -29,7 +29,7 @@
 
 	function update(key: string) {
 		if (key === 'backspace') {
-			data.guesses[i] = data.guesses[i].slice(0, 1);
+			data.guesses[i] = data.guesses[i].slice(0, -1);
 			if (badGuess) badGuess = false;
 		} else if (currentGuess.length < 5) {
 			data.guesses[i] += key;
