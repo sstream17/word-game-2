@@ -1,6 +1,12 @@
-import { words, allowed } from './words.server';
+import { allowed, words } from "./words";
 
-export class Game {
+export interface IGameData {
+	guesses: string[];
+	answers: string[];
+	answer: string | null;
+}
+
+export class Game implements IGameData {
 	index: number;
 	guesses: string[];
 	answers: string[];

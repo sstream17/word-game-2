@@ -1,87 +1,72 @@
 <script lang="ts">
 	import { confetti } from '@neoconfetti/svelte';
-	import { enhance } from '$app/forms';
-	import type { PageData, ActionData } from './$types';
+	import type { PageData } from './$types';
+	import Controls from './Controls.svelte';
 	import { reduced_motion } from './reduced-motion';
+	import { Game } from './game';
+	import { invalidateAll } from '$app/navigation';
 
-	export let data: PageData;
-
-	export let form: ActionData;
-
-	/** Whether or not the user has won */
-	$: won = data.answers.at(-1) === 'xxxxx';
-
-	/** The index of the current guess */
-	$: i = won ? -1 : data.answers.length;
-
-	/** Whether the current guess can be submitted */
-	$: submittable = data.guesses[i]?.length === 5;
-
-	/**
-	 * A map of classnames for all letters that have been guessed,
-	 * used for styling the keyboard
-	 */
-	let classnames: Record<string, 'exact' | 'close' | 'missing'>;
-
-	/**
-	 * A map of descriptions for all letters that have been guessed,
-	 * used for adding text for assistive technology (e.g. screen readers)
-	 */
-	let description: Record<string, string>;
-
-	$: {
-		classnames = {};
-		description = {};
-
-		data.answers.forEach((answer, i) => {
-			const guess = data.guesses[i];
-
-			for (let i = 0; i < 5; i += 1) {
-				const letter = guess[i];
-
-				if (answer[i] === 'x') {
-					classnames[letter] = 'exact';
-					description[letter] = 'correct';
-				} else if (!classnames[letter]) {
-					classnames[letter] = answer[i] === 'c' ? 'close' : 'missing';
-					description[letter] = answer[i] === 'c' ? 'present' : 'absent';
-				}
-			}
-		});
+	interface IProps {
+		data: PageData;
 	}
 
-	/**
-	 * Modify the game state without making a trip to the server,
-	 * if client-side JavaScript is enabled
-	 */
-	function update(event: MouseEvent) {
-		const guess = data.guesses[i];
-		const key = (event.target as HTMLButtonElement).getAttribute(
-			'data-key'
-		);
+	let { data } = $props<IProps>();
 
+	let badGuess = $state(false);
+
+	/** Whether or not the user has won */
+	let won = $derived(data.answers.at(-1) === 'xxxxx');
+
+	/** The index of the current guess */
+	let i = $derived(won ? -1 : data.answers.length);
+
+	/** The current guess */
+	let currentGuess = $derived(data.guesses[i] || '');
+
+	/** Whether the current guess can be submitted */
+	let submittable = $derived(currentGuess.length === 5);
+
+	function update(key: string) {
 		if (key === 'backspace') {
-			data.guesses[i] = guess.slice(0, -1);
-			if (form?.badGuess) form.badGuess = false;
-		} else if (guess.length < 5) {
+			data.guesses[i] = data.guesses[i].slice(0, 1);
+			if (badGuess) badGuess = false;
+		} else if (currentGuess.length < 5) {
 			data.guesses[i] += key;
 		}
 	}
 
-	/**
-	 * Trigger form logic in response to a keydown event, so that
-	 * desktop users can use the keyboard to play the game
-	 */
-	function keydown(event: KeyboardEvent) {
-		if (event.metaKey) return;
+	function submit() {
+		const game = new Game(localStorage.getItem('sverdle') ?? '');
 
-		document
-			.querySelector(`[data-key="${event.key}" i]`)
-			?.dispatchEvent(new MouseEvent('click', { cancelable: true }));
+		if (!game.enter([...currentGuess])) {
+			badGuess = true;
+		}
+
+		localStorage.setItem('sverdle', game.toString());
+		invalidateAll();
+	}
+
+	function restart() {
+		localStorage.removeItem('sverdle');
+		invalidateAll();
+	}
+
+	function handleKey(event: any) {
+		const key = event.detail.key;
+
+		switch (key) {
+			case 'enter':
+				submit();
+				break;
+			case 'restart':
+				restart();
+				break;
+			default:
+				update(key);
+				break;
+		}
 	}
 </script>
-
-<svelte:window on:keydown={keydown} />
 
 <svelte:head>
 	<title>Sverdle</title>
@@ -90,27 +75,19 @@
 
 <h1 class="visually-hidden">Sverdle</h1>
 
-<form
-	method="POST"
-	action="?/enter"
-	use:enhance={() => {
-		// prevent default callback from resetting the form
-		return ({ update }) => {
-			update({ reset: false });
-		};
-	}}
->
+<div class="form">
 	<a class="how-to-play" href="/sverdle/how-to-play">How to play</a>
 
-	<div class="grid" class:playing={!won} class:bad-guess={form?.badGuess}>
-		{#each Array(6) as _, row}
+	<div class="grid" class:playing={!won} class:bad-guess={badGuess}>
+		{#each Array.from(Array(6).keys()) as row (row)}
 			{@const current = row === i}
 			<h2 class="visually-hidden">Row {row + 1}</h2>
 			<div class="row" class:current>
-				{#each Array(5) as _, column}
+				{#each Array.from(Array(5).keys()) as column (column)}
+					{@const guess = current ? currentGuess : data.guesses[row]}
 					{@const answer = data.answers[row]?.[column]}
-					{@const value = data.guesses[row]?.[column] ?? ''}
-					{@const selected = current && column === data.guesses[row].length}
+					{@const value = guess?.[column] ?? ''}
+					{@const selected = current && column === guess.length}
 					{@const exact = answer === 'x'}
 					{@const close = answer === 'c'}
 					{@const missing = answer === '_'}
@@ -133,51 +110,8 @@
 			</div>
 		{/each}
 	</div>
-
-	<div class="controls">
-		{#if won || data.answers.length >= 6}
-			{#if !won && data.answer}
-				<p>the answer was "{data.answer}"</p>
-			{/if}
-			<button data-key="enter" class="restart selected" formaction="?/restart">
-				{won ? 'you won :)' : `game over :(`} play again?
-			</button>
-		{:else}
-			<div class="keyboard">
-				<button data-key="enter" class:selected={submittable} disabled={!submittable}>enter</button>
-
-				<button
-					on:click|preventDefault={update}
-					data-key="backspace"
-					formaction="?/update"
-					name="key"
-					value="backspace"
-				>
-					back
-				</button>
-
-				{#each ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'] as row}
-					<div class="row">
-						{#each row as letter}
-							<button
-								on:click|preventDefault={update}
-								data-key={letter}
-								class={classnames[letter]}
-								disabled={data.guesses[i].length === 5}
-								formaction="?/update"
-								name="key"
-								value={letter}
-								aria-label="{letter} {description[letter] || ''}"
-							>
-								{letter}
-							</button>
-						{/each}
-					</div>
-				{/each}
-			</div>
-		{/if}
-	</div>
-</form>
+	<Controls on:key={handleKey} {data} {won} {submittable} />
+</div>
 
 {#if won}
 	<div
@@ -193,7 +127,7 @@
 {/if}
 
 <style>
-	form {
+	.form {
 		width: 100%;
 		height: 100%;
 		display: flex;
@@ -283,101 +217,6 @@
 
 	.letter.close {
 		border: 2px solid var(--color-theme-2);
-	}
-
-	.selected {
-		outline: 2px solid var(--color-theme-1);
-	}
-
-	.controls {
-		text-align: center;
-		justify-content: center;
-		height: min(18vh, 10rem);
-	}
-
-	.keyboard {
-		--gap: 0.2rem;
-		position: relative;
-		display: flex;
-		flex-direction: column;
-		gap: var(--gap);
-		height: 100%;
-	}
-
-	.keyboard .row {
-		display: flex;
-		justify-content: center;
-		gap: 0.2rem;
-		flex: 1;
-	}
-
-	.keyboard button,
-	.keyboard button:disabled {
-		--size: min(8vw, 4vh, 40px);
-		background-color: white;
-		color: black;
-		width: var(--size);
-		border: none;
-		border-radius: 2px;
-		font-size: calc(var(--size) * 0.5);
-		margin: 0;
-	}
-
-	.keyboard button.exact {
-		background: var(--color-theme-2);
-		color: white;
-	}
-
-	.keyboard button.missing {
-		opacity: 0.5;
-	}
-
-	.keyboard button.close {
-		border: 2px solid var(--color-theme-2);
-	}
-
-	.keyboard button:focus {
-		background: var(--color-theme-1);
-		color: white;
-		outline: none;
-	}
-
-	.keyboard button[data-key='enter'],
-	.keyboard button[data-key='backspace'] {
-		position: absolute;
-		bottom: 0;
-		width: calc(1.5 * var(--size));
-		height: calc(1 / 3 * (100% - 2 * var(--gap)));
-		text-transform: uppercase;
-		font-size: calc(0.3 * var(--size));
-		padding-top: calc(0.15 * var(--size));
-	}
-
-	.keyboard button[data-key='enter'] {
-		right: calc(50% + 3.5 * var(--size) + 0.8rem);
-	}
-
-	.keyboard button[data-key='backspace'] {
-		left: calc(50% + 3.5 * var(--size) + 0.8rem);
-	}
-
-	.keyboard button[data-key='enter']:disabled {
-		opacity: 0.5;
-	}
-
-	.restart {
-		width: 100%;
-		padding: 1rem;
-		background: rgba(255, 255, 255, 0.5);
-		border-radius: 2px;
-		border: none;
-	}
-
-	.restart:focus,
-	.restart:hover {
-		background: var(--color-theme-1);
-		color: white;
-		outline: none;
 	}
 
 	@keyframes wiggle {

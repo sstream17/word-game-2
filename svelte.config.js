@@ -9,6 +9,10 @@ const config = {
 	// for more information about preprocessors
 	preprocess: vitePreprocess(),
 
+	compilerOptions: {
+		runes: true
+	},
+
 	kit: {
 		adapter: adapter({
 			pages: 'build',
