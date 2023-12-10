@@ -1,6 +1,6 @@
 {
-	"name": "client",
-	"version": "0.0.1",
+	"name": "wordgame",
+	"version": "2.0.0",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
