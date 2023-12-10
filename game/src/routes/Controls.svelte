@@ -204,11 +204,11 @@
 	}
 
 	.keyboard button[data-key='enter'] {
-		right: calc(50% + 3.5 * var(--size) + 0.8rem);
+		left: calc(50% + 3.5 * var(--size) + 0.8rem);
 	}
 
 	.keyboard button[data-key='backspace'] {
-		left: calc(50% + 3.5 * var(--size) + 0.8rem);
+		right: calc(50% + 3.5 * var(--size) + 0.8rem);
 	}
 
 	.keyboard button[data-key='enter']:disabled {
