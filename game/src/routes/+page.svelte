@@ -38,7 +38,7 @@
 	}
 
 	function submit() {
-		const game = new Game(localStorage.getItem('sverdle') ?? '');
+		const game = new Game(localStorage.getItem('sverdle') ?? '', data.numberOfGames);
 
 		if (!game.enter([...currentGuess])) {
 			badGuess = true;
@@ -80,7 +80,9 @@
 <div class="form">
 	<a class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
 
-	<GameBoard rowIndex={i} {data} {won} {currentGuess} {badGuess} />
+	{#each { length: data.numberOfGames } as _, game (game)}
+		<GameBoard rowIndex={i} {data} {won} {currentGuess} {badGuess} />
+	{/each}
 	<Controls on:key={handleKey} {data} {won} {submittable} />
 </div>
 

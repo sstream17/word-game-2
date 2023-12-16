@@ -6,6 +6,11 @@ export const load = (() => {
 
 	return {
 		/**
+		 * The number of games
+		 */
+		numberOfGames: game.numberOfGames,
+
+		/**
 		 * The player's guessed words so far
 		 */
 		guesses: game.guesses,

@@ -13,11 +13,12 @@
 </script>
 
 <div class="grid" class:playing={!won} class:bad-guess={badGuess}>
-	{#each Array.from(Array(6).keys()) as row (row)}
+    {console.log(data)}
+	{#each { length: data.numberOfGames + 5 } as _, row (row)}
 		{@const current = row === rowIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
 		<div class="row" class:current>
-			{#each Array.from(Array(5).keys()) as column (column)}
+			{#each { length: 5 } as _, column (column)}
 				{@const guess = current ? currentGuess : data.guesses[row]}
 				{@const answer = data.answers[row]?.[column]}
 				{@const value = guess?.[column] ?? ''}
@@ -46,7 +47,7 @@
 </div>
 
 <style>
-    .grid {
+	.grid {
 		--width: min(100vw, 40vh, 380px);
 		max-width: var(--width);
 		align-self: center;

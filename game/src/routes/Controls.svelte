@@ -93,7 +93,7 @@
 <svelte:window onkeydown={keydown} />
 
 <div class="controls">
-	{#if won || data.answers.length >= 6}
+	{#if won || data.answers.length >= data.numberOfGames + 5}
 		{#if !won && data.answer}
 			<p>the answer was "{data.answer}"</p>
 		{/if}

@@ -1,12 +1,14 @@
 import { allowed, words } from "./words";
 
 export interface IGameData {
+	numberOfGames: number;
 	guesses: string[];
 	answers: string[];
 	answer: string | null;
 }
 
 export class Game implements IGameData {
+	numberOfGames: number;
 	index: number;
 	guesses: string[];
 	answers: string[];
@@ -15,17 +17,20 @@ export class Game implements IGameData {
 	/**
 	 * Create a game object from the player's cookie, or initialise a new game
 	 */
-	constructor(serialized: string | undefined = undefined) {
+	constructor(serialized: string | undefined = undefined, numberOfGames: number = 1) {
+		console.log("game const", numberOfGames)
 		if (serialized) {
-			const [index, guesses, answers] = serialized.split('-');
+			const [numberOfGames, index, guesses, answers] = serialized.split('-');
 
+			this.numberOfGames = +numberOfGames;
 			this.index = +index;
 			this.guesses = guesses ? guesses.split(' ') : [];
 			this.answers = answers ? answers.split(' ') : [];
 		} else {
 			this.index = Math.floor(Math.random() * words.length);
 			this.guesses = ['', '', '', '', '', ''];
-			this.answers = [] ;
+			this.answers = [];
+			this.numberOfGames = numberOfGames;
 		}
 
 		this.answer = words[this.index];
@@ -76,6 +81,6 @@ export class Game implements IGameData {
 	 * Serialize game state so it can be set as a cookie
 	 */
 	toString() {
-		return `${this.index}-${this.guesses.join(' ')}-${this.answers.join(' ')}`;
+		return `${this.numberOfGames}-${this.index}-${this.guesses.join(' ')}-${this.answers.join(' ')}`;
 	}
 }
