@@ -14,14 +14,15 @@
 
 	let { data } = $props<IProps>();
 
-	const storageKey = `word-game-${data.numberOfGames}`;
+	const numberOfGames = data.numberOfGames;
+	const storageKey = `word-game-${numberOfGames}`;
 
 	let badGuess = $state(false);
 
 	/** Whether or not the user has won */
-	let won = $derived(Object.values(data.hints).every((value) => value.at(-1) === 'xxxxx'));
+	let won = $derived(Object.values(data.hints).every((value) => value.includes('xxxxx')));
 
-	/** The index of the current guess */
+	/** The index of the current guess, based on the number of current hints */
 	let i = $derived(won ? -1 : Object.values(data.hints)[0].length);
 
 	/** The current guess */
@@ -40,7 +41,7 @@
 	}
 
 	function submit() {
-		const game = new Game(localStorage.getItem(storageKey) ?? '', data.numberOfGames);
+		const game = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
 
 		if (!game.enter([...currentGuess])) {
 			badGuess = true;
@@ -82,8 +83,17 @@
 <div class="form">
 	<a class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
 
-	{#each { length: data.numberOfGames } as _, game (game)}
-		<GameBoard rowIndex={i} {data} {won} {currentGuess} {badGuess} />
+	{#each { length: numberOfGames } as _, game (game)}
+		{@const hints = data.hints[game]}
+		<GameBoard
+			rowIndex={i}
+			{numberOfGames}
+			{won}
+			guesses={data.guesses}
+			{currentGuess}
+			{hints}
+			{badGuess}
+		/>
 	{/each}
 	<Controls on:key={handleKey} {data} {won} {submittable} />
 </div>

@@ -1,25 +1,25 @@
 <script lang="ts">
-	import type { IGameData } from './game';
-
 	interface IProps {
-		data: IGameData;
+		numberOfGames: number;
 		won: boolean;
 		badGuess: boolean;
+		guesses: string[];
 		currentGuess: string;
+		hints: string[];
 		rowIndex: number;
 	}
 
-	let { won, badGuess, currentGuess, data, rowIndex } = $props<IProps>();
+	let { numberOfGames, won, badGuess, guesses, currentGuess, hints, rowIndex } = $props<IProps>();
 </script>
 
 <div class="grid" class:playing={!won} class:bad-guess={badGuess}>
-	{#each { length: data.numberOfGames + 5 } as _, row (row)}
+	{#each { length: numberOfGames + 5 } as _, row (row)}
 		{@const current = row === rowIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
 		<div class="row" class:current>
 			{#each { length: 5 } as _, column (column)}
-				{@const guess = current ? currentGuess : data.guesses[row]}
-				{@const answer = data.hints[row]?.[column]}
+				{@const guess = current ? currentGuess : guesses[row]}
+				{@const answer = hints[row]?.[column]}
 				{@const value = guess?.[column] ?? ''}
 				{@const selected = current && column === guess.length}
 				{@const exact = answer === 'x'}
