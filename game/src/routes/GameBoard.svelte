@@ -2,6 +2,7 @@
 	interface IProps {
 		numberOfGames: number;
 		won: boolean;
+		winIndex: number;
 		badGuess: boolean;
 		guesses: string[];
 		currentGuess: string;
@@ -9,38 +10,48 @@
 		rowIndex: number;
 	}
 
-	let { numberOfGames, won, badGuess, guesses, currentGuess, hints, rowIndex } = $props<IProps>();
+	let { numberOfGames, won, winIndex, badGuess, guesses, currentGuess, hints, rowIndex } =
+		$props<IProps>();
 </script>
 
 <div class="grid" class:playing={!won} class:bad-guess={badGuess}>
 	{#each { length: numberOfGames + 5 } as _, row (row)}
-		{@const current = row === rowIndex}
+		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
 		<div class="row" class:current>
-			{#each { length: 5 } as _, column (column)}
-				{@const guess = current ? currentGuess : guesses[row]}
-				{@const answer = hints[row]?.[column]}
-				{@const value = guess?.[column] ?? ''}
-				{@const selected = current && column === guess.length}
-				{@const exact = answer === 'x'}
-				{@const close = answer === 'c'}
-				{@const missing = answer === '_'}
-				<div class="letter" class:exact class:close class:missing class:selected>
-					{value}
-					<span class="visually-hidden">
-						{#if exact}
-							(correct)
-						{:else if close}
-							(present)
-						{:else if missing}
-							(absent)
-						{:else}
-							empty
-						{/if}
-					</span>
-					<input name="guess" disabled={!current} type="hidden" {value} />
-				</div>
-			{/each}
+			{#if !won || (won && row <= winIndex)}
+				{#each { length: 5 } as _, column (column)}
+					{@const guess = !won && current ? currentGuess : guesses[row]}
+					{@const answer = hints[row]?.[column]}
+					{@const value = guess?.[column] ?? ''}
+					{@const selected = current && column === guess.length}
+					{@const exact = answer === 'x'}
+					{@const close = answer === 'c'}
+					{@const missing = answer === '_'}
+					<div class="letter" class:exact class:close class:missing class:selected>
+						{value}
+						<span class="visually-hidden">
+							{#if exact}
+								(correct)
+							{:else if close}
+								(present)
+							{:else if missing}
+								(absent)
+							{:else}
+								empty
+							{/if}
+						</span>
+						<input name="guess" disabled={!current} type="hidden" {value} />
+					</div>
+				{/each}
+			{:else}
+				{#each { length: 5 } as _, column (column)}
+					<div class="letter missing">
+						<span class="visually-hidden"> empty </span>
+						<input name="guess" disabled type="hidden" />
+					</div>
+				{/each}
+			{/if}
 		</div>
 	{/each}
 </div>
@@ -66,7 +77,7 @@
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
-		.grid.bad-guess .row.current {
+		.grid.playing.bad-guess .row.current {
 			animation: wiggle 0.5s;
 		}
 	}

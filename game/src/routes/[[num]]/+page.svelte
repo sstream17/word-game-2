@@ -2,11 +2,11 @@
 	import { invalidateAll } from '$app/navigation';
 	import { base } from '$app/paths';
 	import { confetti } from '@neoconfetti/svelte';
-	import type { PageData } from './$types';
 	import Controls from '../Controls.svelte';
+	import GameBoard from '../GameBoard.svelte';
 	import { Game } from '../game';
 	import { reduced_motion } from '../reduced-motion';
-	import GameBoard from '../GameBoard.svelte';
+	import type { PageData } from './$types';
 
 	interface IProps {
 		data: PageData;
@@ -32,9 +32,9 @@
 	let submittable = $derived(currentGuess.length === 5);
 
 	function update(key: string) {
+		if (badGuess) badGuess = false;
 		if (key === 'backspace') {
 			data.guesses[i] = data.guesses[i].slice(0, -1);
-			if (badGuess) badGuess = false;
 		} else if (currentGuess.length < 5) {
 			data.guesses[i] += key;
 		}
@@ -43,9 +43,7 @@
 	function submit() {
 		const game = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
 
-		if (!game.enter([...currentGuess])) {
-			badGuess = true;
-		}
+		badGuess = !game.enter([...currentGuess]);
 
 		localStorage.setItem(storageKey, game.toString());
 		invalidateAll();
@@ -54,6 +52,10 @@
 	function restart() {
 		localStorage.removeItem(storageKey);
 		invalidateAll();
+	}
+
+	function triedBadGuess() {
+		badGuess = true;
 	}
 
 	function handleKey(event: any) {
@@ -65,6 +67,9 @@
 				break;
 			case 'restart':
 				restart();
+				break;
+			case 'badGuess':
+				triedBadGuess();
 				break;
 			default:
 				update(key);
@@ -85,10 +90,13 @@
 
 	{#each { length: numberOfGames } as _, game (game)}
 		{@const hints = data.hints[game]}
+		{@const winIndex = hints.findIndex((hint) => hint === 'xxxxx')}
+		{@const thisBoardWon = winIndex !== -1}
 		<GameBoard
 			rowIndex={i}
 			{numberOfGames}
-			{won}
+			won={thisBoardWon}
+			{winIndex}
 			guesses={data.guesses}
 			{currentGuess}
 			{hints}

@@ -68,6 +68,10 @@
 		dispatch('key', { key: 'restart' });
 	}
 
+	function badGuess() {
+		dispatch('key', { key: 'badGuess' });
+	}
+
 	/**
 	 * Trigger form logic in response to a keydown event, so that
 	 * desktop users can use the keyboard to play the game
@@ -80,7 +84,10 @@
 			return;
 		}
 
-		if (event.key === 'Enter' && !submittable) return;
+		if (event.key === 'Enter' && !submittable) {
+			badGuess();
+			return;
+		};
 
 		const key = document.querySelector(`[data-key="${event.key}" i]`)?.getAttribute('data-key');
 
