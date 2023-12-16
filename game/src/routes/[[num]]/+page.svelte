@@ -3,16 +3,18 @@
 	import { base } from '$app/paths';
 	import { confetti } from '@neoconfetti/svelte';
 	import type { PageData } from './$types';
-	import Controls from './Controls.svelte';
-	import { Game } from './game';
-	import { reduced_motion } from './reduced-motion';
-	import GameBoard from './GameBoard.svelte';
+	import Controls from '../Controls.svelte';
+	import { Game } from '../game';
+	import { reduced_motion } from '../reduced-motion';
+	import GameBoard from '../GameBoard.svelte';
 
 	interface IProps {
 		data: PageData;
 	}
 
 	let { data } = $props<IProps>();
+
+	const storageKey = `word-game-${data.numberOfGames}`;
 
 	let badGuess = $state(false);
 
@@ -38,18 +40,18 @@
 	}
 
 	function submit() {
-		const game = new Game(localStorage.getItem('sverdle') ?? '', data.numberOfGames);
+		const game = new Game(localStorage.getItem(storageKey) ?? '', data.numberOfGames);
 
 		if (!game.enter([...currentGuess])) {
 			badGuess = true;
 		}
 
-		localStorage.setItem('sverdle', game.toString());
+		localStorage.setItem(storageKey, game.toString());
 		invalidateAll();
 	}
 
 	function restart() {
-		localStorage.removeItem('sverdle');
+		localStorage.removeItem(storageKey);
 		invalidateAll();
 	}
 

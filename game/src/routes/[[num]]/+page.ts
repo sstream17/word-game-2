@@ -1,8 +1,12 @@
 import type { PageLoad } from './$types';
-import { Game } from './game';
+import { Game } from '../game';
 
-export const load = (() => {
-	const game = typeof localStorage === 'undefined' ? new Game(''): new Game(localStorage.getItem('sverdle') ?? '');
+export const load = (({params}) => {
+	const numberOfGames = Math.max(1, Math.min(+(params.num ?? 1), 4));
+	const storageKey = `word-game-${numberOfGames}`;
+	const initialState = typeof localStorage === 'undefined' ? '' : localStorage.getItem(storageKey) ?? '';
+	
+	const game = new Game(initialState, numberOfGames);
 
 	return {
 		/**
@@ -24,6 +28,6 @@ export const load = (() => {
 		/**
 		 * The correct answer, revealed if the game is over
 		 */
-		answer: game.answers.length >= 6 ? game.answer : null
+		answer: game.answers.length >= game.numberOfGames + 5 ? game.answer : null
 	};
 }) satisfies PageLoad;

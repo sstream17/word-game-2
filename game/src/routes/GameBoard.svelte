@@ -13,7 +13,6 @@
 </script>
 
 <div class="grid" class:playing={!won} class:bad-guess={badGuess}>
-    {console.log(data)}
 	{#each { length: data.numberOfGames + 5 } as _, row (row)}
 		{@const current = row === rowIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>

@@ -18,17 +18,16 @@ export class Game implements IGameData {
 	 * Create a game object from the player's cookie, or initialise a new game
 	 */
 	constructor(serialized: string | undefined = undefined, numberOfGames: number = 1) {
-		console.log("game const", numberOfGames)
 		if (serialized) {
-			const [numberOfGames, index, guesses, answers] = serialized.split('-');
+			const [index, guesses, answers] = serialized.split('-');
 
-			this.numberOfGames = +numberOfGames;
+			this.numberOfGames = numberOfGames;
 			this.index = +index;
 			this.guesses = guesses ? guesses.split(' ') : [];
 			this.answers = answers ? answers.split(' ') : [];
 		} else {
 			this.index = Math.floor(Math.random() * words.length);
-			this.guesses = ['', '', '', '', '', ''];
+			this.guesses = Array(numberOfGames + 5).fill('');
 			this.answers = [];
 			this.numberOfGames = numberOfGames;
 		}
@@ -81,6 +80,6 @@ export class Game implements IGameData {
 	 * Serialize game state so it can be set as a cookie
 	 */
 	toString() {
-		return `${this.numberOfGames}-${this.index}-${this.guesses.join(' ')}-${this.answers.join(' ')}`;
+		return `${this.index}-${this.guesses.join(' ')}-${this.answers.join(' ')}`;
 	}
 }
