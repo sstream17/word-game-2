@@ -15,7 +15,7 @@
 	 * used for styling the keyboard
 	 */
 	let classnames: Record<string, 'exact' | 'close' | 'missing'> = $derived(
-		data.answers.reduce((acc: Record<string, 'exact' | 'close' | 'missing'>, answer, i) => {
+		data.hints['0'].reduce((acc: Record<string, 'exact' | 'close' | 'missing'>, answer, i) => {
 			const guess = data.guesses[i];
 
 			for (let i = 0; i < 5; i += 1) {
@@ -36,7 +36,7 @@
 	 * used for adding text for assistive technology (e.g. screen readers)
 	 */
 	let description: Record<string, string> = $derived(
-		data.answers.reduce((acc: Record<string, string>, answer, i) => {
+		data.hints['0'].reduce((acc: Record<string, string>, answer, i) => {
 			const guess = data.guesses[i];
 
 			for (let i = 0; i < 5; i += 1) {
@@ -75,7 +75,7 @@
 	function keydown(event: KeyboardEvent) {
 		if (event.metaKey) return;
 
-		if (event.key === 'Enter' && data.answers.at(-1) === 'xxxxx') {
+		if (event.key === 'Enter' && won) {
 			restart();
 			return;
 		}
@@ -93,9 +93,9 @@
 <svelte:window onkeydown={keydown} />
 
 <div class="controls">
-	{#if won || data.answers.length >= data.numberOfGames + 5}
-		{#if !won && data.answer}
-			<p>the answer was "{data.answer}"</p>
+	{#if won || data.guesses.findLastIndex((guess) => !!guess) >= data.numberOfGames + 5}
+		{#if !won && data.answers['0']}
+			<p>the answer was "{Object.values(data.answers)}"</p>
 		{/if}
 		<button on:click={restart} data-key="enter" class="restart selected">
 			{won ? 'you won :)' : `game over :(`} play again?

@@ -3,36 +3,54 @@ import { allowed, words } from "./words";
 export interface IGameData {
 	numberOfGames: number;
 	guesses: string[];
-	answers: string[];
-	answer: string | null;
+	hints: { [index: string]: string[] };
+	answers: { [index: string]: string | null };
 }
 
 export class Game implements IGameData {
 	numberOfGames: number;
-	index: number;
+	wordIndices: { [gameIndex: string]: number };
 	guesses: string[];
-	answers: string[];
-	answer: string;
+	hints: { [gameIndex: string]: string[] };
+	answers: { [gameIndex: string]: string };
 
 	/**
 	 * Create a game object from the player's cookie, or initialise a new game
 	 */
 	constructor(serialized: string | undefined = undefined, numberOfGames: number = 1) {
 		if (serialized) {
-			const [index, guesses, answers] = serialized.split('-');
+			const [gameIndicesPacked, wordIndicesPacked, guesses, hintsPacked] = serialized.split('-');
+
+			const gameIndices = gameIndicesPacked.split(',');
+			const wordIndices = wordIndicesPacked.split(',');
+			const hints = hintsPacked.split(' ');
 
 			this.numberOfGames = numberOfGames;
-			this.index = +index;
+			this.wordIndices = gameIndices.reduce<{ [gameIndex: string]: number }>((acc, currentIndex, i) => {
+				acc[currentIndex] = +wordIndices[i];
+				return acc;
+			}, {});
 			this.guesses = guesses ? guesses.split(' ') : [];
-			this.answers = answers ? answers.split(' ') : [];
+			this.hints = gameIndices.reduce<{ [gameIndex: string]: string[] }>((acc, currentIndex, i) => {
+				acc[currentIndex] = hints[i] ? hints[i].split(',') : [];
+				return acc;
+			}, {});
 		} else {
-			this.index = Math.floor(Math.random() * words.length);
-			this.guesses = Array(numberOfGames + 5).fill('');
-			this.answers = [];
 			this.numberOfGames = numberOfGames;
+			this.wordIndices = Array.from({ length: numberOfGames }, (_, i) =>
+				[`${i}`, Math.floor(Math.random() * words.length)])
+				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+			this.guesses = Array(numberOfGames + 5).fill('');
+			this.hints = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: string[] }>((acc, currentIndex) => {
+				acc[currentIndex] = []
+				return acc;
+			}, {});
 		}
 
-		this.answer = words[this.index];
+		this.answers = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: string }>((acc, currentIndex) => {
+			acc[currentIndex] = words[this.wordIndices[currentIndex]]
+			return acc;
+		}, {});
 	}
 
 	/**
@@ -45,33 +63,36 @@ export class Game implements IGameData {
 
 		if (!valid) return false;
 
-		this.guesses[this.answers.length] = word;
+		this.guesses[Object.values(this.hints)[0].length] = word;
 
-		const available = Array.from(this.answer);
-		const answer = Array(5).fill('_');
+		Object.entries(this.answers).forEach(([answerIndex, currentAnswer]) => {
+			const available = Array.from(currentAnswer);
+			const hint = Array(5).fill('_');
 
-		// first, find exact matches
-		for (let i = 0; i < 5; i += 1) {
-			if (letters[i] === available[i]) {
-				answer[i] = 'x';
-				available[i] = ' ';
-			}
-		}
-
-		// then find close matches (this has to happen
-		// in a second step, otherwise an early close
-		// match can prevent a later exact match)
-		for (let i = 0; i < 5; i += 1) {
-			if (answer[i] === '_') {
-				const index = available.indexOf(letters[i]);
-				if (index !== -1) {
-					answer[i] = 'c';
-					available[index] = ' ';
+			// first, find exact matches
+			for (let i = 0; i < 5; i += 1) {
+				if (letters[i] === available[i]) {
+					hint[i] = 'x';
+					available[i] = ' ';
 				}
 			}
-		}
 
-		this.answers.push(answer.join(''));
+			// then find close matches (this has to happen
+			// in a second step, otherwise an early close
+			// match can prevent a later exact match)
+			for (let i = 0; i < 5; i += 1) {
+				if (hint[i] === '_') {
+					const index = available.indexOf(letters[i]);
+					if (index !== -1) {
+						hint[i] = 'c';
+						available[index] = ' ';
+					}
+				}
+			}
+
+			this.hints[answerIndex].push(hint.join(''));
+		});
+
 
 		return true;
 	}
@@ -80,6 +101,6 @@ export class Game implements IGameData {
 	 * Serialize game state so it can be set as a cookie
 	 */
 	toString() {
-		return `${this.index}-${this.guesses.join(' ')}-${this.answers.join(' ')}`;
+		return `${Object.keys(this.wordIndices)}-${Object.values(this.wordIndices)}-${this.guesses.join(' ')}-${Object.values(this.hints).join(' ')}`;
 	}
 }

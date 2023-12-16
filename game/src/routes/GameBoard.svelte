@@ -19,7 +19,7 @@
 		<div class="row" class:current>
 			{#each { length: 5 } as _, column (column)}
 				{@const guess = current ? currentGuess : data.guesses[row]}
-				{@const answer = data.answers[row]?.[column]}
+				{@const answer = data.hints[row]?.[column]}
 				{@const value = guess?.[column] ?? ''}
 				{@const selected = current && column === guess.length}
 				{@const exact = answer === 'x'}

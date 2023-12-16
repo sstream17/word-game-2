@@ -19,10 +19,10 @@
 	let badGuess = $state(false);
 
 	/** Whether or not the user has won */
-	let won = $derived(data.answers.at(-1) === 'xxxxx');
+	let won = $derived(Object.values(data.hints).every((value) => value.at(-1) === 'xxxxx'));
 
 	/** The index of the current guess */
-	let i = $derived(won ? -1 : data.answers.length);
+	let i = $derived(won ? -1 : Object.values(data.hints)[0].length);
 
 	/** The current guess */
 	let currentGuess = $derived(data.guesses[i] || '');
