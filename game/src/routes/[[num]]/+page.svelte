@@ -88,21 +88,24 @@
 <div class="form">
 	<a class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
 
-	{#each { length: numberOfGames } as _, game (game)}
-		{@const hints = data.hints[game]}
-		{@const winIndex = hints.findIndex((hint) => hint === 'xxxxx')}
-		{@const thisBoardWon = winIndex !== -1}
-		<GameBoard
-			rowIndex={i}
-			{numberOfGames}
-			won={thisBoardWon}
-			{winIndex}
-			guesses={data.guesses}
-			{currentGuess}
-			{hints}
-			{badGuess}
-		/>
-	{/each}
+	<div class="boards-container">
+		{#each { length: numberOfGames } as _, game (game)}
+			{@const hints = data.hints[game]}
+			{@const winIndex = hints.findIndex((hint) => hint === 'xxxxx')}
+			{@const thisBoardWon = winIndex !== -1}
+			<GameBoard
+				rowIndex={i}
+				{numberOfGames}
+				won={thisBoardWon}
+				{winIndex}
+				guesses={data.guesses}
+				{currentGuess}
+				{hints}
+				{badGuess}
+			/>
+		{/each}
+	</div>
+
 	<Controls on:key={handleKey} {data} {won} {submittable} />
 </div>
 
@@ -150,5 +153,14 @@
 		margin: 0 0.5em 0 0;
 		position: relative;
 		top: -0.05em;
+	}
+
+	.boards-container {
+		display: flex;
+		flex-direction: column;
+		flex: 1;
+		width: 100%;
+		gap: 1rem;
+		margin-bottom: calc(var(--keyboard-height) + 20px);
 	}
 </style>

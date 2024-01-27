@@ -199,7 +199,11 @@
 	.controls {
 		text-align: center;
 		justify-content: center;
-		height: min(18vh, 10rem);
+		height: var(--keyboard-height);
+		position: fixed;
+		bottom: 0;
+		background: var(--color-bg-0);
+		padding: 10px;
 	}
 
 	.keyboard {
