@@ -150,35 +150,43 @@
 		</button>
 	{:else}
 		<div class="keyboard">
-			<button
-				on:click|preventDefault={update}
-				data-key="enter"
-				name="key"
-				class:selected={submittable}
-				disabled={!submittable}>enter</button
-			>
-
-			<button on:click|preventDefault={update} data-key="backspace" name="key" value="backspace">
-				back
-			</button>
-
-			{#each ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'] as row}
+			{#snippet letter(key)}
+				<button
+					on:click|preventDefault={update}
+					data-key={key}
+					style="background: {getBackgroundForLetter(classnames, key)}"
+					disabled={submittable}
+					name="key"
+					value={key}
+					aria-label="{key} {description[key] || ''}"
+				>
+					{key}
+				</button>
+			{/snippet}
+			{#each ['qwertyuiop', 'asdfghjkl'] as row}
 				<div class="row">
-					{#each row as letter}
-						<button
-							on:click|preventDefault={update}
-							data-key={letter}
-							style="background: {getBackgroundForLetter(classnames, letter)}"
-							disabled={submittable}
-							name="key"
-							value={letter}
-							aria-label="{letter} {description[letter] || ''}"
-						>
-							{letter}
-						</button>
+					{#each row as key}
+						{@render letter(key)}
 					{/each}
 				</div>
 			{/each}
+
+			<!-- Separating out last row so back and enter buttons can be placed here -->
+			<div class="row">
+				<button on:click|preventDefault={update} data-key="backspace" name="key" value="backspace">
+					back
+				</button>
+				{#each 'zxcvbnm' as key}
+					{@render letter(key)}
+				{/each}
+				<button
+					on:click|preventDefault={update}
+					data-key="enter"
+					name="key"
+					class:selected={submittable}
+					disabled={!submittable}>enter</button
+				>
+			</div>
 		</div>
 	{/if}
 </div>
@@ -195,7 +203,7 @@
 	}
 
 	.keyboard {
-		--gap: 0.2rem;
+		--gap: max(4px);
 		position: relative;
 		display: flex;
 		flex-direction: column;
@@ -206,14 +214,14 @@
 	.keyboard .row {
 		display: flex;
 		justify-content: center;
-		gap: 0.2rem;
+		gap: var(--gap);
 		flex: 1;
 	}
 
 	.keyboard button,
 	.keyboard button:disabled {
-		--size: min(8vw, 4vh, 40px);
-		background-color: white;
+		--size: min(8.8vw, 40px);
+		background-color: var(--color-unguessed);
 		color: black;
 		width: var(--size);
 		border: none;
@@ -230,21 +238,10 @@
 
 	.keyboard button[data-key='enter'],
 	.keyboard button[data-key='backspace'] {
-		position: absolute;
-		bottom: 0;
 		width: calc(1.5 * var(--size));
-		height: calc(1 / 3 * (100% - 2 * var(--gap)));
 		text-transform: uppercase;
 		font-size: calc(0.3 * var(--size));
 		padding-top: calc(0.15 * var(--size));
-	}
-
-	.keyboard button[data-key='enter'] {
-		left: calc(50% + 3.5 * var(--size) + 0.8rem);
-	}
-
-	.keyboard button[data-key='backspace'] {
-		right: calc(50% + 3.5 * var(--size) + 0.8rem);
 	}
 
 	.keyboard button[data-key='enter']:disabled {

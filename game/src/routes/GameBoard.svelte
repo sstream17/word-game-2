@@ -109,12 +109,11 @@
 	}
 
 	.letter.exact {
-		background: var(--color-theme-2);
-		color: white;
+		background: var(--color-exact);
 	}
 
 	.letter.close {
-		border: 2px solid var(--color-theme-2);
+		background: var(--color-close);
 	}
 
 	@keyframes wiggle {
