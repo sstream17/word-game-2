@@ -36,7 +36,9 @@
 						guessOut[letter] = [];
 					}
 
-					guessOut[letter]?.splice(gameIndex, 1, hints[guessIndex][letterIndex] as HintValues);
+					if (guessOut[letter][gameIndex] !== 'x') {
+						guessOut[letter].splice(gameIndex, 1, hints[guessIndex][letterIndex] as HintValues);
+					}
 				});
 
 				return guessOut;
