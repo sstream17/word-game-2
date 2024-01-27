@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import type { IGameData } from './game';
+	import type { HintValues, IGameData } from './game';
 
 	interface IProps {
 		data: IGameData;
@@ -10,26 +10,65 @@
 
 	let { data, won, submittable } = $props<IProps>();
 
+	const colorMap = {
+		_: 'var(--color-mising)',
+		c: 'var(--color-close)',
+		x: 'var(--color-exact)'
+	};
+
 	/**
 	 * A map of classnames for all letters that have been guessed,
 	 * used for styling the keyboard
 	 */
-	let classnames: Record<string, 'exact' | 'close' | 'missing'> = $derived(
-		data.hints['0'].reduce((acc: Record<string, 'exact' | 'close' | 'missing'>, answer, i) => {
-			const guess = data.guesses[i];
-
-			for (let i = 0; i < 5; i += 1) {
-				const letter = guess[i];
-
-				if (answer[i] === 'x') {
-					acc[letter] = 'exact';
-				} else if (!acc[letter]) {
-					acc[letter] = answer[i] === 'c' ? 'close' : 'missing';
-				}
+	let classnames: Record<string, HintValues[]> = $derived(
+		Object.values(data.hints).reduce((output, hints, gameIndex) => {
+			if (hints.length < 1) {
+				return output;
 			}
-			return acc;
+
+			return data.guesses.reduce((guessOut: Record<string, HintValues[]>, guess, guessIndex) => {
+				if (guess.length !== 5 || !hints[guessIndex]) {
+					return output;
+				}
+
+				guess.split('').forEach((letter, letterIndex) => {
+					if (!guessOut[letter]) {
+						guessOut[letter] = [];
+					}
+
+					guessOut[letter]?.splice(gameIndex, 1, hints[guessIndex][letterIndex] as HintValues);
+				});
+
+				return guessOut;
+			}, output);
 		}, {})
 	);
+
+	function getBackgroundForLetter(colors: Record<string, HintValues[]>, letter: string) {
+		const letterColors = colors[letter];
+		let quad1Color = 'var(--color-unguessed)';
+		let quad2Color = 'var(--color-unguessed)';
+		let quad3Color = 'var(--color-unguessed)';
+		let quad4Color = 'var(--color-unguessed)';
+		if (letterColors?.length === 1) {
+			quad1Color = colorMap[letterColors[0]];
+			quad2Color = colorMap[letterColors[0]];
+			quad3Color = colorMap[letterColors[0]];
+			quad4Color = colorMap[letterColors[0]];
+		} else if (letterColors?.length === 2) {
+			quad1Color = colorMap[letterColors[1]];
+			quad2Color = colorMap[letterColors[0]];
+			quad3Color = colorMap[letterColors[0]];
+			quad4Color = colorMap[letterColors[1]];
+		} else if (letterColors?.length == 4) {
+			quad1Color = colorMap[letterColors[1]];
+			quad2Color = colorMap[letterColors[0]];
+			quad3Color = colorMap[letterColors[2]];
+			quad4Color = colorMap[letterColors[3]];
+		}
+
+		return `conic-gradient(${quad1Color} 0deg,${quad1Color} 90deg,${quad4Color} 90deg,${quad4Color} 180deg,${quad3Color} 180deg,${quad3Color} 270deg,${quad2Color} 270deg,${quad2Color} 360deg);`;
+	}
 
 	/**
 	 * A map of descriptions for all letters that have been guessed,
@@ -87,7 +126,7 @@
 		if (event.key === 'Enter' && !submittable) {
 			badGuess();
 			return;
-		};
+		}
 
 		const key = document.querySelector(`[data-key="${event.key}" i]`)?.getAttribute('data-key');
 
@@ -112,6 +151,7 @@
 			<button
 				on:click|preventDefault={update}
 				data-key="enter"
+				name="key"
 				class:selected={submittable}
 				disabled={!submittable}>enter</button
 			>
@@ -126,7 +166,7 @@
 						<button
 							on:click|preventDefault={update}
 							data-key={letter}
-							class={classnames[letter]}
+							style="background: {getBackgroundForLetter(classnames, letter)}"
 							disabled={submittable}
 							name="key"
 							value={letter}
@@ -175,22 +215,9 @@
 		color: black;
 		width: var(--size);
 		border: none;
-		border-radius: 2px;
+		border-radius: 0.2rem;
 		font-size: calc(var(--size) * 0.5);
 		margin: 0;
-	}
-
-	.keyboard button.exact {
-		background: var(--color-theme-2);
-		color: white;
-	}
-
-	.keyboard button.missing {
-		opacity: 0.5;
-	}
-
-	.keyboard button.close {
-		border: 2px solid var(--color-theme-2);
 	}
 
 	.keyboard button:focus {
@@ -226,7 +253,7 @@
 		width: 100%;
 		padding: 1rem;
 		background: rgba(255, 255, 255, 0.5);
-		border-radius: 2px;
+		border-radius: 0.2rem;
 		border: none;
 	}
 

@@ -1,9 +1,11 @@
-import { allowed, words } from "./words";
+import { allowed, words } from './words';
+
+export type HintValues = 'x' | 'c' | '_';
 
 export interface IGameData {
 	numberOfGames: number;
 	guesses: string[];
-	hints: { [index: string]: string[] };
+	hints: { [index: string]: HintValues[] };
 	answers: { [index: string]: string | null };
 }
 
@@ -11,7 +13,7 @@ export class Game implements IGameData {
 	numberOfGames: number;
 	wordIndices: { [gameIndex: string]: number };
 	guesses: string[];
-	hints: { [gameIndex: string]: string[] };
+	hints: { [gameIndex: string]: HintValues[] };
 	answers: { [gameIndex: string]: string };
 
 	/**
@@ -31,8 +33,8 @@ export class Game implements IGameData {
 				return acc;
 			}, {});
 			this.guesses = guesses ? guesses.split(' ') : [];
-			this.hints = gameIndices.reduce<{ [gameIndex: string]: string[] }>((acc, currentIndex, i) => {
-				acc[currentIndex] = hints[i] ? hints[i].split(',') : [];
+			this.hints = gameIndices.reduce<{ [gameIndex: string]: HintValues[] }>((acc, currentIndex, i) => {
+				acc[currentIndex] = hints[i] ? hints[i].split(',') as HintValues[] : [];
 				return acc;
 			}, {});
 		} else {
@@ -41,7 +43,7 @@ export class Game implements IGameData {
 				[`${i}`, Math.floor(Math.random() * words.length)])
 				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
 			this.guesses = Array(numberOfGames + 5).fill('');
-			this.hints = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: string[] }>((acc, currentIndex) => {
+			this.hints = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: HintValues[] }>((acc, currentIndex) => {
 				acc[currentIndex] = []
 				return acc;
 			}, {});
@@ -90,7 +92,7 @@ export class Game implements IGameData {
 				}
 			}
 
-			this.hints[answerIndex].push(hint.join(''));
+			this.hints[answerIndex].push(hint.join('') as HintValues);
 		});
 
 
