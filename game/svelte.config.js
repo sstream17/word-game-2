@@ -21,6 +21,9 @@ const config = {
 			precompress: false,
 			strict: true
 		}),
+		prerender: {
+			entries: ['/1', '/2', '/4']
+		},
 		paths: {
 			base: isDevEnvironment ? '' : process.env.BASE_PATH,
 		}

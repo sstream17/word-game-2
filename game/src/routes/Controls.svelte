@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { createEventDispatcher } from 'svelte';
-	import type { IGameData } from './game';
+	import type { HintValues, IGameData } from './game';
 
 	interface IProps {
 		data: IGameData;
@@ -10,33 +10,74 @@
 
 	let { data, won, submittable } = $props<IProps>();
 
+	const colorMap = {
+		_: 'var(--color-mising)',
+		c: 'var(--color-close)',
+		x: 'var(--color-exact)'
+	};
+
 	/**
 	 * A map of classnames for all letters that have been guessed,
 	 * used for styling the keyboard
 	 */
-	let classnames: Record<string, 'exact' | 'close' | 'missing'> = $derived(
-		data.answers.reduce((acc: Record<string, 'exact' | 'close' | 'missing'>, answer, i) => {
-			const guess = data.guesses[i];
-
-			for (let i = 0; i < 5; i += 1) {
-				const letter = guess[i];
-
-				if (answer[i] === 'x') {
-					acc[letter] = 'exact';
-				} else if (!acc[letter]) {
-					acc[letter] = answer[i] === 'c' ? 'close' : 'missing';
-				}
+	let classnames: Record<string, HintValues[]> = $derived(
+		Object.values(data.hints).reduce((output, hints, gameIndex) => {
+			if (hints.length < 1) {
+				return output;
 			}
-			return acc;
+
+			return data.guesses.reduce((guessOut: Record<string, HintValues[]>, guess, guessIndex) => {
+				if (guess.length !== 5 || !hints[guessIndex]) {
+					return output;
+				}
+
+				guess.split('').forEach((letter, letterIndex) => {
+					if (!guessOut[letter]) {
+						guessOut[letter] = [];
+					}
+
+					if (guessOut[letter][gameIndex] !== 'x') {
+						guessOut[letter].splice(gameIndex, 1, hints[guessIndex][letterIndex] as HintValues);
+					}
+				});
+
+				return guessOut;
+			}, output);
 		}, {})
 	);
+
+	function getBackgroundForLetter(colors: Record<string, HintValues[]>, letter: string) {
+		const letterColors = colors[letter];
+		let quad1Color = 'var(--color-unguessed)';
+		let quad2Color = 'var(--color-unguessed)';
+		let quad3Color = 'var(--color-unguessed)';
+		let quad4Color = 'var(--color-unguessed)';
+		if (letterColors?.length === 1) {
+			quad1Color = colorMap[letterColors[0]];
+			quad2Color = colorMap[letterColors[0]];
+			quad3Color = colorMap[letterColors[0]];
+			quad4Color = colorMap[letterColors[0]];
+		} else if (letterColors?.length === 2) {
+			quad1Color = colorMap[letterColors[1]];
+			quad2Color = colorMap[letterColors[0]];
+			quad3Color = colorMap[letterColors[0]];
+			quad4Color = colorMap[letterColors[1]];
+		} else if (letterColors?.length == 4) {
+			quad1Color = colorMap[letterColors[1]];
+			quad2Color = colorMap[letterColors[0]];
+			quad3Color = colorMap[letterColors[2]];
+			quad4Color = colorMap[letterColors[3]];
+		}
+
+		return `conic-gradient(${quad1Color} 0deg,${quad1Color} 90deg,${quad4Color} 90deg,${quad4Color} 180deg,${quad3Color} 180deg,${quad3Color} 270deg,${quad2Color} 270deg,${quad2Color} 360deg);`;
+	}
 
 	/**
 	 * A map of descriptions for all letters that have been guessed,
 	 * used for adding text for assistive technology (e.g. screen readers)
 	 */
 	let description: Record<string, string> = $derived(
-		data.answers.reduce((acc: Record<string, string>, answer, i) => {
+		data.hints['0'].reduce((acc: Record<string, string>, answer, i) => {
 			const guess = data.guesses[i];
 
 			for (let i = 0; i < 5; i += 1) {
@@ -68,6 +109,10 @@
 		dispatch('key', { key: 'restart' });
 	}
 
+	function badGuess() {
+		dispatch('key', { key: 'badGuess' });
+	}
+
 	/**
 	 * Trigger form logic in response to a keydown event, so that
 	 * desktop users can use the keyboard to play the game
@@ -75,12 +120,15 @@
 	function keydown(event: KeyboardEvent) {
 		if (event.metaKey) return;
 
-		if (event.key === 'Enter' && data.answers.at(-1) === 'xxxxx') {
+		if (event.key === 'Enter' && won) {
 			restart();
 			return;
 		}
 
-		if (event.key === 'Enter' && !submittable) return;
+		if (event.key === 'Enter' && !submittable) {
+			badGuess();
+			return;
+		}
 
 		const key = document.querySelector(`[data-key="${event.key}" i]`)?.getAttribute('data-key');
 
@@ -93,43 +141,52 @@
 <svelte:window onkeydown={keydown} />
 
 <div class="controls">
-	{#if won || data.answers.length >= 6}
-		{#if !won && data.answer}
-			<p>the answer was "{data.answer}"</p>
+	{#if won || data.guesses.findLastIndex((guess) => !!guess) >= data.numberOfGames + 5}
+		{#if !won && data.answers['0']}
+			<p>the answer was "{Object.values(data.answers)}"</p>
 		{/if}
 		<button on:click={restart} data-key="enter" class="restart selected">
 			{won ? 'you won :)' : `game over :(`} play again?
 		</button>
 	{:else}
 		<div class="keyboard">
-			<button
-				on:click|preventDefault={update}
-				data-key="enter"
-				class:selected={submittable}
-				disabled={!submittable}>enter</button
-			>
-
-			<button on:click|preventDefault={update} data-key="backspace" name="key" value="backspace">
-				back
-			</button>
-
-			{#each ['qwertyuiop', 'asdfghjkl', 'zxcvbnm'] as row}
+			{#snippet letter(key)}
+				<button
+					on:click|preventDefault={update}
+					data-key={key}
+					style="background: {getBackgroundForLetter(classnames, key)}"
+					disabled={submittable}
+					name="key"
+					value={key}
+					aria-label="{key} {description[key] || ''}"
+				>
+					{key}
+				</button>
+			{/snippet}
+			{#each ['qwertyuiop', 'asdfghjkl'] as row}
 				<div class="row">
-					{#each row as letter}
-						<button
-							on:click|preventDefault={update}
-							data-key={letter}
-							class={classnames[letter]}
-							disabled={submittable}
-							name="key"
-							value={letter}
-							aria-label="{letter} {description[letter] || ''}"
-						>
-							{letter}
-						</button>
+					{#each row as key}
+						{@render letter(key)}
 					{/each}
 				</div>
 			{/each}
+
+			<!-- Separating out last row so back and enter buttons can be placed here -->
+			<div class="row">
+				<button on:click|preventDefault={update} data-key="backspace" name="key" value="backspace">
+					back
+				</button>
+				{#each 'zxcvbnm' as key}
+					{@render letter(key)}
+				{/each}
+				<button
+					on:click|preventDefault={update}
+					data-key="enter"
+					name="key"
+					class:selected={submittable}
+					disabled={!submittable}>enter</button
+				>
+			</div>
 		</div>
 	{/if}
 </div>
@@ -142,11 +199,15 @@
 	.controls {
 		text-align: center;
 		justify-content: center;
-		height: min(18vh, 10rem);
+		height: var(--keyboard-height);
+		position: fixed;
+		bottom: 0;
+		background: var(--color-bg-0);
+		padding: 10px;
 	}
 
 	.keyboard {
-		--gap: 0.2rem;
+		--gap: max(4px);
 		position: relative;
 		display: flex;
 		flex-direction: column;
@@ -157,33 +218,20 @@
 	.keyboard .row {
 		display: flex;
 		justify-content: center;
-		gap: 0.2rem;
+		gap: var(--gap);
 		flex: 1;
 	}
 
 	.keyboard button,
 	.keyboard button:disabled {
-		--size: min(8vw, 4vh, 40px);
-		background-color: white;
+		--size: min(8.8vw, 40px);
+		background-color: var(--color-unguessed);
 		color: black;
 		width: var(--size);
 		border: none;
-		border-radius: 2px;
+		border-radius: 0.2rem;
 		font-size: calc(var(--size) * 0.5);
 		margin: 0;
-	}
-
-	.keyboard button.exact {
-		background: var(--color-theme-2);
-		color: white;
-	}
-
-	.keyboard button.missing {
-		opacity: 0.5;
-	}
-
-	.keyboard button.close {
-		border: 2px solid var(--color-theme-2);
 	}
 
 	.keyboard button:focus {
@@ -194,21 +242,10 @@
 
 	.keyboard button[data-key='enter'],
 	.keyboard button[data-key='backspace'] {
-		position: absolute;
-		bottom: 0;
 		width: calc(1.5 * var(--size));
-		height: calc(1 / 3 * (100% - 2 * var(--gap)));
 		text-transform: uppercase;
 		font-size: calc(0.3 * var(--size));
 		padding-top: calc(0.15 * var(--size));
-	}
-
-	.keyboard button[data-key='enter'] {
-		left: calc(50% + 3.5 * var(--size) + 0.8rem);
-	}
-
-	.keyboard button[data-key='backspace'] {
-		right: calc(50% + 3.5 * var(--size) + 0.8rem);
 	}
 
 	.keyboard button[data-key='enter']:disabled {
@@ -219,7 +256,7 @@
 		width: 100%;
 		padding: 1rem;
 		background: rgba(255, 255, 255, 0.5);
-		border-radius: 2px;
+		border-radius: 0.2rem;
 		border: none;
 	}
 
