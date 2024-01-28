@@ -36,7 +36,11 @@
 						guessOut[letter] = [];
 					}
 
-					if (guessOut[letter][gameIndex] !== 'x') {
+					// If this board has been won, show the letter as missing so it doesn't clutter the
+					// other games. Otherwise update the color if the letter isn't already in the correct spot.
+					if (hints.includes('xxxxx')) {
+						guessOut[letter].splice(gameIndex, 1, '_');
+					} else if (guessOut[letter][gameIndex] !== 'x') {
 						guessOut[letter].splice(gameIndex, 1, hints[guessIndex][letterIndex] as HintValues);
 					}
 				});

@@ -1,11 +1,12 @@
 import { allowed, words } from './words';
 
 export type HintValues = 'x' | 'c' | '_';
+type HintString = `${HintValues}${HintValues}${HintValues}${HintValues}${HintValues}`;
 
 export interface IGameData {
 	numberOfGames: number;
 	guesses: string[];
-	hints: { [index: string]: HintValues[] };
+	hints: { [index: string]: HintString[] };
 	answers: { [index: string]: string | null };
 }
 
@@ -16,7 +17,7 @@ export class Game implements IGameData {
 	numberOfGames: number;
 	wordIndices: { [gameIndex: string]: number };
 	guesses: string[];
-	hints: { [gameIndex: string]: HintValues[] };
+	hints: { [gameIndex: string]: HintString[] };
 	answers: { [gameIndex: string]: string };
 
 	/**
@@ -36,8 +37,8 @@ export class Game implements IGameData {
 				return acc;
 			}, {});
 			this.guesses = guesses ? guesses.split(' ') : [];
-			this.hints = gameIndices.reduce<{ [gameIndex: string]: HintValues[] }>((acc, currentIndex, i) => {
-				acc[currentIndex] = hints[i] ? hints[i].split(',') as HintValues[] : [];
+			this.hints = gameIndices.reduce<{ [gameIndex: string]: HintString[] }>((acc, currentIndex, i) => {
+				acc[currentIndex] = hints[i] ? hints[i].split(',') as HintString[] : [];
 				return acc;
 			}, {});
 		} else {
@@ -46,7 +47,7 @@ export class Game implements IGameData {
 				[`${i}`, Math.floor(Math.random() * words.length)])
 				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
 			this.guesses = Array(numberOfGames + NUMBER_TRIES).fill('');
-			this.hints = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: HintValues[] }>((acc, currentIndex) => {
+			this.hints = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: HintString[] }>((acc, currentIndex) => {
 				acc[currentIndex] = []
 				return acc;
 			}, {});
@@ -72,7 +73,7 @@ export class Game implements IGameData {
 
 		Object.entries(this.answers).forEach(([answerIndex, currentAnswer]) => {
 			const available = Array.from(currentAnswer);
-			const hint = Array(WORD_LENGTH).fill('_');
+			const hint = Array(WORD_LENGTH).fill('_') as HintValues[];
 
 			// first, find exact matches
 			for (let i = 0; i < WORD_LENGTH; i += 1) {
@@ -95,7 +96,7 @@ export class Game implements IGameData {
 				}
 			}
 
-			this.hints[answerIndex].push(hint.join('') as HintValues);
+			this.hints[answerIndex].push(hint.join('') as HintString);
 		});
 
 
