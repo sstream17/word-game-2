@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { NUMBER_TRIES, WORD_LENGTH } from './game';
+	import { NUMBER_TRIES, WORD_LENGTH } from '$lib/types';
 
 	interface IProps {
 		numberOfGames: number;

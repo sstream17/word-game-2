@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { isGameOver } from '$lib/api';
+	import { WORD_LENGTH, type HintValues, type IGameData } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
-	import { NUMBER_TRIES, WORD_LENGTH, type HintValues, type IGameData } from './game';
 
 	interface IProps {
 		data: IGameData;
@@ -146,7 +147,7 @@
 <svelte:window onkeydown={keydown} />
 
 <div class="controls">
-	{#if won || data.hints[0].findLastIndex((guess) => !!guess) >= data.numberOfGames + NUMBER_TRIES - 1}
+	{#if won || isGameOver(data.hints, data.numberOfGames)}
 		{#if !won && data.answers['0']}
 			<p>the answer was "{Object.values(data.answers)}"</p>
 		{/if}

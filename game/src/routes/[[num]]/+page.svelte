@@ -1,10 +1,11 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { base } from '$app/paths';
+	import { WORD_LENGTH } from '$lib/types';
 	import { confetti } from '@neoconfetti/svelte';
 	import Controls from '../Controls.svelte';
 	import GameBoard from '../GameBoard.svelte';
-	import { Game, WORD_LENGTH } from '../game';
+	import { Game } from '../game';
 	import { reduced_motion } from '../reduced-motion';
 	import type { PageData } from './$types';
 

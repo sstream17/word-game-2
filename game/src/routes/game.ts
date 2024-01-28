@@ -1,17 +1,5 @@
+import { NUMBER_TRIES, WORD_LENGTH, type HintString, type HintValues, type IGameData } from '$lib/types';
 import { allowed, words } from './words';
-
-export type HintValues = 'x' | 'c' | '_';
-type HintString = `${HintValues}${HintValues}${HintValues}${HintValues}${HintValues}`;
-
-export interface IGameData {
-	numberOfGames: number;
-	guesses: string[];
-	hints: { [index: string]: HintString[] };
-	answers: { [index: string]: string | null };
-}
-
-export const WORD_LENGTH = 5;
-export const NUMBER_TRIES = 5;
 
 export class Game implements IGameData {
 	numberOfGames: number;
