@@ -48,14 +48,23 @@ export class Game implements IGameData {
 	}
 
 	/**
-	 * Update game state based on a guess of a five-letter word. Returns
-	 * true if the guess was valid, false otherwise
+	 * Validate whether the current guess is in the list of allowed words
+	 * @returns True if the guess was valid, false otherwise
+	 */
+	validate(word: string) {
+		return allowed.has(word);
+	}
+
+	/**
+	 * Update game state based on a guess of a five-letter word
+	 * @returns True if the guess was valid, false otherwise
 	 */
 	enter(letters: string[]) {
 		const word = letters.join('');
-		const valid = allowed.has(word);
 
-		if (!valid) return false;
+		if (!this.validate(word)) {
+			return false;
+		}
 
 		this.guesses[Object.values(this.hints)[0].length] = word;
 
@@ -86,7 +95,6 @@ export class Game implements IGameData {
 
 			this.hints[answerIndex].push(hint.join('') as HintString);
 		});
-
 
 		return true;
 	}

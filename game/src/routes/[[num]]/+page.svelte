@@ -19,6 +19,7 @@
 	const storageKey = `word-game-${numberOfGames}`;
 
 	let badGuess = $state(false);
+	let invalid = $state(false);
 
 	/** Whether or not the user has won */
 	let won = $derived(Object.values(data.hints).every((value) => value.includes('xxxxx')));
@@ -34,10 +35,18 @@
 
 	function update(key: string) {
 		if (badGuess) badGuess = false;
+		if (invalid) invalid = false;
+
 		if (key === 'backspace') {
 			data.guesses[i] = data.guesses[i].slice(0, -1);
 		} else if (currentGuess.length < WORD_LENGTH) {
 			data.guesses[i] += key;
+		}
+
+		// After adding the letter check if the word is long enough and valid
+		if (currentGuess.length === WORD_LENGTH) {
+			const game = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
+			invalid = !game.validate(currentGuess);
 		}
 	}
 
@@ -103,6 +112,7 @@
 				{currentGuess}
 				{hints}
 				{badGuess}
+				{invalid}
 			/>
 		{/each}
 	</div>

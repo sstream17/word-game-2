@@ -6,17 +6,18 @@
 		won: boolean;
 		winIndex: number;
 		badGuess: boolean;
+		invalid: boolean;
 		guesses: string[];
 		currentGuess: string;
 		hints: string[];
 		rowIndex: number;
 	}
 
-	let { numberOfGames, won, winIndex, badGuess, guesses, currentGuess, hints, rowIndex } =
+	let { numberOfGames, won, winIndex, badGuess, invalid, guesses, currentGuess, hints, rowIndex } =
 		$props<IProps>();
 </script>
 
-<div class="grid" class:playing={!won} class:bad-guess={badGuess}>
+<div class="grid" class:playing={!won} class:bad-guess={badGuess} class:invalid>
 	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
@@ -88,6 +89,10 @@
 		filter: drop-shadow(3px 3px 10px var(--color-bg-0));
 	}
 
+	.grid.playing.invalid .row.current .letter {
+		color: var(--color-text-invalid);
+	}
+
 	.letter {
 		aspect-ratio: 1;
 		width: 100%;
@@ -102,7 +107,7 @@
 		border-radius: 2px;
 		background: white;
 		margin: 0;
-		color: rgba(0, 0, 0, 0.7);
+		color: var(--color-text);
 	}
 
 	.letter.missing {
