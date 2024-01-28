@@ -41,6 +41,11 @@
 			data.guesses[i] = data.guesses[i].slice(0, -1);
 		} else if (currentGuess.length < WORD_LENGTH) {
 			data.guesses[i] += key;
+		} else {
+			// The guess is already long enough
+			requestAnimationFrame(() => {
+				badGuess = true;
+			});
 		}
 
 		// After adding the letter check if the word is long enough and valid
@@ -51,9 +56,15 @@
 	}
 
 	function submit() {
+		if (badGuess) badGuess = false;
+
 		const game = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
 
-		badGuess = !game.enter([...currentGuess]);
+		const isBadGuess = !game.enter([...currentGuess]);
+
+		requestAnimationFrame(() => {
+			badGuess = isBadGuess;
+		});
 
 		localStorage.setItem(storageKey, game.toString());
 		invalidateAll();
