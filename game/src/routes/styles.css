@@ -6,7 +6,6 @@
 	--font-mono: 'Fira Mono', monospace;
 	--color-bg-0: rgb(202, 216, 228);
 	--color-bg-1: hsl(209, 36%, 86%);
-	--color-bg-2: hsl(224, 44%, 95%);
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #4075a6;
 	--color-unguessed: #ffffff;
@@ -17,6 +16,8 @@
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
 	--keyboard-height: min(18vh, 10rem);
+	--keyboard-padding: 10px;
+	--keyboard-padding-bottom: calc(3 * var(--keyboard-padding));
 	font-family: var(--font-body);
 	color: var(--color-text);
 }
@@ -30,7 +31,7 @@ body {
 	background-image: radial-gradient(50% 50% at 50% 50%,
 			rgba(255, 255, 255, 0.75) 0%,
 			rgba(255, 255, 255, 0) 100%),
-		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%, var(--color-bg-2) 50%);
+		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%);
 }
 
 h1,
@@ -59,17 +60,6 @@ h1 {
 
 h2 {
 	font-size: 1rem;
-}
-
-pre {
-	font-size: 16px;
-	font-family: var(--font-mono);
-	background-color: rgba(255, 255, 255, 0.45);
-	border-radius: 3px;
-	box-shadow: 2px 2px 6px rgb(255 255 255 / 25%);
-	padding: 0.5em;
-	overflow-x: auto;
-	color: var(--color-text);
 }
 
 .text-column {

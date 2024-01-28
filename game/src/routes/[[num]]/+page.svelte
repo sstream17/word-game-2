@@ -4,7 +4,7 @@
 	import { confetti } from '@neoconfetti/svelte';
 	import Controls from '../Controls.svelte';
 	import GameBoard from '../GameBoard.svelte';
-	import { Game } from '../game';
+	import { Game, WORD_LENGTH } from '../game';
 	import { reduced_motion } from '../reduced-motion';
 	import type { PageData } from './$types';
 
@@ -29,13 +29,13 @@
 	let currentGuess = $derived(data.guesses[i] || '');
 
 	/** Whether the current guess can be submitted */
-	let submittable = $derived(currentGuess.length === 5);
+	let submittable = $derived(currentGuess.length === WORD_LENGTH);
 
 	function update(key: string) {
 		if (badGuess) badGuess = false;
 		if (key === 'backspace') {
 			data.guesses[i] = data.guesses[i].slice(0, -1);
-		} else if (currentGuess.length < 5) {
+		} else if (currentGuess.length < WORD_LENGTH) {
 			data.guesses[i] += key;
 		}
 	}
@@ -158,9 +158,12 @@
 	.boards-container {
 		display: flex;
 		flex-direction: column;
+		justify-content: center;
 		flex: 1;
 		width: 100%;
 		gap: 1rem;
-		margin-bottom: calc(var(--keyboard-height) + 20px);
+		margin-bottom: calc(
+			var(--keyboard-height) + var(--keyboard-padding) + var(--keyboard-padding-bottom)
+		);
 	}
 </style>

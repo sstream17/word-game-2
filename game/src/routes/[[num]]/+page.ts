@@ -1,5 +1,5 @@
 import type { PageLoad } from './$types';
-import { Game } from '../game';
+import { Game, NUMBER_TRIES } from '../game';
 
 export const load = (({ params }) => {
 	const numberOfGames = Math.max(1, Math.min(+(params.num ?? 1), 4));
@@ -28,7 +28,7 @@ export const load = (({ params }) => {
 		/**
 		 * The correct answer, revealed if the game is over
 		 */
-		answers: game.guesses.findLastIndex((guess) => (!!guess)) >= game.numberOfGames + 5
+		answers: game.hints[0].findLastIndex((guess) => !!guess) >= game.numberOfGames + NUMBER_TRIES - 1
 			? game.answers
 			: Object.keys(game.wordIndices).reduce<{ [gameIndex: string]: null }>((acc, currentIndex) => {
 				acc[currentIndex] = null

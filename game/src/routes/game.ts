@@ -9,6 +9,9 @@ export interface IGameData {
 	answers: { [index: string]: string | null };
 }
 
+export const WORD_LENGTH = 5;
+export const NUMBER_TRIES = 5;
+
 export class Game implements IGameData {
 	numberOfGames: number;
 	wordIndices: { [gameIndex: string]: number };
@@ -42,7 +45,7 @@ export class Game implements IGameData {
 			this.wordIndices = Array.from({ length: numberOfGames }, (_, i) =>
 				[`${i}`, Math.floor(Math.random() * words.length)])
 				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-			this.guesses = Array(numberOfGames + 5).fill('');
+			this.guesses = Array(numberOfGames + NUMBER_TRIES).fill('');
 			this.hints = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: HintValues[] }>((acc, currentIndex) => {
 				acc[currentIndex] = []
 				return acc;
@@ -69,10 +72,10 @@ export class Game implements IGameData {
 
 		Object.entries(this.answers).forEach(([answerIndex, currentAnswer]) => {
 			const available = Array.from(currentAnswer);
-			const hint = Array(5).fill('_');
+			const hint = Array(WORD_LENGTH).fill('_');
 
 			// first, find exact matches
-			for (let i = 0; i < 5; i += 1) {
+			for (let i = 0; i < WORD_LENGTH; i += 1) {
 				if (letters[i] === available[i]) {
 					hint[i] = 'x';
 					available[i] = ' ';
@@ -82,7 +85,7 @@ export class Game implements IGameData {
 			// then find close matches (this has to happen
 			// in a second step, otherwise an early close
 			// match can prevent a later exact match)
-			for (let i = 0; i < 5; i += 1) {
+			for (let i = 0; i < WORD_LENGTH; i += 1) {
 				if (hint[i] === '_') {
 					const index = available.indexOf(letters[i]);
 					if (index !== -1) {

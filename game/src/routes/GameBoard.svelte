@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { NUMBER_TRIES, WORD_LENGTH } from './game';
+
 	interface IProps {
 		numberOfGames: number;
 		won: boolean;
@@ -15,12 +17,12 @@
 </script>
 
 <div class="grid" class:playing={!won} class:bad-guess={badGuess}>
-	{#each { length: numberOfGames + 5 } as _, row (row)}
+	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
 		<div class="row" class:current>
 			{#if !won || (won && row <= winIndex)}
-				{#each { length: 5 } as _, column (column)}
+				{#each { length: WORD_LENGTH } as _, column (column)}
 					{@const guess = !won && current ? currentGuess : guesses[row]}
 					{@const answer = hints[row]?.[column]}
 					{@const value = guess?.[column] ?? ''}
@@ -45,7 +47,7 @@
 					</div>
 				{/each}
 			{:else}
-				{#each { length: 5 } as _, column (column)}
+				{#each { length: WORD_LENGTH } as _, column (column)}
 					<div class="letter missing">
 						<span class="visually-hidden"> empty </span>
 						<input name="guess" disabled type="hidden" />
