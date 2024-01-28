@@ -23,7 +23,7 @@ export class Game implements IGameData {
 	/**
 	 * Create a game object from the player's cookie, or initialise a new game
 	 */
-	constructor(serialized: string | undefined = undefined, numberOfGames: number = 1) {
+	constructor(serialized: string | undefined = undefined, numberOfGames = 1) {
 		if (serialized) {
 			const [gameIndicesPacked, wordIndicesPacked, guesses, hintsPacked] = serialized.split('-');
 
