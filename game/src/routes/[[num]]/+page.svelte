@@ -183,7 +183,8 @@
 
 	.boards-container {
 		display: flex;
-		flex-direction: column;
+		flex-wrap: wrap;
+		flex-direction: row;
 		justify-content: center;
 		flex: 1;
 		width: 100%;

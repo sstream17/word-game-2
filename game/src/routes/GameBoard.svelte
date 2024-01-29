@@ -61,12 +61,11 @@
 
 <style>
 	.grid {
-		--width: min(100vw, 40vh, 380px);
+		--width: 47%;
 		max-width: var(--width);
 		align-self: center;
-		justify-self: center;
-		width: 100%;
-		height: 100%;
+		width: 35vh;
+		max-height: 50%;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
@@ -77,6 +76,8 @@
 		grid-template-columns: repeat(5, 1fr);
 		grid-gap: 0.2rem;
 		margin: 0 0 0.2rem 0;
+		flex-basis: 3vh;
+		flex-shrink: 2;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
@@ -87,6 +88,11 @@
 
 	.grid.playing .row.current {
 		filter: drop-shadow(3px 3px 10px var(--color-bg-0));
+		flex-basis: 4vh;
+	}
+
+	.grid .row.current .letter {
+		font-size: 4vw;
 	}
 
 	.grid.playing.invalid .row.current .letter {
@@ -94,7 +100,6 @@
 	}
 
 	.letter {
-		aspect-ratio: 1;
 		width: 100%;
 		display: flex;
 		align-items: center;
@@ -103,7 +108,7 @@
 		box-sizing: border-box;
 		text-transform: lowercase;
 		border: none;
-		font-size: calc(0.08 * var(--width));
+		font-size: 3vw;
 		border-radius: 2px;
 		background: white;
 		margin: 0;
@@ -121,6 +126,16 @@
 
 	.letter.close {
 		background: var(--color-close);
+	}
+
+	@media screen and (min-width: 680px) {
+		.letter {
+			font-size: 3vh;
+		}
+
+		.grid .row.current .letter {
+			font-size: 4vh;
+		}
 	}
 
 	@keyframes wiggle {
