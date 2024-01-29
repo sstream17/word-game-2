@@ -43,9 +43,7 @@
 			data.guesses[i] += key;
 		} else {
 			// The guess is already long enough
-			requestAnimationFrame(() => {
-				badGuess = true;
-			});
+			triedBadGuess();
 		}
 
 		// After adding the letter check if the word is long enough and valid
@@ -56,18 +54,18 @@
 	}
 
 	function submit() {
-		if (badGuess) badGuess = false;
-
 		const game = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
 
 		const isBadGuess = !game.enter([...currentGuess]);
 
-		requestAnimationFrame(() => {
-			badGuess = isBadGuess;
-		});
-
 		localStorage.setItem(storageKey, game.toString());
-		invalidateAll();
+
+		if (!isBadGuess) {
+			invalidateAll();
+			return;
+		}
+
+		triedBadGuess();
 	}
 
 	function restart() {
@@ -76,7 +74,13 @@
 	}
 
 	function triedBadGuess() {
-		badGuess = true;
+		// Set bad guess to false, then set it to true on the next frame.
+		// This allows the animation to be run consecutively.
+		if (badGuess) badGuess = false;
+
+		requestAnimationFrame(() => {
+			badGuess = true;
+		});
 	}
 
 	function handleKey(event: any) {
