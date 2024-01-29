@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { base } from '$app/paths';
+	import { WORD_LENGTH } from '$lib/types';
 	import { confetti } from '@neoconfetti/svelte';
 	import Controls from '../Controls.svelte';
 	import GameBoard from '../GameBoard.svelte';
@@ -18,6 +19,7 @@
 	const storageKey = `word-game-${numberOfGames}`;
 
 	let badGuess = $state(false);
+	let invalid = $state(false);
 
 	/** Whether or not the user has won */
 	let won = $derived(Object.values(data.hints).every((value) => value.includes('xxxxx')));
@@ -29,24 +31,41 @@
 	let currentGuess = $derived(data.guesses[i] || '');
 
 	/** Whether the current guess can be submitted */
-	let submittable = $derived(currentGuess.length === 5);
+	let submittable = $derived(currentGuess.length === WORD_LENGTH);
 
 	function update(key: string) {
 		if (badGuess) badGuess = false;
+		if (invalid) invalid = false;
+
 		if (key === 'backspace') {
 			data.guesses[i] = data.guesses[i].slice(0, -1);
-		} else if (currentGuess.length < 5) {
+		} else if (currentGuess.length < WORD_LENGTH) {
 			data.guesses[i] += key;
+		} else {
+			// The guess is already long enough
+			triedBadGuess();
+		}
+
+		// After adding the letter check if the word is long enough and valid
+		if (currentGuess.length === WORD_LENGTH) {
+			const game = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
+			invalid = !game.validate(currentGuess);
 		}
 	}
 
 	function submit() {
 		const game = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
 
-		badGuess = !game.enter([...currentGuess]);
+		const isBadGuess = !game.enter([...currentGuess]);
 
 		localStorage.setItem(storageKey, game.toString());
-		invalidateAll();
+
+		if (!isBadGuess) {
+			invalidateAll();
+			return;
+		}
+
+		triedBadGuess();
 	}
 
 	function restart() {
@@ -55,7 +74,13 @@
 	}
 
 	function triedBadGuess() {
-		badGuess = true;
+		// Set bad guess to false, then set it to true on the next frame.
+		// This allows the animation to be run consecutively.
+		if (badGuess) badGuess = false;
+
+		requestAnimationFrame(() => {
+			badGuess = true;
+		});
 	}
 
 	function handleKey(event: any) {
@@ -102,6 +127,7 @@
 				{currentGuess}
 				{hints}
 				{badGuess}
+				{invalid}
 			/>
 		{/each}
 	</div>
@@ -157,10 +183,14 @@
 
 	.boards-container {
 		display: flex;
-		flex-direction: column;
+		flex-wrap: wrap;
+		flex-direction: row;
+		justify-content: center;
 		flex: 1;
 		width: 100%;
 		gap: 1rem;
-		margin-bottom: calc(var(--keyboard-height) + 20px);
+		margin-bottom: calc(
+			var(--keyboard-height) + var(--keyboard-padding) + var(--keyboard-padding-bottom)
+		);
 	}
 </style>

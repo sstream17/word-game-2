@@ -1,0 +1,1 @@
+export { isGameOver } from "./isGameOver";

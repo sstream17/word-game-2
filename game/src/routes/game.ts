@@ -1,25 +1,17 @@
+import { NUMBER_TRIES, WORD_LENGTH, type HintString, type HintValues, type IGameData } from '$lib/types';
 import { allowed, words } from './words';
-
-export type HintValues = 'x' | 'c' | '_';
-
-export interface IGameData {
-	numberOfGames: number;
-	guesses: string[];
-	hints: { [index: string]: HintValues[] };
-	answers: { [index: string]: string | null };
-}
 
 export class Game implements IGameData {
 	numberOfGames: number;
 	wordIndices: { [gameIndex: string]: number };
 	guesses: string[];
-	hints: { [gameIndex: string]: HintValues[] };
+	hints: { [gameIndex: string]: HintString[] };
 	answers: { [gameIndex: string]: string };
 
 	/**
 	 * Create a game object from the player's cookie, or initialise a new game
 	 */
-	constructor(serialized: string | undefined = undefined, numberOfGames: number = 1) {
+	constructor(serialized: string | undefined = undefined, numberOfGames = 1) {
 		if (serialized) {
 			const [gameIndicesPacked, wordIndicesPacked, guesses, hintsPacked] = serialized.split('-');
 
@@ -33,8 +25,8 @@ export class Game implements IGameData {
 				return acc;
 			}, {});
 			this.guesses = guesses ? guesses.split(' ') : [];
-			this.hints = gameIndices.reduce<{ [gameIndex: string]: HintValues[] }>((acc, currentIndex, i) => {
-				acc[currentIndex] = hints[i] ? hints[i].split(',') as HintValues[] : [];
+			this.hints = gameIndices.reduce<{ [gameIndex: string]: HintString[] }>((acc, currentIndex, i) => {
+				acc[currentIndex] = hints[i] ? hints[i].split(',') as HintString[] : [];
 				return acc;
 			}, {});
 		} else {
@@ -42,8 +34,8 @@ export class Game implements IGameData {
 			this.wordIndices = Array.from({ length: numberOfGames }, (_, i) =>
 				[`${i}`, Math.floor(Math.random() * words.length)])
 				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-			this.guesses = Array(numberOfGames + 5).fill('');
-			this.hints = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: HintValues[] }>((acc, currentIndex) => {
+			this.guesses = Array(numberOfGames + NUMBER_TRIES).fill('');
+			this.hints = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: HintString[] }>((acc, currentIndex) => {
 				acc[currentIndex] = []
 				return acc;
 			}, {});
@@ -56,23 +48,32 @@ export class Game implements IGameData {
 	}
 
 	/**
-	 * Update game state based on a guess of a five-letter word. Returns
-	 * true if the guess was valid, false otherwise
+	 * Validate whether the current guess is in the list of allowed words
+	 * @returns True if the guess was valid, false otherwise
+	 */
+	validate(word: string) {
+		return allowed.has(word);
+	}
+
+	/**
+	 * Update game state based on a guess of a five-letter word
+	 * @returns True if the guess was valid, false otherwise
 	 */
 	enter(letters: string[]) {
 		const word = letters.join('');
-		const valid = allowed.has(word);
 
-		if (!valid) return false;
+		if (!this.validate(word)) {
+			return false;
+		}
 
 		this.guesses[Object.values(this.hints)[0].length] = word;
 
 		Object.entries(this.answers).forEach(([answerIndex, currentAnswer]) => {
 			const available = Array.from(currentAnswer);
-			const hint = Array(5).fill('_');
+			const hint = Array(WORD_LENGTH).fill('_') as HintValues[];
 
 			// first, find exact matches
-			for (let i = 0; i < 5; i += 1) {
+			for (let i = 0; i < WORD_LENGTH; i += 1) {
 				if (letters[i] === available[i]) {
 					hint[i] = 'x';
 					available[i] = ' ';
@@ -82,7 +83,7 @@ export class Game implements IGameData {
 			// then find close matches (this has to happen
 			// in a second step, otherwise an early close
 			// match can prevent a later exact match)
-			for (let i = 0; i < 5; i += 1) {
+			for (let i = 0; i < WORD_LENGTH; i += 1) {
 				if (hint[i] === '_') {
 					const index = available.indexOf(letters[i]);
 					if (index !== -1) {
@@ -92,9 +93,8 @@ export class Game implements IGameData {
 				}
 			}
 
-			this.hints[answerIndex].push(hint.join('') as HintValues);
+			this.hints[answerIndex].push(hint.join('') as HintString);
 		});
-
 
 		return true;
 	}

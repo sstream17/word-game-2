@@ -1,26 +1,29 @@
 <script lang="ts">
+	import { NUMBER_TRIES, WORD_LENGTH } from '$lib/types';
+
 	interface IProps {
 		numberOfGames: number;
 		won: boolean;
 		winIndex: number;
 		badGuess: boolean;
+		invalid: boolean;
 		guesses: string[];
 		currentGuess: string;
 		hints: string[];
 		rowIndex: number;
 	}
 
-	let { numberOfGames, won, winIndex, badGuess, guesses, currentGuess, hints, rowIndex } =
+	let { numberOfGames, won, winIndex, badGuess, invalid, guesses, currentGuess, hints, rowIndex } =
 		$props<IProps>();
 </script>
 
-<div class="grid" class:playing={!won} class:bad-guess={badGuess}>
-	{#each { length: numberOfGames + 5 } as _, row (row)}
+<div class="grid" class:playing={!won} class:bad-guess={badGuess} class:invalid>
+	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
 		<div class="row" class:current>
 			{#if !won || (won && row <= winIndex)}
-				{#each { length: 5 } as _, column (column)}
+				{#each { length: WORD_LENGTH } as _, column (column)}
 					{@const guess = !won && current ? currentGuess : guesses[row]}
 					{@const answer = hints[row]?.[column]}
 					{@const value = guess?.[column] ?? ''}
@@ -45,7 +48,7 @@
 					</div>
 				{/each}
 			{:else}
-				{#each { length: 5 } as _, column (column)}
+				{#each { length: WORD_LENGTH } as _, column (column)}
 					<div class="letter missing">
 						<span class="visually-hidden"> empty </span>
 						<input name="guess" disabled type="hidden" />
@@ -58,12 +61,11 @@
 
 <style>
 	.grid {
-		--width: min(100vw, 40vh, 380px);
+		--width: 47%;
 		max-width: var(--width);
 		align-self: center;
-		justify-self: center;
-		width: 100%;
-		height: 100%;
+		width: 35vh;
+		max-height: 50%;
 		display: flex;
 		flex-direction: column;
 		justify-content: flex-start;
@@ -74,6 +76,8 @@
 		grid-template-columns: repeat(5, 1fr);
 		grid-gap: 0.2rem;
 		margin: 0 0 0.2rem 0;
+		flex-basis: 3vh;
+		flex-shrink: 2;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
@@ -84,10 +88,18 @@
 
 	.grid.playing .row.current {
 		filter: drop-shadow(3px 3px 10px var(--color-bg-0));
+		flex-basis: 4vh;
+	}
+
+	.grid .row.current .letter {
+		font-size: 4vw;
+	}
+
+	.grid.playing.invalid .row.current .letter {
+		color: var(--color-text-invalid);
 	}
 
 	.letter {
-		aspect-ratio: 1;
 		width: 100%;
 		display: flex;
 		align-items: center;
@@ -96,11 +108,11 @@
 		box-sizing: border-box;
 		text-transform: lowercase;
 		border: none;
-		font-size: calc(0.08 * var(--width));
+		font-size: 3vw;
 		border-radius: 2px;
 		background: white;
 		margin: 0;
-		color: rgba(0, 0, 0, 0.7);
+		color: var(--color-text);
 	}
 
 	.letter.missing {
@@ -114,6 +126,16 @@
 
 	.letter.close {
 		background: var(--color-close);
+	}
+
+	@media screen and (min-width: 680px) {
+		.letter {
+			font-size: 3vh;
+		}
+
+		.grid .row.current .letter {
+			font-size: 4vh;
+		}
 	}
 
 	@keyframes wiggle {

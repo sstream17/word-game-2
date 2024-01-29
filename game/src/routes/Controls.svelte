@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { isGameOver } from '$lib/api';
+	import { WORD_LENGTH, type HintValues, type IGameData } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
-	import type { HintValues, IGameData } from './game';
 
 	interface IProps {
 		data: IGameData;
@@ -27,7 +28,7 @@
 			}
 
 			return data.guesses.reduce((guessOut: Record<string, HintValues[]>, guess, guessIndex) => {
-				if (guess.length !== 5 || !hints[guessIndex]) {
+				if (guess.length !== WORD_LENGTH || !hints[guessIndex]) {
 					return output;
 				}
 
@@ -36,7 +37,11 @@
 						guessOut[letter] = [];
 					}
 
-					if (guessOut[letter][gameIndex] !== 'x') {
+					// If this board has been won, show the letter as missing so it doesn't clutter the
+					// other games. Otherwise update the color if the letter isn't already in the correct spot.
+					if (hints.includes('xxxxx')) {
+						guessOut[letter].splice(gameIndex, 1, '_');
+					} else if (guessOut[letter][gameIndex] !== 'x') {
 						guessOut[letter].splice(gameIndex, 1, hints[guessIndex][letterIndex] as HintValues);
 					}
 				});
@@ -80,6 +85,7 @@
 		data.hints['0'].reduce((acc: Record<string, string>, answer, i) => {
 			const guess = data.guesses[i];
 
+			// Skip replacing this magic number
 			for (let i = 0; i < 5; i += 1) {
 				const letter = guess[i];
 
@@ -141,7 +147,7 @@
 <svelte:window onkeydown={keydown} />
 
 <div class="controls">
-	{#if won || data.guesses.findLastIndex((guess) => !!guess) >= data.numberOfGames + 5}
+	{#if won || isGameOver(data.hints, data.numberOfGames)}
 		{#if !won && data.answers['0']}
 			<p>the answer was "{Object.values(data.answers)}"</p>
 		{/if}
@@ -179,12 +185,8 @@
 				{#each 'zxcvbnm' as key}
 					{@render letter(key)}
 				{/each}
-				<button
-					on:click|preventDefault={update}
-					data-key="enter"
-					name="key"
-					class:selected={submittable}
-					disabled={!submittable}>enter</button
+				<button on:click|preventDefault={update} data-key="enter" name="key" disabled={!submittable}
+					>enter</button
 				>
 			</div>
 		</div>
@@ -193,26 +195,29 @@
 
 <style>
 	.selected {
-		outline: 2px solid var(--color-theme-1);
+		outline: 2px solid black;
 	}
 
 	.controls {
 		text-align: center;
 		justify-content: center;
 		height: var(--keyboard-height);
+		width: 100%;
 		position: fixed;
 		bottom: 0;
 		background: var(--color-bg-0);
-		padding: 10px;
+		padding: var(--keyboard-padding) var(--keyboard-padding) var(--keyboard-padding-bottom)
+			var(--keyboard-padding);
 	}
 
 	.keyboard {
-		--gap: max(4px);
+		--gap: 4px;
 		position: relative;
 		display: flex;
 		flex-direction: column;
 		gap: var(--gap);
 		height: 100%;
+		width: 100%;
 	}
 
 	.keyboard .row {
@@ -235,9 +240,7 @@
 	}
 
 	.keyboard button:focus {
-		background: var(--color-theme-1);
-		color: white;
-		outline: none;
+		outline: 2px solid black;
 	}
 
 	.keyboard button[data-key='enter'],
@@ -253,7 +256,7 @@
 	}
 
 	.restart {
-		width: 100%;
+		width: 75%;
 		padding: 1rem;
 		background: rgba(255, 255, 255, 0.5);
 		border-radius: 0.2rem;
