@@ -165,7 +165,7 @@
 					on:click|preventDefault={update}
 					data-key={key}
 					style="background: {getBackgroundForLetter(classnames, key)}"
-					disabled={submittable}
+					aria-disabled={submittable}
 					name="key"
 					value={key}
 					aria-label="{key} {description[key] || ''}"
@@ -189,8 +189,11 @@
 				{#each 'zxcvbnm' as key}
 					{@render letter(key)}
 				{/each}
-				<button on:click|preventDefault={update} data-key="enter" name="key" disabled={!submittable}
-					>enter</button
+				<button
+					on:click|preventDefault={update}
+					data-key="enter"
+					name="key"
+					aria-disabled={!submittable}>enter</button
 				>
 			</div>
 		</div>
@@ -229,8 +232,7 @@
 		flex: 1;
 	}
 
-	.keyboard button,
-	.keyboard button:disabled {
+	.keyboard button {
 		--size: min(8.8vw, 40px);
 		background-color: var(--color-unguessed);
 		color: black;
@@ -253,7 +255,7 @@
 		padding-top: calc(0.15 * var(--size));
 	}
 
-	.keyboard button[data-key='enter']:disabled {
+	.keyboard button[data-key='enter'][aria-disabled='true'] {
 		opacity: 0.5;
 	}
 
