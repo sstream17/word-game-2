@@ -161,7 +161,7 @@
 					on:click|preventDefault={update}
 					data-key={key}
 					style="background: {getBackgroundForLetter(classnames, key)}"
-					disabled={submittable}
+					aria-disabled={submittable}
 					name="key"
 					value={key}
 					aria-label="{key} {description[key] || ''}"
