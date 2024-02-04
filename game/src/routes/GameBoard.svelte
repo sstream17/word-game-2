@@ -109,8 +109,8 @@
 	}
 
 	.letter.missing {
-		background: rgba(255, 255, 255, 0.5);
-		color: rgba(0, 0, 0, 0.5);
+		background: var(--color-mising);
+		color: var(--color-text-missing);
 	}
 
 	.letter.exact {
