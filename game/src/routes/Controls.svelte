@@ -42,6 +42,10 @@
 					if (hints.includes('xxxxx')) {
 						guessOut[letter].splice(gameIndex, 1, '_');
 					} else if (guessOut[letter][gameIndex] !== 'x') {
+						if (guessOut[letter][gameIndex] === 'c' && hints[guessIndex][letterIndex] === '_') {
+							return;
+						}
+
 						guessOut[letter].splice(gameIndex, 1, hints[guessIndex][letterIndex] as HintValues);
 					}
 				});
