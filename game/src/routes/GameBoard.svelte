@@ -87,6 +87,7 @@
 
 	.game .row.current .letter {
 		height: 6vh;
+		font-size: 1.4rem;
 	}
 
 	.game.playing.invalid .row.current .letter {
