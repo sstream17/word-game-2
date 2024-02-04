@@ -17,14 +17,13 @@
 	--column-width: 42rem;
 	--column-margin-top: 4rem;
 	--keyboard-height: min(18vh, 10rem);
-	--keyboard-padding: 10px;
-	--keyboard-padding-bottom: calc(3 * var(--keyboard-padding));
+	--keyboard-padding-bottom: 8vw;
 	font-family: var(--font-body);
 	color: var(--color-text);
 }
 
 body {
-	min-height: 100vh;
+	overflow-y: hidden;
 	margin: 0;
 	background-attachment: fixed;
 	background-color: var(--color-bg-1);
