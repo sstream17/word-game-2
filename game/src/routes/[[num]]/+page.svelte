@@ -151,7 +151,7 @@
 <style>
 	.form {
 		width: 100%;
-		height: 100%;
+		max-height: calc(100svh - 2rem);
 		display: flex;
 		flex-direction: column;
 		align-items: center;
@@ -186,11 +186,10 @@
 		flex-wrap: wrap;
 		flex-direction: row;
 		justify-content: center;
+		align-items: center;
 		flex: 1;
+		overflow-y: auto;
 		width: 100%;
 		gap: 1rem;
-		margin-bottom: calc(
-			var(--keyboard-height) + var(--keyboard-padding) + var(--keyboard-padding-bottom)
-		);
 	}
 </style>

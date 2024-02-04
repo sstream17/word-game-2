@@ -202,12 +202,10 @@
 		text-align: center;
 		justify-content: center;
 		height: var(--keyboard-height);
+		padding-bottom: var(--keyboard-padding-bottom);
 		width: 100%;
-		position: fixed;
-		bottom: 0;
 		background: var(--color-bg-0);
-		padding: var(--keyboard-padding) var(--keyboard-padding) var(--keyboard-padding-bottom)
-			var(--keyboard-padding);
+		flex-shrink: 0;
 	}
 
 	.keyboard {
