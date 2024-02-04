@@ -42,6 +42,10 @@
 					if (hints.includes('xxxxx')) {
 						guessOut[letter].splice(gameIndex, 1, '_');
 					} else if (guessOut[letter][gameIndex] !== 'x') {
+						if (guessOut[letter][gameIndex] === 'c' && hints[guessIndex][letterIndex] === '_') {
+							return;
+						}
+
 						guessOut[letter].splice(gameIndex, 1, hints[guessIndex][letterIndex] as HintValues);
 					}
 				});
@@ -53,28 +57,23 @@
 
 	function getBackgroundForLetter(colors: Record<string, HintValues[]>, letter: string) {
 		const letterColors = colors[letter];
-		let quad1Color = 'var(--color-unguessed)';
-		let quad2Color = 'var(--color-unguessed)';
-		let quad3Color = 'var(--color-unguessed)';
-		let quad4Color = 'var(--color-unguessed)';
-		if (letterColors?.length === 1) {
-			quad1Color = colorMap[letterColors[0]];
-			quad2Color = colorMap[letterColors[0]];
-			quad3Color = colorMap[letterColors[0]];
-			quad4Color = colorMap[letterColors[0]];
-		} else if (letterColors?.length === 2) {
-			quad1Color = colorMap[letterColors[1]];
-			quad2Color = colorMap[letterColors[0]];
-			quad3Color = colorMap[letterColors[0]];
-			quad4Color = colorMap[letterColors[1]];
-		} else if (letterColors?.length == 4) {
-			quad1Color = colorMap[letterColors[1]];
-			quad2Color = colorMap[letterColors[0]];
-			quad3Color = colorMap[letterColors[2]];
-			quad4Color = colorMap[letterColors[3]];
-		}
 
-		return `conic-gradient(${quad1Color} 0deg,${quad1Color} 90deg,${quad4Color} 90deg,${quad4Color} 180deg,${quad3Color} 180deg,${quad3Color} 270deg,${quad2Color} 270deg,${quad2Color} 360deg);`;
+		if (letterColors?.length === 1) {
+			return `--quadrant1-color: ${colorMap[letterColors[0]]};
+				--quadrant2-color: ${colorMap[letterColors[0]]};
+				--quadrant3-color: ${colorMap[letterColors[0]]};
+				--quadrant4-color: ${colorMap[letterColors[0]]};`;
+		} else if (letterColors?.length === 2) {
+			return `--quadrant1-color: ${colorMap[letterColors[1]]};
+				--quadrant2-color: ${colorMap[letterColors[0]]};
+				--quadrant3-color: ${colorMap[letterColors[0]]};
+				--quadrant4-color: ${colorMap[letterColors[1]]};`;
+		} else if (letterColors?.length == 4) {
+			return `--quadrant1-color: ${colorMap[letterColors[1]]};
+				--quadrant2-color: ${colorMap[letterColors[0]]};
+				--quadrant3-color: ${colorMap[letterColors[2]]};
+				--quadrant4-color: ${colorMap[letterColors[3]]};`;
+		}
 	}
 
 	/**
@@ -160,8 +159,8 @@
 				<button
 					on:click|preventDefault={update}
 					data-key={key}
-					style="background: {getBackgroundForLetter(classnames, key)}"
-					disabled={submittable}
+					style={getBackgroundForLetter(classnames, key)}
+					aria-disabled={submittable}
 					name="key"
 					value={key}
 					aria-label="{key} {description[key] || ''}"
@@ -185,8 +184,11 @@
 				{#each 'zxcvbnm' as key}
 					{@render letter(key)}
 				{/each}
-				<button on:click|preventDefault={update} data-key="enter" name="key" disabled={!submittable}
-					>enter</button
+				<button
+					on:click|preventDefault={update}
+					data-key="enter"
+					name="key"
+					aria-disabled={!submittable}>enter</button
 				>
 			</div>
 		</div>
@@ -202,12 +204,10 @@
 		text-align: center;
 		justify-content: center;
 		height: var(--keyboard-height);
+		padding-bottom: var(--keyboard-padding-bottom);
 		width: 100%;
-		position: fixed;
-		bottom: 0;
 		background: var(--color-bg-0);
-		padding: var(--keyboard-padding) var(--keyboard-padding) var(--keyboard-padding-bottom)
-			var(--keyboard-padding);
+		flex-shrink: 0;
 	}
 
 	.keyboard {
@@ -227,10 +227,23 @@
 		flex: 1;
 	}
 
-	.keyboard button,
-	.keyboard button:disabled {
+	.keyboard button {
+		--_quadrant1-color: var(--quadrant1-color, var(--color-unguessed));
+		--_quadrant2-color: var(--quadrant2-color, var(--color-unguessed));
+		--_quadrant3-color: var(--quadrant3-color, var(--color-unguessed));
+		--_quadrant4-color: var(--quadrant4-color, var(--color-unguessed));
+		background: conic-gradient(
+			var(--_quadrant1-color) 0deg,
+			var(--_quadrant1-color) 90deg,
+			var(--_quadrant4-color) 90deg,
+			var(--_quadrant4-color) 180deg,
+			var(--_quadrant3-color) 180deg,
+			var(--_quadrant3-color) 270deg,
+			var(--_quadrant2-color) 270deg,
+			var(--_quadrant2-color) 360deg
+		);
+
 		--size: min(8.8vw, 40px);
-		background-color: var(--color-unguessed);
 		color: black;
 		width: var(--size);
 		border: none;
@@ -251,7 +264,7 @@
 		padding-top: calc(0.15 * var(--size));
 	}
 
-	.keyboard button[data-key='enter']:disabled {
+	.keyboard button[data-key='enter'][aria-disabled='true'] {
 		opacity: 0.5;
 	}
 
