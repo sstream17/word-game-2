@@ -132,7 +132,7 @@
 		{/each}
 	</div>
 
-	<Controls on:key={handleKey} {data} {won} {submittable} />
+	<Controls on:key={handleKey} {data} {won} {submittable} {invalid} />
 </div>
 
 {#if won}
