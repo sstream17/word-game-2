@@ -14,7 +14,10 @@
 	const colorMap = {
 		_: 'var(--color-mising)',
 		c: 'var(--color-close)',
-		x: 'var(--color-exact)'
+		x: 'var(--color-exact)',
+		_Border: 'var(--color-mising)',
+		cBorder: 'var(--color-close-border)',
+		xBorder: 'var(--color-exact)',
 	};
 
 	/**
@@ -62,17 +65,30 @@
 			return `--quadrant1-color: ${colorMap[letterColors[0]]};
 				--quadrant2-color: ${colorMap[letterColors[0]]};
 				--quadrant3-color: ${colorMap[letterColors[0]]};
-				--quadrant4-color: ${colorMap[letterColors[0]]};`;
+				--quadrant4-color: ${colorMap[letterColors[0]]};
+				--quadrant1-color-border: ${colorMap[`${letterColors[0]}Border`]};
+				--quadrant2-color-border: ${colorMap[`${letterColors[0]}Border`]};
+				--quadrant3-color-border: ${colorMap[`${letterColors[0]}Border`]};
+				--quadrant4-color-border: ${colorMap[`${letterColors[0]}Border`]};`;
 		} else if (letterColors?.length === 2) {
 			return `--quadrant1-color: ${colorMap[letterColors[1]]};
 				--quadrant2-color: ${colorMap[letterColors[0]]};
 				--quadrant3-color: ${colorMap[letterColors[0]]};
-				--quadrant4-color: ${colorMap[letterColors[1]]};`;
+				--quadrant4-color: ${colorMap[letterColors[1]]};
+				--quadrant1-color-border: ${colorMap[`${letterColors[1]}Border`]};
+				--quadrant2-color-border: ${colorMap[`${letterColors[0]}Border`]};
+				--quadrant3-color-border: ${colorMap[`${letterColors[0]}Border`]};
+				--quadrant4-color-border: ${colorMap[`${letterColors[1]}Border`]};`;
+				
 		} else if (letterColors?.length == 4) {
 			return `--quadrant1-color: ${colorMap[letterColors[1]]};
 				--quadrant2-color: ${colorMap[letterColors[0]]};
 				--quadrant3-color: ${colorMap[letterColors[2]]};
-				--quadrant4-color: ${colorMap[letterColors[3]]};`;
+				--quadrant4-color: ${colorMap[letterColors[3]]};
+				--quadrant1-color-border: ${colorMap[`${letterColors[1]}Border`]};
+				--quadrant2-color-border: ${colorMap[`${letterColors[0]}Border`]};
+				--quadrant3-color-border: ${colorMap[`${letterColors[2]}Border`]};
+				--quadrant4-color-border: ${colorMap[`${letterColors[3]}Border`]};`;
 		}
 	}
 
@@ -232,6 +248,10 @@
 		--_quadrant2-color: var(--quadrant2-color, var(--color-unguessed));
 		--_quadrant3-color: var(--quadrant3-color, var(--color-unguessed));
 		--_quadrant4-color: var(--quadrant4-color, var(--color-unguessed));
+		--_quadrant1-color-border: var(--quadrant1-color-border, var(--color-unguessed));
+		--_quadrant2-color-border: var(--quadrant2-color-border, var(--color-unguessed));
+		--_quadrant3-color-border: var(--quadrant3-color-border, var(--color-unguessed));
+		--_quadrant4-color-border: var(--quadrant4-color-border, var(--color-unguessed));
 		background: conic-gradient(
 			var(--_quadrant1-color) 0deg,
 			var(--_quadrant1-color) 90deg,
@@ -241,12 +261,21 @@
 			var(--_quadrant3-color) 270deg,
 			var(--_quadrant2-color) 270deg,
 			var(--_quadrant2-color) 360deg
-		);
+		) padding-box, conic-gradient(
+			var(--_quadrant1-color-border) 0deg,
+			var(--_quadrant1-color-border) 90deg,
+			var(--_quadrant4-color-border) 90deg,
+			var(--_quadrant4-color-border) 180deg,
+			var(--_quadrant3-color-border) 180deg,
+			var(--_quadrant3-color-border) 270deg,
+			var(--_quadrant2-color-border) 270deg,
+			var(--_quadrant2-color-border) 360deg
+		) border-box;
+		border: 2px solid transparent;
 
 		--size: min(8.8vw, 40px);
 		color: black;
 		width: var(--size);
-		border: none;
 		border-radius: 0.2rem;
 		font-size: calc(var(--size) * 0.5);
 		margin: 0;

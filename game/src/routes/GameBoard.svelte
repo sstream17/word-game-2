@@ -101,6 +101,7 @@
 		justify-content: center;
 		text-align: center;
 		text-transform: lowercase;
+		box-sizing: border-box;
 		border: none;
 		border-radius: 2px;
 		background: white;
@@ -119,6 +120,7 @@
 
 	.letter.close {
 		background: var(--color-close);
+		border: 2px solid var(--color-close-border);
 	}
 
 	@keyframes wiggle {
