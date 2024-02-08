@@ -108,31 +108,33 @@
 	<meta name="description" content="A Wordle clone written in SvelteKit" />
 </svelte:head>
 
-<h1 class="visually-hidden">Sverdle</h1>
+<div class="wrapper">
+	<h1 class="visually-hidden">Sverdle</h1>
 
-<div class="form">
-	<a class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
+	<div class="form">
+		<a class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
 
-	<div class="boards-container">
-		{#each { length: numberOfGames } as _, game (game)}
-			{@const hints = data.hints[game]}
-			{@const winIndex = hints.findIndex((hint) => hint === 'xxxxx')}
-			{@const thisBoardWon = winIndex !== -1}
-			<GameBoard
-				rowIndex={i}
-				{numberOfGames}
-				won={thisBoardWon}
-				{winIndex}
-				guesses={data.guesses}
-				{currentGuess}
-				{hints}
-				{badGuess}
-				{invalid}
-			/>
-		{/each}
+		<div class="boards-container">
+			{#each { length: numberOfGames } as _, game (game)}
+				{@const hints = data.hints[game]}
+				{@const winIndex = hints.findIndex((hint) => hint === 'xxxxx')}
+				{@const thisBoardWon = winIndex !== -1}
+				<GameBoard
+					rowIndex={i}
+					{numberOfGames}
+					won={thisBoardWon}
+					{winIndex}
+					guesses={data.guesses}
+					{currentGuess}
+					{hints}
+					{badGuess}
+					{invalid}
+				/>
+			{/each}
+		</div>
+
+		<Controls on:key={handleKey} {data} {won} {submittable} {invalid} />
 	</div>
-
-	<Controls on:key={handleKey} {data} {won} {submittable} />
 </div>
 
 {#if won}
@@ -149,6 +151,10 @@
 {/if}
 
 <style>
+	.wrapper {
+		padding: 16px;
+	}
+
 	.form {
 		width: 100%;
 		max-height: calc(100svh - 2rem);
