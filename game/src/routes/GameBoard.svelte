@@ -94,8 +94,30 @@
 		color: var(--color-text-invalid);
 	}
 
+	.game.playing.invalid .row.current .letter::after,
+	.game.playing.invalid .row.current .letter::before {
+		height: inherit;
+		width: 50%;
+		background-size: 4px 130%;
+		content: '';
+		position: absolute;
+	}
+
+	.game.playing.invalid .row.current .letter::before {
+		top: -2px;
+		background-image: linear-gradient(45deg, var(--color-text-invalid) 35%, transparent 0),
+			linear-gradient(-45deg, var(--color-text-invalid) 35%, transparent 0);
+	}
+
+	.game.playing.invalid .row.current .letter::after {
+		top: 0px;
+		background-image: linear-gradient(45deg, white 35%, transparent 0),
+			linear-gradient(-45deg, white 35%, transparent 0);
+	}
+
 	.letter {
 		height: 4vh;
+		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
