@@ -180,6 +180,7 @@
 			{#snippet letter(key)}
 				<button
 					on:click|preventDefault={update}
+					class="letter"
 					data-key={key}
 					style={getBackgroundForLetter(classnames, key)}
 					aria-disabled={submittable}
@@ -190,18 +191,24 @@
 					{key}
 				</button>
 			{/snippet}
-			{#each ['qwertyuiop', 'asdfghjkl'] as row}
-				<div class="row">
-					{#each row as key}
-						{@render letter(key)}
-					{/each}
-				</div>
-			{/each}
 
-			<!-- Separating out last row so back and enter buttons can be placed here -->
+			<div class="row">
+				{#each 'qwertyuiop' as key}
+					{@render letter(key)}
+				{/each}
+			</div>
+
+			<div class="row">
+				<div class="spacer" />
+				{#each 'asdfghjkl' as key}
+					{@render letter(key)}
+				{/each}
+				<div class="spacer" />
+			</div>
+
 			<div class="row">
 				<button on:click|preventDefault={update} data-key="backspace" name="key" value="backspace">
-					back
+					<img src="back_icon.svg" alt="backspace" />
 				</button>
 				{#each 'zxcvbnm' as key}
 					{@render letter(key)}
@@ -210,8 +217,10 @@
 					on:click|preventDefault={update}
 					data-key="enter"
 					name="key"
-					aria-disabled={!submittable || invalid}>enter</button
+					aria-disabled={!submittable || invalid}
 				>
+					<img src="send_icon.svg" alt="enter" />
+				</button>
 			</div>
 		</div>
 	{/if}
@@ -223,8 +232,12 @@
 	}
 
 	.controls {
+		align-self: flex-end;
 		text-align: center;
+		display: flex;
+		flex-direction: column;
 		justify-content: center;
+		align-items: center;
 		height: var(--keyboard-height);
 		padding-bottom: var(--keyboard-padding-bottom);
 		width: 100%;
@@ -239,17 +252,34 @@
 		flex-direction: column;
 		gap: var(--gap);
 		height: 100%;
-		width: 100%;
+		width: calc(100% - 16px);
 	}
 
 	.keyboard .row {
 		display: flex;
 		justify-content: center;
 		gap: var(--gap);
+		width: 100%;
 		flex: 1;
 	}
 
 	.keyboard button {
+		background: var(--color-unguessed);
+		color: black;
+		border-radius: 0.2rem;
+		margin: 0;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border: none;
+		padding: 0;
+	}
+
+	.keyboard button img {
+		pointer-events: none;
+	}
+
+	.keyboard .letter {
 		--_quadrant1-color: var(--quadrant1-color, var(--color-unguessed));
 		--_quadrant2-color: var(--quadrant2-color, var(--color-unguessed));
 		--_quadrant3-color: var(--quadrant3-color, var(--color-unguessed));
@@ -283,12 +313,11 @@
 				border-box;
 		border: 2px solid transparent;
 
-		--size: min(8.8vw, 40px);
-		color: black;
-		width: var(--size);
-		border-radius: 0.2rem;
-		font-size: calc(var(--size) * 0.5);
-		margin: 0;
+		flex: 1;
+	}
+
+	.keyboard .spacer {
+		flex: 0.5;
 	}
 
 	.keyboard button:focus {
@@ -297,10 +326,8 @@
 
 	.keyboard button[data-key='enter'],
 	.keyboard button[data-key='backspace'] {
-		width: calc(1.5 * var(--size));
 		text-transform: uppercase;
-		font-size: calc(0.3 * var(--size));
-		padding-top: calc(0.15 * var(--size));
+		flex: 1.6;
 	}
 
 	.keyboard button[data-key='enter'][aria-disabled='true'] {

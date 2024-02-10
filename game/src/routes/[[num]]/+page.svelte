@@ -110,10 +110,9 @@
 
 <div class="wrapper">
 	<h1 class="visually-hidden">Sverdle</h1>
+	<a class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
 
 	<div class="form">
-		<a class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
-
 		<div class="boards-container">
 			{#each { length: numberOfGames } as _, game (game)}
 				{@const hints = data.hints[game]}
@@ -151,19 +150,16 @@
 {/if}
 
 <style>
-	.wrapper {
-		padding: 16px;
-	}
-
 	.form {
 		width: 100%;
 		max-height: calc(100svh - 2rem);
+		max-width: 768px;
+		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
 		gap: 1rem;
-		flex: 1;
 	}
 
 	.how-to-play {
@@ -193,9 +189,9 @@
 		flex-direction: row;
 		justify-content: center;
 		align-items: center;
-		flex: 1;
 		overflow-y: auto;
 		width: 100%;
 		gap: 1rem;
+		flex-basis: 100svh;
 	}
 </style>
