@@ -5,6 +5,7 @@
 	import { confetti } from '@neoconfetti/svelte';
 	import Controls from '../Controls.svelte';
 	import GameBoard from '../GameBoard.svelte';
+	import ThemeToggle from '../ThemeToggle.svelte';
 	import { Game } from '../game';
 	import { reduced_motion } from '../reduced-motion';
 	import type { PageData } from './$types';
@@ -111,6 +112,7 @@
 <div class="wrapper">
 	<h1 class="visually-hidden">Sverdle</h1>
 	<a class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
+	<ThemeToggle />
 
 	<div class="form">
 		<div class="boards-container">
