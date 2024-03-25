@@ -239,6 +239,7 @@
 		justify-content: center;
 		align-items: center;
 		height: var(--keyboard-height);
+		padding-top: 1rem;
 		padding-bottom: var(--keyboard-padding-bottom);
 		width: 100%;
 		background: var(--color-bg-0);

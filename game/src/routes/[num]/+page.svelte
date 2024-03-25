@@ -159,7 +159,6 @@
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-		gap: 1rem;
 	}
 
 	.how-to-play {
@@ -193,5 +192,6 @@
 		width: 100%;
 		gap: 1rem;
 		flex-basis: 100svh;
+		padding: 0.5rem 0;
 	}
 </style>
