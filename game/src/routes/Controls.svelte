@@ -273,6 +273,7 @@
 		align-items: center;
 		border: none;
 		padding: 0;
+		font-size: var(--letter-size);
 	}
 
 	.keyboard button img {

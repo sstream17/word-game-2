@@ -87,7 +87,7 @@
 
 	.game .row.current .letter {
 		height: 6vh;
-		font-size: 1.4rem;
+		font-size: calc(var(--letter-size) * 1.15);
 	}
 
 	.game.playing.invalid .row.current .letter {
@@ -129,6 +129,7 @@
 		background: white;
 		margin: 0;
 		color: var(--color-text);
+		font-size: var(--letter-size);
 	}
 
 	.letter.missing {
