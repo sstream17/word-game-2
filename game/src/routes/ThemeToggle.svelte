@@ -1,16 +1,15 @@
 <script lang="ts">
 	import type { Theme } from '$lib/types';
+	import { getContext } from 'svelte';
 
-	let currentTheme = $state(
-		typeof localStorage === 'undefined' ? '' : localStorage.getItem('theme')
-	);
+	const currentTheme = getContext('theme') as { theme: Theme };
 
-	$effect(() => {
-		currentTheme = localStorage.getItem('theme');
-	});
+	console.log(currentTheme.theme);
 
 	function update(event: MouseEvent) {
 		const newTheme = (event.target as HTMLButtonElement).getAttribute('data-theme') as Theme;
+
+		currentTheme.theme = newTheme;
 
 		if (newTheme === 'dark') {
 			window.document.body.classList.add('dark');
@@ -22,7 +21,7 @@
 </script>
 
 {#each [['light', 'Light'], ['dark', 'Dark'], ['system', 'System']] as [dataId, label]}
-	<button data-theme={dataId} on:click={update} class:current={currentTheme === dataId}>
+	<button data-theme={dataId} on:click={update} class:current={currentTheme.theme === dataId}>
 		{label}
 	</button>
 {/each}
