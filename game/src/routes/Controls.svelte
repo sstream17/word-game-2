@@ -266,7 +266,7 @@
 
 	.keyboard button {
 		background: var(--color-unguessed);
-		color: black;
+		color: var(--color-text);
 		border-radius: 0.2rem;
 		margin: 0;
 		display: flex;

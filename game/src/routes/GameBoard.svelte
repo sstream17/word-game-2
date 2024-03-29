@@ -111,8 +111,8 @@
 
 	.game.playing.invalid .row.current .letter::after {
 		top: 0px;
-		background-image: linear-gradient(45deg, white 35%, transparent 0),
-			linear-gradient(-45deg, white 35%, transparent 0);
+		background-image: linear-gradient(45deg, var(--color-unguessed) 35%, transparent 0),
+			linear-gradient(-45deg, var(--color-unguessed) 35%, transparent 0);
 	}
 
 	.letter {
@@ -126,7 +126,7 @@
 		box-sizing: border-box;
 		border: none;
 		border-radius: 2px;
-		background: white;
+		background: var(--color-unguessed);
 		margin: 0;
 		color: var(--color-text);
 		font-size: var(--letter-size);
@@ -139,6 +139,7 @@
 
 	.letter.exact {
 		background: var(--color-exact);
+		color: var(--color-text-exact);
 	}
 
 	.letter.close {

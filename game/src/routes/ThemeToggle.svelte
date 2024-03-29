@@ -4,19 +4,9 @@
 
 	const currentTheme = getContext('theme') as { theme: Theme };
 
-	console.log(currentTheme.theme);
-
 	function update(event: MouseEvent) {
 		const newTheme = (event.target as HTMLButtonElement).getAttribute('data-theme') as Theme;
-
 		currentTheme.theme = newTheme;
-
-		if (newTheme === 'dark') {
-			window.document.body.classList.add('dark');
-			return;
-		}
-
-		window.document.body.classList.remove('dark');
 	}
 </script>
 
