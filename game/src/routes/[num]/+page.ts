@@ -1,3 +1,4 @@
+import { browser } from '$app/environment';
 import { isGameOver } from '$lib/api';
 import { Game } from '../game';
 import type { PageLoad } from './$types';
@@ -5,7 +6,8 @@ import type { PageLoad } from './$types';
 export const load = (({ params }) => {
 	const numberOfGames = Math.max(1, Math.min(+(params.num ?? 1), 4));
 	const storageKey = `word-game-${numberOfGames}`;
-	const initialState = typeof localStorage === 'undefined' ? '' : localStorage.getItem(storageKey) ?? '';
+
+	const initialState = browser ? localStorage.getItem(storageKey) ?? '' : '';
 
 	const game = new Game(initialState, numberOfGames);
 

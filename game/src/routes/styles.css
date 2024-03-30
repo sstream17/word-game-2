@@ -13,6 +13,8 @@
 	--color-bg-grad-1: rgba(255, 255, 255, 0);
 	--color-bg-0: #cad8e4;
 	--color-bg-1: #cedce8;
+	--color-menu-bg: hsl(0, 0%, 95%);
+	--color-shadow: #00000080;
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #4075a6;
 	--color-unguessed: #ffffff;
@@ -25,18 +27,22 @@
 	--color-text-exact: #000000de;
 	--color-text-invalid: #f33e48;
 	--color-focus-ring: black;
-	--keyboard-height: min(18vh, 10rem);
+	--keyboard-height: min(18vh, 160px);
 	--keyboard-padding-bottom: 8vw;
 	--letter-size: 1.4rem;
+	--key-size: 20px;
 	font-family: var(--font-body);
 	color: var(--color-text);
 }
 
 :root:has(.app.dark) {
+	color-scheme: dark;
 	--color-bg-grad-0: rgba(29, 33, 36, 0.749);
 	--color-bg-grad-1: rgba(255, 255, 255, 0);
 	--color-bg-0: hsl(208, 33%, 9%);
 	--color-bg-1: hsl(208, 36%, 11%);
+	--color-menu-bg: hsl(208, 20%, 22%);
+	--color-shadow: #000000f0;
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #4075a6;
 	--color-unguessed: hsl(208, 20%, 17%);
@@ -49,7 +55,6 @@
 	--color-text-exact: #000000de;
 	--color-text-invalid: hsl(357, 60%, 60%);
 	--color-focus-ring: white;
-	color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -58,6 +63,8 @@
 		--color-bg-grad-1: rgba(255, 255, 255, 0);
 		--color-bg-0: hsl(208, 33%, 9%);
 		--color-bg-1: hsl(208, 36%, 11%);
+		--color-menu-bg: hsl(208, 20%, 22%);
+		--color-shadow: #000000f0;
 		--color-theme-1: #ff3e00;
 		--color-theme-2: #4075a6;
 		--color-unguessed: hsl(208, 20%, 17%);
@@ -73,10 +80,13 @@
 	}
 
 	:root:has(.app.light) {
+		color-scheme: light;
 		--color-bg-grad-0: rgba(255, 255, 255, 0.75);
 		--color-bg-grad-1: rgba(255, 255, 255, 0);
 		--color-bg-0: #cad8e4;
 		--color-bg-1: #cedce8;
+		--color-menu-bg: hsl(0, 0%, 95%);
+		--color-shadow: #00000080;
 		--color-theme-1: #ff3e00;
 		--color-theme-2: #4075a6;
 		--color-unguessed: #ffffff;
@@ -89,7 +99,6 @@
 		--color-text-exact: #000000de;
 		--color-text-invalid: #f33e48;
 		--color-focus-ring: black;
-		color-scheme: light;
 	}
 }
 
@@ -102,6 +111,10 @@ body {
 			var(--color-bg-grad-0) 0%,
 			var(--color-bg-grad-1) 100%),
 		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%);
+}
+
+li[role="menuitem"] {
+	list-style: none;
 }
 
 h1,

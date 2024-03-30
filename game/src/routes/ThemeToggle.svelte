@@ -12,7 +12,9 @@
 </script>
 
 {#each [['light', 'Light'], ['dark', 'Dark'], ['system', 'System']] as [dataId, label]}
-	<button data-theme={dataId} on:click={update} class:current={currentTheme.theme === dataId}>
-		{label}
-	</button>
+	<li role="menuitem">
+		<button data-theme={dataId} on:click={update} class:current={currentTheme.theme === dataId}>
+			{label}
+		</button>
+	</li>
 {/each}

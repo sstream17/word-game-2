@@ -1,11 +1,9 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { base } from '$app/paths';
 	import { WORD_LENGTH } from '$lib/types';
 	import { confetti } from '@neoconfetti/svelte';
 	import Controls from '../Controls.svelte';
 	import GameBoard from '../GameBoard.svelte';
-	import ThemeToggle from '../ThemeToggle.svelte';
 	import { Game } from '../game';
 	import { reduced_motion } from '../reduced-motion';
 	import type { PageData } from './$types';
@@ -111,8 +109,6 @@
 
 <div class="wrapper">
 	<h1 class="visually-hidden">Sverdle</h1>
-	<a class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
-	<ThemeToggle />
 
 	<div class="form">
 		<div class="boards-container">
@@ -154,34 +150,14 @@
 <style>
 	.form {
 		width: 100%;
-		max-height: calc(100svh - 2rem);
+		/* 100% of view height - 24px for menu button - 32px for menu padding */
+		max-height: calc(100svh - 24px - 32px);
 		max-width: 768px;
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
 		align-items: center;
 		justify-content: center;
-	}
-
-	.how-to-play {
-		color: var(--color-text);
-	}
-
-	.how-to-play::before {
-		content: 'i';
-		display: inline-block;
-		font-size: 0.8em;
-		font-weight: 900;
-		width: 1em;
-		height: 1em;
-		padding: 0.2em;
-		line-height: 1;
-		border: 1.5px solid var(--color-text);
-		border-radius: 50%;
-		text-align: center;
-		margin: 0 0.5em 0 0;
-		position: relative;
-		top: -0.05em;
 	}
 
 	.boards-container {
@@ -192,8 +168,8 @@
 		align-items: center;
 		overflow-y: auto;
 		width: 100%;
-		gap: 1rem;
+		gap: 16px;
 		flex-basis: 100svh;
-		padding: 0.5rem 0;
+		padding: 8px 0;
 	}
 </style>

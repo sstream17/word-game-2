@@ -74,13 +74,14 @@
 		width: var(--game-width);
 		display: flex;
 		flex-direction: column;
+		font-size: var(--letter-size);
 	}
 
 	.game .row {
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
-		grid-gap: 0.2rem;
-		margin: 0 0 0.2rem 0;
+		grid-gap: 4px;
+		margin: 0 0 4px 0;
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
@@ -90,13 +91,14 @@
 	}
 
 	.game.playing .row.current {
-		filter: drop-shadow(3px 3px 10px var(--color-bg-0));
+		filter: drop-shadow(0px 8px 8px var(--color-shadow));
 		flex-basis: 4vh;
+		z-index: 1;
 	}
 
 	.game .row.current .letter {
 		height: 6vh;
-		font-size: calc(var(--letter-size) * 1.15);
+		font-size: 1.15em;
 	}
 
 	.game.playing.invalid .row.current .letter {
@@ -138,7 +140,6 @@
 		background-color: var(--color-unguessed);
 		margin: 0;
 		color: var(--color-text);
-		font-size: var(--letter-size);
 	}
 
 	.letter.missing {

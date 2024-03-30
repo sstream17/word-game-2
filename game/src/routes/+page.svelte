@@ -34,7 +34,8 @@
 	.card {
 		width: 40vw;
         padding: 24px 0;
-		background-color: var(--color-unguessed);
+		background-color: var(--color-menu-bg);
+		filter: drop-shadow(4px 4px 8px var(--color-shadow));
 		border-radius: 8px;
 		display: flex;
 		flex-direction: column;
