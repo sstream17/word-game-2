@@ -6,12 +6,25 @@
 	import Menu from './Menu.svelte';
 	import './styles.css';
 
-	const initialTheme = browser ? (localStorage.getItem('theme') as Theme) ?? 'system' : 'system';
+	const initialTheme = browser
+		? (localStorage.getItem('theme') as Theme) ?? 'system-theme'
+		: 'system-theme';
 	const theme = createThemeState(initialTheme);
 	setContext('theme', theme);
 </script>
 
-<div class={`app ${theme.theme}`}>
+<svelte:head>
+	<script>
+		// Required to set the theme before the rest of the page loads.
+		// Prevents flashing one theme then switching to another.
+		if (document) {
+			const theme = localStorage.getItem('theme');
+			document.documentElement.classList.add(theme);
+		}
+	</script>
+</svelte:head>
+
+<div class="app">
 	<main>
 		<Menu />
 		<slot />

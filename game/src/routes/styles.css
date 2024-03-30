@@ -35,7 +35,7 @@
 	color: var(--color-text);
 }
 
-:root:has(.app.dark) {
+:root.dark-theme {
 	color-scheme: dark;
 	--color-bg-grad-0: rgba(29, 33, 36, 0.749);
 	--color-bg-grad-1: rgba(255, 255, 255, 0);
@@ -79,7 +79,7 @@
 		--color-focus-ring: white;
 	}
 
-	:root:has(.app.light) {
+	:root.light-theme {
 		color-scheme: light;
 		--color-bg-grad-0: rgba(255, 255, 255, 0.75);
 		--color-bg-grad-1: rgba(255, 255, 255, 0);
