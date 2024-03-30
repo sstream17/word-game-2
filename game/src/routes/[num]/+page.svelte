@@ -14,7 +14,7 @@
 		data: PageData;
 	}
 
-	let { data } = $props<IProps>();
+	let { data }: IProps = $props();
 
 	const numberOfGames = data.numberOfGames;
 	const storageKey = `word-game-${numberOfGames}`;

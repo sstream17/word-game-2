@@ -7,6 +7,7 @@
 	function update(event: MouseEvent) {
 		const newTheme = (event.target as HTMLButtonElement).getAttribute('data-theme') as Theme;
 		currentTheme.theme = newTheme;
+		localStorage.setItem('theme', newTheme);
 	}
 </script>
 

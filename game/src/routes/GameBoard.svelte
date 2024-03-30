@@ -13,8 +13,17 @@
 		rowIndex: number;
 	}
 
-	let { numberOfGames, won, winIndex, badGuess, invalid, guesses, currentGuess, hints, rowIndex } =
-		$props<IProps>();
+	let {
+		numberOfGames,
+		won,
+		winIndex,
+		badGuess,
+		invalid,
+		guesses,
+		currentGuess,
+		hints,
+		rowIndex
+	}: IProps = $props();
 </script>
 
 <div class="game" class:playing={!won} class:bad-guess={badGuess} class:invalid>
@@ -126,24 +135,24 @@
 		box-sizing: border-box;
 		border: none;
 		border-radius: 2px;
-		background: var(--color-unguessed);
+		background-color: var(--color-unguessed);
 		margin: 0;
 		color: var(--color-text);
 		font-size: var(--letter-size);
 	}
 
 	.letter.missing {
-		background: var(--color-mising);
+		background-color: var(--color-mising);
 		color: var(--color-text-missing);
 	}
 
 	.letter.exact {
-		background: var(--color-exact);
+		background-color: var(--color-exact);
 		color: var(--color-text-exact);
 	}
 
 	.letter.close {
-		background: var(--color-close);
+		background-color: var(--color-close);
 		border: 2px solid var(--color-close-border);
 	}
 

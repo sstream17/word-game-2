@@ -20,15 +20,36 @@
 	--color-close: #f0e442;
 	--color-close-border: #a89f2e;
 	--color-exact: #56b4e9;
-	--color-text: #000000b3;
+	--color-text: #000000de;
 	--color-text-missing: #00000080;
-	--color-text-exact: #000000b3;
+	--color-text-exact: #000000de;
 	--color-text-invalid: #f33e48;
+	--color-focus-ring: black;
 	--keyboard-height: min(18vh, 10rem);
 	--keyboard-padding-bottom: 8vw;
 	--letter-size: 1.4rem;
 	font-family: var(--font-body);
 	color: var(--color-text);
+}
+
+:root:has(.app.dark) {
+	--color-bg-grad-0: rgba(29, 33, 36, 0.749);
+	--color-bg-grad-1: rgba(255, 255, 255, 0);
+	--color-bg-0: hsl(208, 33%, 9%);
+	--color-bg-1: hsl(208, 36%, 11%);
+	--color-theme-1: #ff3e00;
+	--color-theme-2: #4075a6;
+	--color-unguessed: hsl(208, 20%, 17%);
+	--color-mising: hsl(208, 30%, 13%);
+	--color-close: hsl(208, 25%, 30%);
+	--color-close-border: hsl(56, 50%, 60%);
+	--color-exact: hsl(202, 40%, 63%);
+	--color-text: #ffffffde;
+	--color-text-missing: #ffffffb3;
+	--color-text-exact: #000000de;
+	--color-text-invalid: hsl(357, 60%, 60%);
+	--color-focus-ring: white;
+	color-scheme: dark;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -44,10 +65,31 @@
 		--color-close: hsl(208, 25%, 30%);
 		--color-close-border: hsl(56, 50%, 60%);
 		--color-exact: hsl(202, 40%, 63%);
-		--color-text: #ffffffb3;
+		--color-text: #ffffffde;
 		--color-text-missing: #ffffffb3;
-		--color-text-exact: #000000b3;
+		--color-text-exact: #000000de;
 		--color-text-invalid: hsl(357, 60%, 60%);
+		--color-focus-ring: white;
+	}
+
+	:root:has(.app.light) {
+		--color-bg-grad-0: rgba(255, 255, 255, 0.75);
+		--color-bg-grad-1: rgba(255, 255, 255, 0);
+		--color-bg-0: #cad8e4;
+		--color-bg-1: #cedce8;
+		--color-theme-1: #ff3e00;
+		--color-theme-2: #4075a6;
+		--color-unguessed: #ffffff;
+		--color-mising: #e6edf3;
+		--color-close: #f0e442;
+		--color-close-border: #a89f2e;
+		--color-exact: #56b4e9;
+		--color-text: #000000de;
+		--color-text-missing: #00000080;
+		--color-text-exact: #000000de;
+		--color-text-invalid: #f33e48;
+		--color-focus-ring: black;
+		color-scheme: light;
 	}
 }
 

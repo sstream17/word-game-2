@@ -16,7 +16,7 @@
 		invalid: boolean;
 	}
 
-	let { data, won, submittable, invalid } = $props<IProps>();
+	let { data, won, submittable, invalid }: IProps = $props();
 
 	const colorMap = {
 		_: 'var(--color-mising)',
@@ -208,7 +208,11 @@
 
 			<div class="row">
 				<button on:click|preventDefault={update} data-key="backspace" name="key" value="backspace">
-					<img src="back_icon.svg" alt="backspace" />
+					<svg height="24" viewBox="0 -960 960 960" width="24">
+						<path
+							d="M360-200q-20 0-37.5-9T294-234L120-480l174-246q11-16 28.5-25t37.5-9h400q33 0 56.5 23.5T840-680v400q0 33-23.5 56.5T760-200H360Zm400-80v-400 400Zm-400 0h400v-400H360L218-480l142 200Zm96-40 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Z"
+						/>
+					</svg>
 				</button>
 				{#each 'zxcvbnm' as key}
 					{@render letter(key)}
@@ -219,7 +223,11 @@
 					name="key"
 					aria-disabled={!submittable || invalid}
 				>
-					<img src="send_icon.svg" alt="enter" />
+					<svg height="24" viewBox="0 -960 960 960" width="24">
+						<path
+							d="M120-160v-640l760 320-760 320Zm80-120 474-200-474-200v140l240 60-240 60v140Zm0 0v-400 400Z"
+						/>
+					</svg>
 				</button>
 			</div>
 		</div>
@@ -228,7 +236,7 @@
 
 <style>
 	.selected {
-		outline: 2px solid black;
+		outline: 2px solid var(--color-focus-ring);
 	}
 
 	.controls {
@@ -242,7 +250,7 @@
 		padding-top: 1rem;
 		padding-bottom: var(--keyboard-padding-bottom);
 		width: 100%;
-		background: var(--color-bg-0);
+		background-color: var(--color-bg-0);
 		flex-shrink: 0;
 	}
 
@@ -265,7 +273,7 @@
 	}
 
 	.keyboard button {
-		background: var(--color-unguessed);
+		background-color: var(--color-unguessed);
 		color: var(--color-text);
 		border-radius: 0.2rem;
 		margin: 0;
@@ -277,8 +285,9 @@
 		font-size: var(--letter-size);
 	}
 
-	.keyboard button img {
+	.keyboard button svg {
 		pointer-events: none;
+		fill: var(--color-text);
 	}
 
 	.keyboard .letter {
@@ -323,7 +332,7 @@
 	}
 
 	.keyboard button:focus {
-		outline: 2px solid black;
+		outline: 2px solid var(--color-focus-ring);
 	}
 
 	.keyboard button[data-key='enter'],
@@ -339,15 +348,14 @@
 	.restart {
 		width: 75%;
 		padding: 1rem;
-		background: rgba(255, 255, 255, 0.5);
+		background-color: var(--color-unguessed);
 		border-radius: 0.2rem;
 		border: none;
 	}
 
 	.restart:focus,
 	.restart:hover {
-		background: var(--color-theme-1);
-		color: white;
+		background-color: var(--color-theme-1);
 		outline: none;
 	}
 </style>

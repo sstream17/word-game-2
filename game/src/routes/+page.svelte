@@ -34,7 +34,7 @@
 	.card {
 		width: 40vw;
         padding: 24px 0;
-		background: white;
+		background-color: var(--color-unguessed);
 		border-radius: 8px;
 		display: flex;
 		flex-direction: column;
@@ -54,6 +54,6 @@
 	.fake-game {
 		aspect-ratio: 1;
 		width: 45%;
-		background: var(--color-bg-0);
+		background-color: var(--color-bg-0);
 	}
 </style>
