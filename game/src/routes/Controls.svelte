@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { isGameOver } from '$lib/api';
+	import Icon from '$lib/components/Icon.svelte';
 	import { WORD_LENGTH, type HintValues, type IGameData } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
 
@@ -16,7 +17,7 @@
 		invalid: boolean;
 	}
 
-	let { data, won, submittable, invalid } = $props<IProps>();
+	let { data, won, submittable, invalid }: IProps = $props();
 
 	const colorMap = {
 		_: 'var(--color-mising)',
@@ -208,7 +209,8 @@
 
 			<div class="row">
 				<button on:click|preventDefault={update} data-key="backspace" name="key" value="backspace">
-					<img src="back_icon.svg" alt="backspace" />
+					<span class="visually-hidden">backspace</span>
+					<Icon path="back_icon.svg#icon_path" />
 				</button>
 				{#each 'zxcvbnm' as key}
 					{@render letter(key)}
@@ -219,7 +221,8 @@
 					name="key"
 					aria-disabled={!submittable || invalid}
 				>
-					<img src="send_icon.svg" alt="enter" />
+					<span class="visually-hidden">enter</span>
+					<Icon path="send_icon.svg#icon_path" />
 				</button>
 			</div>
 		</div>
@@ -228,7 +231,7 @@
 
 <style>
 	.selected {
-		outline: 2px solid black;
+		outline: 2px solid var(--color-focus-ring);
 	}
 
 	.controls {
@@ -239,9 +242,10 @@
 		justify-content: center;
 		align-items: center;
 		height: var(--keyboard-height);
+		padding-top: 16px;
 		padding-bottom: var(--keyboard-padding-bottom);
 		width: 100%;
-		background: var(--color-bg-0);
+		background-color: var(--color-bg-0);
 		flex-shrink: 0;
 	}
 
@@ -264,19 +268,16 @@
 	}
 
 	.keyboard button {
-		background: var(--color-unguessed);
-		color: black;
-		border-radius: 0.2rem;
+		background-color: var(--color-unguessed);
+		color: var(--color-text);
+		border-radius: 4px;
 		margin: 0;
 		display: flex;
 		justify-content: center;
 		align-items: center;
 		border: none;
 		padding: 0;
-	}
-
-	.keyboard button img {
-		pointer-events: none;
+		font-size: var(--key-size);
 	}
 
 	.keyboard .letter {
@@ -321,7 +322,7 @@
 	}
 
 	.keyboard button:focus {
-		outline: 2px solid black;
+		outline: 2px solid var(--color-focus-ring);
 	}
 
 	.keyboard button[data-key='enter'],
@@ -336,16 +337,15 @@
 
 	.restart {
 		width: 75%;
-		padding: 1rem;
-		background: rgba(255, 255, 255, 0.5);
-		border-radius: 0.2rem;
+		padding: 16px;
+		background-color: var(--color-unguessed);
+		border-radius: 4px;
 		border: none;
 	}
 
 	.restart:focus,
 	.restart:hover {
-		background: var(--color-theme-1);
-		color: white;
+		background-color: var(--color-theme-1);
 		outline: none;
 	}
 </style>
