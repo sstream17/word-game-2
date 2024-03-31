@@ -13,7 +13,7 @@
 	--color-bg-grad-1: rgba(255, 255, 255, 0);
 	--color-bg-0: #cad8e4;
 	--color-bg-1: #cedce8;
-	--color-menu-bg: hsl(0, 0%, 95%);
+	--color-menu-bg: #ffffff;
 	--color-shadow: #00000080;
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #4075a6;
@@ -85,7 +85,7 @@
 		--color-bg-grad-1: rgba(255, 255, 255, 0);
 		--color-bg-0: #cad8e4;
 		--color-bg-1: #cedce8;
-		--color-menu-bg: hsl(0, 0%, 95%);
+		--color-menu-bg: #ffffff;
 		--color-shadow: #00000080;
 		--color-theme-1: #ff3e00;
 		--color-theme-2: #4075a6;
@@ -113,8 +113,14 @@ body {
 		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%);
 }
 
-li[role="menuitem"] {
+ul[role="menu"] {
 	list-style: none;
+	padding: 0;
+	outline: none;
+}
+
+ul[role="menu"]:has(li[role='menuitem']:hover) li[role='menuitem'].focused:not(:hover) {
+	outline: none;
 }
 
 h1,

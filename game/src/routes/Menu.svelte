@@ -1,15 +1,119 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import MenuItem from './MenuItem.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 
+	const listIds = ['how-to-play', 'light-theme', 'dark-theme', 'system-theme'];
+
 	let isOpen = $state(false);
+	let activeDescendant: string | undefined = $state(undefined);
+
+	let menuRef: HTMLUListElement;
+
+	/**
+	 * Open and focus on the menu, and set visual focus to the first item
+	 */
+	function openMenu() {
+		isOpen = true;
+		activeDescendant = listIds[0];
+		menuRef.focus();
+	}
+
+	/**
+	 * Close the menu and clear the focus
+	 */
+	function closeMenu() {
+		isOpen = false;
+		activeDescendant = undefined;
+	}
 
 	function toggleMenu() {
-		isOpen = !isOpen;
+		isOpen ? closeMenu() : openMenu();
+	}
+
+	function handleBlur(event: FocusEvent) {
+		const { currentTarget, relatedTarget } = event;
+
+		// `currentTarget.contains()` is a function
+		// @ts-ignore
+		if (!currentTarget?.contains(relatedTarget)) {
+			closeMenu();
+		}
+	}
+
+	function getNextItem(activeDescendant: string | undefined, list: string[], direction: 1 | -1) {
+		const currentIndex = list.findIndex((item) => item === activeDescendant);
+
+		if (currentIndex === -1) {
+			return list[0];
+		}
+
+		const length = list.length;
+		const newIndex = (currentIndex + (direction % length) + length) % length;
+		return list[newIndex];
+	}
+
+	function findFocusableElement(
+		activeDescendant: string | undefined
+	): HTMLButtonElement | HTMLAnchorElement | null {
+		const clickedItem = activeDescendant ? document.getElementById(activeDescendant) : undefined;
+
+		if (!clickedItem) {
+			return null;
+		}
+
+		return clickedItem.querySelector('button, [href]');
+	}
+
+	function handleKeyDown(event: KeyboardEvent) {
+		const { key } = event;
+
+		switch (key.toUpperCase()) {
+			case ' ':
+			case 'ENTER':
+				const clickedItem = findFocusableElement(activeDescendant);
+				clickedItem?.click();
+				event.stopPropagation();
+				break;
+			case 'DOWN':
+			case 'ARROWDOWN':
+				if (isOpen) {
+					const nextItem = getNextItem(activeDescendant, listIds, 1);
+					activeDescendant = nextItem;
+				}
+				break;
+			case 'UP':
+			case 'ARROWUP':
+				if (isOpen) {
+					const previousItem = getNextItem(activeDescendant, listIds, -1);
+					activeDescendant = previousItem;
+				}
+				break;
+			case 'END':
+			case 'PAGEDOWN':
+				if (isOpen) {
+					activeDescendant = listIds.at(-1);
+				}
+				break;
+			case 'HOME':
+			case 'PAGEUP':
+				if (isOpen) {
+					activeDescendant = listIds[0];
+				}
+				break;
+			case 'ESC':
+			case 'ESCAPE':
+			case 'TAB':
+				closeMenu();
+				break;
+			default:
+				break;
+		}
 	}
 </script>
 
-<div class="container">
+<div role="presentation" class="container" onfocusout={handleBlur} onkeydown={handleKeyDown}>
+	<span id="menu-label" class="visually-hidden">menu</span>
 	<button
 		class="menu-button"
 		onclick={toggleMenu}
@@ -17,7 +121,7 @@
 		aria-controls="game-menu"
 		aria-expanded={isOpen}
 	>
-		<span id="menu-label" class="visually-hidden">menu</span>
+		<span class="visually-hidden">toggle menu</span>
 		<svg height="24" viewBox="0 -960 960 960" width="24">
 			<use xlink:href="menu_icon.svg#icon_path" />
 		</svg>
@@ -28,10 +132,15 @@
 		aria-labelledby="menu-label"
 		class="menu"
 		class:visually-hidden={!isOpen}
+		tabindex="-1"
+		aria-activedescendant={activeDescendant}
+		bind:this={menuRef}
 	>
 		{#if isOpen}
-			<li role="menuitem"><a class="how-to-play" href={`${base}/how-to-play`}>How to play</a></li>
-			<ThemeToggle />
+			<MenuItem id="how-to-play" {activeDescendant}>
+				<a tabindex="-1" class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
+			</MenuItem>
+			<ThemeToggle {activeDescendant} />
 		{/if}
 	</ul>
 </div>
@@ -50,8 +159,8 @@
 		height: var(--button-size);
 		width: var(--button-size);
 		fill: var(--color-text);
-        border-radius: 4px;
-        /* reset button styles */
+		border-radius: 4px;
+		/* reset button styles */
 		background: none;
 		color: inherit;
 		border: none;
