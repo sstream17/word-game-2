@@ -1,0 +1,88 @@
+:root {
+	--font-body: 'Nunito', system-ui, sans-serif;
+	--color-bg-grad-0: rgba(255, 255, 255, 0.75);
+	--color-bg-grad-1: rgba(255, 255, 255, 0);
+	--color-bg-0: #cad8e4;
+	--color-bg-1: #cedce8;
+	--color-menu-bg: #ffffff;
+	--color-shadow: #00000080;
+	--color-theme-1: #ff3e00;
+	--color-theme-2: #4075a6;
+	--color-unguessed: #ffffff;
+	--color-mising: #e6edf3;
+	--color-close: #f0e442;
+	--color-close-border: #a89f2e;
+	--color-exact: #56b4e9;
+	--color-text: #000000de;
+	--color-text-missing: #00000080;
+	--color-text-exact: #000000de;
+	--color-text-invalid: #f33e48;
+	--color-focus-ring: black;
+}
+
+:root.dark-theme {
+	color-scheme: dark;
+	--color-bg-grad-0: rgba(29, 33, 36, 0.749);
+	--color-bg-grad-1: rgba(255, 255, 255, 0);
+	--color-bg-0: hsl(208, 33%, 9%);
+	--color-bg-1: hsl(208, 36%, 11%);
+	--color-menu-bg: hsl(208, 20%, 22%);
+	--color-shadow: #000000f0;
+	--color-theme-1: #ff3e00;
+	--color-theme-2: #4075a6;
+	--color-unguessed: hsl(208, 20%, 17%);
+	--color-mising: hsl(208, 30%, 13%);
+	--color-close: hsl(208, 25%, 30%);
+	--color-close-border: hsl(56, 50%, 60%);
+	--color-exact: hsl(202, 40%, 63%);
+	--color-text: #ffffffde;
+	--color-text-missing: #ffffffb3;
+	--color-text-exact: #000000de;
+	--color-text-invalid: hsl(357, 60%, 60%);
+	--color-focus-ring: white;
+}
+
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-bg-grad-0: rgba(29, 33, 36, 0.749);
+		--color-bg-grad-1: rgba(255, 255, 255, 0);
+		--color-bg-0: hsl(208, 33%, 9%);
+		--color-bg-1: hsl(208, 36%, 11%);
+		--color-menu-bg: hsl(208, 20%, 22%);
+		--color-shadow: #000000f0;
+		--color-theme-1: #ff3e00;
+		--color-theme-2: #4075a6;
+		--color-unguessed: hsl(208, 20%, 17%);
+		--color-mising: hsl(208, 30%, 13%);
+		--color-close: hsl(208, 25%, 30%);
+		--color-close-border: hsl(56, 50%, 60%);
+		--color-exact: hsl(202, 40%, 63%);
+		--color-text: #ffffffde;
+		--color-text-missing: #ffffffb3;
+		--color-text-exact: #000000de;
+		--color-text-invalid: hsl(357, 60%, 60%);
+		--color-focus-ring: white;
+	}
+
+	:root.light-theme {
+		color-scheme: light;
+		--color-bg-grad-0: rgba(255, 255, 255, 0.75);
+		--color-bg-grad-1: rgba(255, 255, 255, 0);
+		--color-bg-0: #cad8e4;
+		--color-bg-1: #cedce8;
+		--color-menu-bg: #ffffff;
+		--color-shadow: #00000080;
+		--color-theme-1: #ff3e00;
+		--color-theme-2: #4075a6;
+		--color-unguessed: #ffffff;
+		--color-mising: #e6edf3;
+		--color-close: #f0e442;
+		--color-close-border: #a89f2e;
+		--color-exact: #56b4e9;
+		--color-text: #000000de;
+		--color-text-missing: #00000080;
+		--color-text-exact: #000000de;
+		--color-text-invalid: #f33e48;
+		--color-focus-ring: black;
+	}
+}
