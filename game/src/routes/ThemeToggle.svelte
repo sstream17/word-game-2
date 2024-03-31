@@ -2,12 +2,19 @@
 	import type { Theme } from '$lib/types';
 	import { getContext } from 'svelte';
 	import MenuItem from './MenuItem.svelte';
+	import Icon from '$lib/components/Icon.svelte';
 
 	interface IProps {
 		activeDescendant: string | undefined;
 	}
 
 	let { activeDescendant }: IProps = $props();
+
+	const themes = [
+		['light-theme', 'Light', 'theme_light_icon.svg#icon_path'],
+		['dark-theme', 'Dark', 'theme_dark_icon.svg#icon_path'],
+		['system-theme', 'System', 'theme_system_icon.svg#icon_path']
+	];
 
 	const currentTheme = getContext('theme') as { theme: Theme };
 
@@ -25,14 +32,11 @@
 <li role="presentation">
 	<span id="theme-submenu">Theme</span>
 	<ul role="menu" aria-labelledby="theme-submenu">
-		{#each [['light-theme', 'Light'], ['dark-theme', 'Dark'], ['system-theme', 'System']] as [dataId, label]}
+		{#each themes as [dataId, label, iconPath]}
+			{@const selected = currentTheme.theme === dataId}
 			<MenuItem id={dataId} {activeDescendant}>
-				<button
-					data-theme={dataId}
-					on:click={update}
-					tabindex="-1"
-					class:current={currentTheme.theme === dataId}
-				>
+				<button data-theme={dataId} on:click={update} tabindex="-1" class:selected>
+					<Icon path={selected ? `${iconPath}_enabled` : `${iconPath}_disabled`} />
 					{label}
 				</button>
 			</MenuItem>

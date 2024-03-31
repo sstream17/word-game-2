@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { isGameOver } from '$lib/api';
+	import Icon from '$lib/components/Icon.svelte';
 	import { WORD_LENGTH, type HintValues, type IGameData } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
 
@@ -209,9 +210,7 @@
 			<div class="row">
 				<button on:click|preventDefault={update} data-key="backspace" name="key" value="backspace">
 					<span class="visually-hidden">backspace</span>
-					<svg height="24" viewBox="0 -960 960 960" width="24">
-						<use xlink:href="back_icon.svg#icon_path" />
-					</svg>
+					<Icon path="back_icon.svg#icon_path" />
 				</button>
 				{#each 'zxcvbnm' as key}
 					{@render letter(key)}
@@ -223,9 +222,7 @@
 					aria-disabled={!submittable || invalid}
 				>
 					<span class="visually-hidden">enter</span>
-					<svg height="24" viewBox="0 -960 960 960" width="24">
-						<use xlink:href="send_icon.svg#icon_path" />
-					</svg>
+					<Icon path="send_icon.svg#icon_path" />
 				</button>
 			</div>
 		</div>
@@ -281,11 +278,6 @@
 		border: none;
 		padding: 0;
 		font-size: var(--key-size);
-	}
-
-	.keyboard button svg {
-		pointer-events: none;
-		fill: var(--color-text);
 	}
 
 	.keyboard .letter {

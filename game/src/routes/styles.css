@@ -123,6 +123,17 @@ ul[role="menu"]:has(li[role='menuitem']:hover) li[role='menuitem'].focused:not(:
 	outline: none;
 }
 
+li[role='menuitem'] > * {
+	display: flex;
+	flex-direction: row;
+	gap: 8px;
+}
+
+li[role='menuitem'] a,
+li[role='menuitem'] button {
+	outline: none;
+}
+
 h1,
 h2,
 p {

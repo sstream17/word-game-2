@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { base } from '$app/paths';
+	import Icon from '$lib/components/Icon.svelte';
 	import MenuItem from './MenuItem.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 
@@ -138,7 +139,10 @@
 	>
 		{#if isOpen}
 			<MenuItem id="how-to-play" {activeDescendant}>
-				<a tabindex="-1" class="how-to-play" href={`${base}/how-to-play`}>How to play</a>
+				<a tabindex="-1" class="how-to-play" href={`${base}/how-to-play`}>
+					<Icon path="info_icon.svg#icon_path" />
+					How to play
+				</a>
 			</MenuItem>
 			<ThemeToggle {activeDescendant} />
 		{/if}
@@ -191,22 +195,5 @@
 
 	.how-to-play {
 		color: var(--color-text);
-	}
-
-	.how-to-play::before {
-		content: 'i';
-		display: inline-block;
-		font-size: 0.8em;
-		font-weight: 900;
-		width: 1em;
-		height: 1em;
-		padding: 0.2em;
-		line-height: 1;
-		border: 1.5px solid var(--color-text);
-		border-radius: 50%;
-		text-align: center;
-		margin: 0 0.5em 0 0;
-		position: relative;
-		top: -0.05em;
 	}
 </style>
