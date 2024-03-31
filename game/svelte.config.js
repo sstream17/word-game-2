@@ -22,7 +22,7 @@ const config = {
 			strict: true
 		}),
 		prerender: {
-			entries: ['/', '/1', '/2', '/4']
+			entries: ['/', '/1', '/2', '/4', '/how-to-play']
 		},
 		paths: {
 			base: isDevEnvironment ? '' : process.env.BASE_PATH,
