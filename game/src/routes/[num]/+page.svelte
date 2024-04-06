@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { createGameState, isGameOver } from '$lib/api';
-	import { WORD_LENGTH } from '$lib/types';
+	import { WORD_LENGTH, type HintString } from '$lib/types';
 	import { confetti } from '@neoconfetti/svelte';
 	import Controls from '../Controls.svelte';
 	import GameBoard from '../GameBoard.svelte';
@@ -19,9 +19,12 @@
 
 	const numberOfGames = storedGame.game.numberOfGames;
 	const storageKey = `word-game-${numberOfGames}`;
+	const statsStorageKey = `stats-${numberOfGames}`;
 
 	let badGuess = $state(false);
 	let invalid = $state(false);
+
+	let winIndexes: { [gameIndex: number]: number } = $state({});
 
 	/** Whether or not the user has won */
 	let won = $derived(
@@ -38,6 +41,12 @@
 
 	/** Whether the current guess can be submitted */
 	let submittable = $derived(currentGuess.length === WORD_LENGTH);
+
+	function updateWinIndexes(hints: { [gameIndex: number]: HintString[] }) {
+		Object.entries(hints).forEach(([gameIndex, gameHints]) => {
+			winIndexes[+gameIndex] = gameHints.findLastIndex((guess) => guess === 'xxxxx');
+		});
+	}
 
 	function update(key: string) {
 		if (badGuess) badGuess = false;
@@ -67,9 +76,10 @@
 		localStorage.setItem(storageKey, updatedGame.toString());
 
 		if (!isBadGuess) {
+			updateWinIndexes(updatedGame.hints);
 			storedGame.game.guesses = updatedGame.guesses;
 			storedGame.game.hints = updatedGame.hints;
-			if (gameOver) {
+			if (won || gameOver) {
 				storedGame.game.answers = updatedGame.answers;
 			}
 			return;
