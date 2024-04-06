@@ -31,9 +31,16 @@ export class Game implements IGameData {
 			}, {});
 		} else {
 			this.numberOfGames = numberOfGames;
-			this.wordIndices = Array.from({ length: numberOfGames }, (_, i) =>
-				[`${i}`, Math.floor(Math.random() * words.length)])
-				.reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
+
+			const usedRandomNumbers = new Set();
+			this.wordIndices = Array.from({ length: numberOfGames }, (_, i) => {
+				let nextRandom = -1;
+				do {
+					nextRandom = Math.floor(Math.random() * words.length)
+				} while (usedRandomNumbers.has(nextRandom));
+				usedRandomNumbers.add(nextRandom);
+				return [`${i}`, nextRandom];
+			}).reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
 			this.guesses = Array(numberOfGames + NUMBER_TRIES).fill('');
 			this.hints = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: HintString[] }>((acc, currentIndex) => {
 				acc[currentIndex] = []

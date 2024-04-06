@@ -1,5 +1,4 @@
 <script lang="ts">
-	import { isGameOver } from '$lib/api';
 	import Icon from '$lib/components/Icon.svelte';
 	import { WORD_LENGTH, type HintValues, type IGameData } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
@@ -7,6 +6,7 @@
 	interface IProps {
 		data: IGameData;
 		won: boolean;
+		gameOver: boolean;
 		/**
 		 * The current guess is long enough to be submitted
 		 */
@@ -17,7 +17,7 @@
 		invalid: boolean;
 	}
 
-	let { data, won, submittable, invalid }: IProps = $props();
+	let { data, won, gameOver, submittable, invalid }: IProps = $props();
 
 	const colorMap = {
 		_: 'var(--color-mising)',
@@ -169,7 +169,7 @@
 <svelte:window onkeydown={keydown} />
 
 <div class="controls">
-	{#if won || isGameOver(data.hints, data.numberOfGames)}
+	{#if won || gameOver}
 		{#if !won && data.answers['0']}
 			<p>the answer was "{Object.values(data.answers)}"</p>
 		{/if}
