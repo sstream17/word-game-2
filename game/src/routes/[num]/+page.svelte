@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
+	import { createGameState, isGameOver } from '$lib/api';
 	import { WORD_LENGTH } from '$lib/types';
 	import { confetti } from '@neoconfetti/svelte';
 	import Controls from '../Controls.svelte';
@@ -14,20 +15,26 @@
 
 	let { data }: IProps = $props();
 
-	const numberOfGames = data.numberOfGames;
+	const storedGame = createGameState(data);
+
+	const numberOfGames = storedGame.game.numberOfGames;
 	const storageKey = `word-game-${numberOfGames}`;
 
 	let badGuess = $state(false);
 	let invalid = $state(false);
 
 	/** Whether or not the user has won */
-	let won = $derived(Object.values(data.hints).every((value) => value.includes('xxxxx')));
+	let won = $derived(
+		Object.values(storedGame.game.hints).every((value) => value.includes('xxxxx'))
+	);
+
+	let gameOver = $derived(isGameOver(storedGame.game.hints, storedGame.game.numberOfGames));
 
 	/** The index of the current guess, based on the number of current hints */
-	let i = $derived(won ? -1 : Object.values(data.hints)[0].length);
+	let i = $derived(won ? -1 : Object.values(storedGame.game.hints)[0].length);
 
 	/** The current guess */
-	let currentGuess = $derived(data.guesses[i] || '');
+	let currentGuess = $derived(storedGame.game.guesses[i] || '');
 
 	/** Whether the current guess can be submitted */
 	let submittable = $derived(currentGuess.length === WORD_LENGTH);
@@ -37,9 +44,9 @@
 		if (invalid) invalid = false;
 
 		if (key === 'backspace') {
-			data.guesses[i] = data.guesses[i].slice(0, -1);
+			storedGame.game.guesses[i] = storedGame.game.guesses[i].slice(0, -1);
 		} else if (currentGuess.length < WORD_LENGTH) {
-			data.guesses[i] += key;
+			storedGame.game.guesses[i] += key;
 		} else {
 			// The guess is already long enough
 			triedBadGuess();
@@ -47,29 +54,34 @@
 
 		// After adding the letter check if the word is long enough and valid
 		if (currentGuess.length === WORD_LENGTH) {
-			const game = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
-			invalid = !game.validate(currentGuess);
+			const updatedGame = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
+			invalid = !updatedGame.validate(currentGuess);
 		}
 	}
 
 	function submit() {
-		const game = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
+		const updatedGame = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
 
-		const isBadGuess = !game.enter([...currentGuess]);
+		const isBadGuess = !updatedGame.enter([...currentGuess]);
 
-		localStorage.setItem(storageKey, game.toString());
+		localStorage.setItem(storageKey, updatedGame.toString());
 
 		if (!isBadGuess) {
-			invalidateAll();
+			storedGame.game.guesses = updatedGame.guesses;
+			storedGame.game.hints = updatedGame.hints;
+			if (gameOver) {
+				storedGame.game.answers = updatedGame.answers;
+			}
 			return;
 		}
 
 		triedBadGuess();
 	}
 
-	function restart() {
+	async function restart() {
 		localStorage.removeItem(storageKey);
-		invalidateAll();
+		await invalidateAll();
+		storedGame.game = data;
 	}
 
 	function triedBadGuess() {
@@ -112,8 +124,8 @@
 
 	<div class="form">
 		<div class="boards-container">
-			{#each { length: numberOfGames } as _, game (game)}
-				{@const hints = data.hints[game]}
+			{#each { length: numberOfGames } as _, board (board)}
+				{@const hints = storedGame.game.hints[board]}
 				{@const winIndex = hints.findIndex((hint) => hint === 'xxxxx')}
 				{@const thisBoardWon = winIndex !== -1}
 				<GameBoard
@@ -121,7 +133,7 @@
 					{numberOfGames}
 					won={thisBoardWon}
 					{winIndex}
-					guesses={data.guesses}
+					guesses={storedGame.game.guesses}
 					{currentGuess}
 					{hints}
 					{badGuess}
@@ -130,7 +142,7 @@
 			{/each}
 		</div>
 
-		<Controls on:key={handleKey} {data} {won} {submittable} {invalid} />
+		<Controls on:key={handleKey} data={storedGame.game} {won} {gameOver} {submittable} {invalid} />
 	</div>
 </div>
 
