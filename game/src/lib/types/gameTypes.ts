@@ -10,3 +10,12 @@ export interface IGameData {
 
 export const WORD_LENGTH = 5;
 export const NUMBER_TRIES = 5;
+
+export type GameStats = {
+    [winIndex: number]: number;
+    wins: number;
+	maxWins: number;
+    played: number;
+    streak: number;
+    maxStreak: number;
+}
