@@ -4,7 +4,7 @@
 	import MenuItem from './MenuItem.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
 
-	const listIds = ['how-to-play', 'light-theme', 'dark-theme', 'system-theme'];
+	const listIds = ['how-to-play', 'stats', 'light-theme', 'dark-theme', 'system-theme'];
 
 	let isOpen = $state(false);
 	let activeDescendant: string | undefined = $state(undefined);
@@ -139,9 +139,15 @@
 	>
 		{#if isOpen}
 			<MenuItem id="how-to-play" {activeDescendant}>
-				<a tabindex="-1" class="how-to-play" href={`${base}/how-to-play`}>
+				<a tabindex="-1" href={`${base}/how-to-play`}>
 					<Icon path="info_icon.svg#icon_path" />
 					How to play
+				</a>
+			</MenuItem>
+			<MenuItem id="stats" {activeDescendant}>
+				<a tabindex="-1" href={`${base}/stats`}>
+					<Icon path="chart_icon.svg#icon_path" />
+					Stats
 				</a>
 			</MenuItem>
 			<ThemeToggle {activeDescendant} />
@@ -193,7 +199,7 @@
 		z-index: 100;
 	}
 
-	.how-to-play {
+	a {
 		color: var(--color-text);
 	}
 </style>

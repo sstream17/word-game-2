@@ -49,12 +49,6 @@ li[role='menuitem'] button {
 	outline: none;
 }
 
-h1,
-h2,
-p {
-	font-weight: 400;
-}
-
 p {
 	line-height: 1.5;
 }
@@ -69,12 +63,7 @@ a:hover {
 }
 
 h1 {
-	font-size: 2rem;
 	text-align: center;
-}
-
-h2 {
-	font-size: 1rem;
 }
 
 .text-column {
@@ -94,12 +83,6 @@ button {
 
 button:focus:not(:focus-visible) {
 	outline: none;
-}
-
-@media (min-width: 720px) {
-	h1 {
-		font-size: 2.4rem;
-	}
 }
 
 .visually-hidden {

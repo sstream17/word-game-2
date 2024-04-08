@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { createGameState, isGameOver } from '$lib/api';
-	import { WORD_LENGTH } from '$lib/types';
+	import { createGameState, isGameOver, storeWinStats } from '$lib/api';
+	import { WORD_LENGTH, type HintString } from '$lib/types';
 	import { confetti } from '@neoconfetti/svelte';
 	import Controls from '../Controls.svelte';
 	import GameBoard from '../GameBoard.svelte';
@@ -19,9 +19,12 @@
 
 	const numberOfGames = storedGame.game.numberOfGames;
 	const storageKey = `word-game-${numberOfGames}`;
+	const statsStorageKey = `stats-${numberOfGames}`;
 
 	let badGuess = $state(false);
 	let invalid = $state(false);
+
+	let winIndexes: { [gameIndex: string]: number } = $state({});
 
 	/** Whether or not the user has won */
 	let won = $derived(
@@ -38,6 +41,24 @@
 
 	/** Whether the current guess can be submitted */
 	let submittable = $derived(currentGuess.length === WORD_LENGTH);
+
+	/**
+	 * For each board, store the index of a correctly guessed word, or -1 if no correct guess.
+	 * @returns The greatest correctly guessed index
+	 */
+	function updateWinIndexes(hints: { [gameIndex: number]: HintString[] }) {
+		let maxIndex = -1;
+		Object.entries(hints).forEach(([gameIndex, gameHints]) => {
+			const gameWinIndex = gameHints.findLastIndex((guess) => guess === 'xxxxx');
+			winIndexes[gameIndex] = gameWinIndex;
+
+			if (gameWinIndex > maxIndex) {
+				maxIndex = gameWinIndex;
+			}
+		});
+
+		return maxIndex;
+	}
 
 	function update(key: string) {
 		if (badGuess) badGuess = false;
@@ -67,9 +88,11 @@
 		localStorage.setItem(storageKey, updatedGame.toString());
 
 		if (!isBadGuess) {
+			const gameWonIndex = updateWinIndexes(updatedGame.hints);
 			storedGame.game.guesses = updatedGame.guesses;
 			storedGame.game.hints = updatedGame.hints;
-			if (gameOver) {
+			if (won || gameOver) {
+				storeWinStats(statsStorageKey, numberOfGames, won ? gameWonIndex : -1);
 				storedGame.game.answers = updatedGame.answers;
 			}
 			return;
