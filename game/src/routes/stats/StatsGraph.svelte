@@ -15,9 +15,16 @@
 
 	const numberOfGuesses = [...Array(NUMBER_TRIES + 1).keys(), -1];
 
+	function getAriaValueForBar(winIndex: number): number {
+		const gamesWon = stats[winIndex];
+		const gamesPlayed = stats['played'];
+		const percent = gamesWon > -1 && gamesPlayed !== 0 ? (gamesWon / gamesPlayed) * 100 : 0;
+		return +percent.toFixed(2);
+	}
+
 	function getHeightForBar(winIndex: number): string {
 		const maxBarHeight = `calc(${maxHeight}px - ${lineHeight}em)`;
-		let gamesWon = stats[winIndex];
+		const gamesWon = stats[winIndex];
 
 		return `--_bar-height: calc(${gamesWon / stats['maxWins']} * ${maxBarHeight});`;
 	}
@@ -25,18 +32,31 @@
 
 <div class="stats-container">
 	<h2>{title}</h2>
-	<div>
-		<span>Played {stats['played']}</span>
-		<span>Won {winPercentage}%</span>
-		<span>Streak {stats['streak']}</span>
-		<span>Max streak {stats['maxStreak']}</span>
+	<div class="stats-group">
+		{#snippet stat({ title, value })}
+			{@const labelId = `stat-${title}`}
+			<div class="single-stat">
+				<span id={labelId}>{title}</span>
+				<span aria-labelledby={labelId}>{value}</span>
+			</div>
+		{/snippet}
+		{@render stat({ title: 'Played', value: stats['played'] })}
+		{@render stat({ title: 'Won', value: `${+winPercentage.toFixed(2)}%` })}
+		{@render stat({ title: 'Streak', value: stats['streak'] })}
+		{@render stat({ title: 'Max Streak', value: stats['maxStreak'] })}
 	</div>
 	<div
 		class="stats-graph"
 		style={`--_max-height: ${maxHeight}px; --_line-height: ${lineHeight}em;`}
 	>
 		{#each numberOfGuesses as winIndex}
-			<div class="graph-column">
+			<div
+				class="graph-column"
+				role="meter"
+				aria-valuemin="0"
+				aria-valuemax="100"
+				aria-valuenow={getAriaValueForBar(winIndex)}
+			>
 				<div class="graph-bar" style={getHeightForBar(winIndex)} />
 				<div>{winIndex === -1 ? 'L' : winIndex + numberOfGames}</div>
 			</div>
@@ -50,6 +70,17 @@
 		flex-direction: column;
 		align-items: center;
 		line-height: var(--_line-height);
+	}
+
+	.stats-group {
+		display: flex;
+		gap: 2rem;
+	}
+
+	.single-stat {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
 	}
 
 	.stats-graph {
