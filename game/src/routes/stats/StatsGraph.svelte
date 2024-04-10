@@ -10,22 +10,19 @@
 	const { title, numberOfGames, stats }: IProps = $props();
 
 	const winPercentage = stats['played'] !== 0 ? (stats['wins'] / stats['played']) * 100 : 0;
-	const maxHeight = 200;
+	const maxHeight = 240;
 	const lineHeight = 2;
+	const maxBarHeight = `calc(${maxHeight}px - ${2 * lineHeight}em)`;
 
 	const numberOfGuesses = [...Array(NUMBER_TRIES + 1).keys(), -1];
 
-	function getAriaValueForBar(winIndex: number): number {
-		const gamesWon = stats[winIndex];
+	function getAriaValueForBar(gamesWon: number): number {
 		const gamesPlayed = stats['played'];
 		const percent = gamesWon > -1 && gamesPlayed !== 0 ? (gamesWon / gamesPlayed) * 100 : 0;
 		return +percent.toFixed(2);
 	}
 
-	function getHeightForBar(winIndex: number): string {
-		const maxBarHeight = `calc(${maxHeight}px - ${lineHeight}em)`;
-		const gamesWon = stats[winIndex];
-
+	function getHeightForBar(gamesWon: number): string {
 		return `--_bar-height: calc(${gamesWon / stats['maxWins']} * ${maxBarHeight});`;
 	}
 </script>
@@ -50,14 +47,16 @@
 		style={`--_max-height: ${maxHeight}px; --_line-height: ${lineHeight}em;`}
 	>
 		{#each numberOfGuesses as winIndex}
+			{@const gamesWon = stats[winIndex]}
 			<div
 				class="graph-column"
 				role="meter"
 				aria-valuemin="0"
 				aria-valuemax="100"
-				aria-valuenow={getAriaValueForBar(winIndex)}
+				aria-valuenow={getAriaValueForBar(gamesWon)}
 			>
-				<div class="graph-bar" style={getHeightForBar(winIndex)} />
+				<span>{gamesWon}</span>
+				<div class="graph-bar" style={getHeightForBar(gamesWon)} />
 				<div>{winIndex === -1 ? 'L' : winIndex + numberOfGames}</div>
 			</div>
 		{/each}
