@@ -3,7 +3,9 @@
 	import './styles.css';
 
 	import { browser } from '$app/environment';
+	import { page } from '$app/stores';
 	import { createThemeState } from '$lib/api';
+	import Version from '$lib/components/Version.svelte';
 	import type { Theme } from '$lib/types';
 	import { setContext } from 'svelte';
 	import Menu from './Menu.svelte';
@@ -30,5 +32,8 @@
 	<main>
 		<Menu />
 		<slot />
+		{#if $page.route.id !== '/[num]'}
+			<Version />
+		{/if}
 	</main>
 </div>
