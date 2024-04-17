@@ -2,6 +2,7 @@
 	import Icon from '$lib/components/Icon.svelte';
 	import { WORD_LENGTH, type HintValues, type IGameData } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
+	import Answers from './Answers.svelte';
 
 	interface IProps {
 		data: IGameData;
@@ -15,9 +16,10 @@
 		 * The current guess is invalid
 		 */
 		invalid: boolean;
+		winIndexes: { [gameIndex: string]: number };
 	}
 
-	let { data, won, gameOver, submittable, invalid }: IProps = $props();
+	let { data, won, gameOver, submittable, invalid, winIndexes }: IProps = $props();
 
 	const colorMap = {
 		_: 'var(--color-mising)',
@@ -170,9 +172,7 @@
 
 <div class="controls">
 	{#if won || gameOver}
-		{#if !won && data.answers['0']}
-			<p>the answer was "{Object.values(data.answers)}"</p>
-		{/if}
+		<Answers gameFinished={won || gameOver} answers={data.answers} {winIndexes} />
 		<button on:click={restart} data-key="enter" class="restart selected">
 			{won ? 'you won :)' : `game over :(`} play again?
 		</button>
@@ -337,7 +337,7 @@
 
 	.restart {
 		width: 75%;
-		padding: 16px;
+		padding: 8px 16px;
 		background-color: var(--color-unguessed);
 		border-radius: 4px;
 		border: none;

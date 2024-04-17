@@ -3,11 +3,11 @@
 	import { createGameState, isGameOver, storeWinStats } from '$lib/api';
 	import { WORD_LENGTH, type HintString } from '$lib/types';
 	import { confetti } from '@neoconfetti/svelte';
-	import Controls from '../Controls.svelte';
-	import GameBoard from '../GameBoard.svelte';
 	import { Game } from '../game';
 	import { reduced_motion } from '../reduced-motion';
 	import type { PageData } from './$types';
+	import Controls from './Controls.svelte';
+	import GameBoard from './GameBoard.svelte';
 
 	interface IProps {
 		data: PageData;
@@ -165,7 +165,15 @@
 			{/each}
 		</div>
 
-		<Controls on:key={handleKey} data={storedGame.game} {won} {gameOver} {submittable} {invalid} />
+		<Controls
+			on:key={handleKey}
+			data={storedGame.game}
+			{won}
+			{gameOver}
+			{submittable}
+			{invalid}
+			{winIndexes}
+		/>
 	</div>
 </div>
 
