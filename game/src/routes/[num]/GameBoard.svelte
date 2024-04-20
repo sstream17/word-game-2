@@ -37,10 +37,11 @@
 					{@const answer = hints[row]?.[column]}
 					{@const value = guess?.[column] ?? ''}
 					{@const selected = current && column === guess.length}
+					{@const animate = guess.length > column}
 					{@const exact = answer === 'x'}
 					{@const close = answer === 'c'}
 					{@const missing = answer === '_'}
-					<div class="letter" class:exact class:close class:missing class:selected>
+					<div class="letter" class:exact class:close class:missing class:selected class:animate>
 						{value}
 						<span class="visually-hidden">
 							{#if exact}
@@ -82,12 +83,6 @@
 		grid-template-columns: repeat(5, 1fr);
 		grid-gap: 4px;
 		margin: 0 0 4px 0;
-	}
-
-	@media (prefers-reduced-motion: no-preference) {
-		.game.playing.bad-guess .row.current {
-			animation: wiggle 0.5s;
-		}
 	}
 
 	.game.playing .row.current {
@@ -157,6 +152,16 @@
 		border: 2px solid var(--color-close-border);
 	}
 
+	@media (prefers-reduced-motion: no-preference) {
+		.game.playing.bad-guess .row.current {
+			animation: wiggle 0.5s;
+		}
+
+		.letter.animate {
+			animation: scale-letter 0.5s;
+		}
+	}
+
 	@keyframes wiggle {
 		0% {
 			transform: translateX(0);
@@ -178,6 +183,18 @@
 		}
 		100% {
 			transform: translateX(0);
+		}
+	}
+
+	@keyframes scale-letter {
+		0% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.08);
+		}
+		100% {
+			transform: scale(1);
 		}
 	}
 </style>
