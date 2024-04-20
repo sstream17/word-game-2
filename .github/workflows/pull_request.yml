@@ -6,12 +6,11 @@ on:
 jobs:
   check_version:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./game
     steps:
       - name: Check Version
         uses: del-systems/check-if-version-bumped@v2
+        with:
+          path: "game/package.json"
         
   build_site:
     runs-on: ubuntu-latest
