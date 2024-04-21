@@ -4,6 +4,7 @@
 	interface IProps {
 		numberOfGames: number;
 		won: boolean;
+		allWon: boolean;
 		winIndex: number;
 		badGuess: boolean;
 		invalid: boolean;
@@ -16,6 +17,7 @@
 	let {
 		numberOfGames,
 		won,
+		allWon,
 		winIndex,
 		badGuess,
 		invalid,
@@ -26,7 +28,7 @@
 	}: IProps = $props();
 </script>
 
-<div class="game" class:playing={!won} class:bad-guess={badGuess} class:invalid>
+<div class="game" class:playing={!won} class:won={allWon} class:bad-guess={badGuess} class:invalid>
 	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
@@ -37,10 +39,19 @@
 					{@const answer = hints[row]?.[column]}
 					{@const value = guess?.[column] ?? ''}
 					{@const selected = current && column === guess.length}
+					{@const animate = guess.length > column}
 					{@const exact = answer === 'x'}
 					{@const close = answer === 'c'}
 					{@const missing = answer === '_'}
-					<div class="letter" class:exact class:close class:missing class:selected>
+					<div
+						style={`--_letter-anim-delay: ${column};`}
+						class="letter"
+						class:exact
+						class:close
+						class:missing
+						class:selected
+						class:animate
+					>
 						{value}
 						<span class="visually-hidden">
 							{#if exact}
@@ -82,12 +93,7 @@
 		grid-template-columns: repeat(5, 1fr);
 		grid-gap: 4px;
 		margin: 0 0 4px 0;
-	}
-
-	@media (prefers-reduced-motion: no-preference) {
-		.game.playing.bad-guess .row.current {
-			animation: wiggle 0.5s;
-		}
+		filter: drop-shadow(0px 8px 8px #00000000);
 	}
 
 	.game.playing .row.current {
@@ -157,6 +163,29 @@
 		border: 2px solid var(--color-close-border);
 	}
 
+	@media (prefers-reduced-motion: no-preference) {
+		.game .row {
+			transition: filter 0.6s;
+		}
+		.game.playing.bad-guess .row.current {
+			animation: wiggle 0.5s;
+		}
+
+		.game.won .row.current .letter {
+			animation: wave 0.5s;
+			animation-delay: calc(var(--_letter-anim-delay) * 0.3s);
+		}
+
+		.letter.animate {
+			animation: scale-letter 0.5s;
+		}
+
+		.letter {
+			transition: background-color, opacity, height;
+			transition-duration: 0.6s, 0.6s, 1s;
+		}
+	}
+
 	@keyframes wiggle {
 		0% {
 			transform: translateX(0);
@@ -178,6 +207,42 @@
 		}
 		100% {
 			transform: translateX(0);
+		}
+	}
+
+	@keyframes wave {
+		0% {
+			transform: translateY(0);
+		}
+		10% {
+			transform: translateY(2px);
+		}
+		30% {
+			transform: translateY(-4px);
+		}
+		50% {
+			transform: translateY(6px);
+		}
+		70% {
+			transform: translateY(-4px);
+		}
+		90% {
+			transform: translateY(2px);
+		}
+		100% {
+			transform: translateY(0);
+		}
+	}
+
+	@keyframes scale-letter {
+		0% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.08);
+		}
+		100% {
+			transform: scale(1);
 		}
 	}
 </style>

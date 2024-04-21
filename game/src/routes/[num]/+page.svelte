@@ -2,7 +2,6 @@
 	import { invalidateAll } from '$app/navigation';
 	import { createGameState, isGameOver, storeWinStats } from '$lib/api';
 	import { WORD_LENGTH, type HintString } from '$lib/types';
-	import { confetti } from '@neoconfetti/svelte';
 	import { Game } from '../game';
 	import { reduced_motion } from '../reduced-motion';
 	import type { PageData } from './$types';
@@ -21,8 +20,10 @@
 	const storageKey = `word-game-${numberOfGames}`;
 	const statsStorageKey = `stats-${numberOfGames}`;
 
+	let canAcceptInput = $state(true);
 	let badGuess = $state(false);
 	let invalid = $state(false);
+	let currentGuessIndex = $state(Object.values(storedGame.game.hints)['0'].length || 0);
 
 	let winIndexes: { [gameIndex: string]: number } = $state({});
 
@@ -33,11 +34,8 @@
 
 	let gameOver = $derived(isGameOver(storedGame.game.hints, storedGame.game.numberOfGames));
 
-	/** The index of the current guess, based on the number of current hints */
-	let i = $derived(won ? -1 : Object.values(storedGame.game.hints)[0].length);
-
 	/** The current guess */
-	let currentGuess = $derived(storedGame.game.guesses[i] || '');
+	let currentGuess = $derived(storedGame.game.guesses[currentGuessIndex] || '');
 
 	/** Whether the current guess can be submitted */
 	let submittable = $derived(currentGuess.length === WORD_LENGTH);
@@ -65,9 +63,12 @@
 		if (invalid) invalid = false;
 
 		if (key === 'backspace') {
-			storedGame.game.guesses[i] = storedGame.game.guesses[i].slice(0, -1);
+			storedGame.game.guesses[currentGuessIndex] = storedGame.game.guesses[currentGuessIndex].slice(
+				0,
+				-1
+			);
 		} else if (currentGuess.length < WORD_LENGTH) {
-			storedGame.game.guesses[i] += key;
+			storedGame.game.guesses[currentGuessIndex] += key;
 		} else {
 			// The guess is already long enough
 			triedBadGuess();
@@ -80,7 +81,30 @@
 		}
 	}
 
-	function submit() {
+	/**
+	 * A 300 ms delay to be used when revealing a guess
+	 */
+	const delay = () => new Promise((resolve) => setTimeout(resolve, 300));
+
+	async function animateGuess(guesses: string[], hints: { [gameIndex: string]: HintString[] }) {
+		canAcceptInput = false;
+		const lastHintIndex = hints['0'].findLastIndex((value) => !!value);
+
+		for (let i = 0; i < WORD_LENGTH; i++) {
+			for (const gameIndex of Object.keys(hints)) {
+				const chars = hints[gameIndex][lastHintIndex].split('');
+				if (storedGame.game.hints[gameIndex][lastHintIndex] === undefined) {
+					storedGame.game.hints[gameIndex][lastHintIndex] = '' as HintString;
+				}
+				storedGame.game.hints[gameIndex][lastHintIndex] += chars[i] as HintString;
+			}
+			await delay();
+		}
+		storedGame.game.guesses = guesses;
+		canAcceptInput = true;
+	}
+
+	async function submit() {
 		const updatedGame = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
 
 		const isBadGuess = !updatedGame.enter([...currentGuess]);
@@ -88,12 +112,14 @@
 		localStorage.setItem(storageKey, updatedGame.toString());
 
 		if (!isBadGuess) {
+			await animateGuess(updatedGame.guesses, updatedGame.hints);
+			currentGuessIndex = currentGuessIndex + 1;
+			
 			const gameWonIndex = updateWinIndexes(updatedGame.hints);
-			storedGame.game.guesses = updatedGame.guesses;
-			storedGame.game.hints = updatedGame.hints;
 			if (won || gameOver) {
 				storeWinStats(statsStorageKey, numberOfGames, won ? gameWonIndex : -1);
 				storedGame.game.answers = updatedGame.answers;
+				currentGuessIndex = -1;
 			}
 			return;
 		}
@@ -105,6 +131,7 @@
 		localStorage.removeItem(storageKey);
 		await invalidateAll();
 		storedGame.game = data;
+		currentGuessIndex = 0;
 	}
 
 	function triedBadGuess() {
@@ -118,6 +145,10 @@
 	}
 
 	function handleKey(event: any) {
+		if (!canAcceptInput) {
+			return;
+		}
+
 		const key = event.detail.key;
 
 		switch (key) {
@@ -152,9 +183,10 @@
 				{@const winIndex = hints.findIndex((hint) => hint === 'xxxxx')}
 				{@const thisBoardWon = winIndex !== -1}
 				<GameBoard
-					rowIndex={i}
+					rowIndex={currentGuessIndex}
 					{numberOfGames}
 					won={thisBoardWon}
+					allWon={won}
 					{winIndex}
 					guesses={storedGame.game.guesses}
 					{currentGuess}
@@ -176,19 +208,6 @@
 		/>
 	</div>
 </div>
-
-{#if won}
-	<div
-		style="position: absolute; left: 50%; top: 30%"
-		use:confetti={{
-			particleCount: $reduced_motion ? 0 : undefined,
-			force: 0.7,
-			stageWidth: window.innerWidth,
-			stageHeight: window.innerHeight,
-			colors: ['#ff3e00', '#40b3ff', '#676778']
-		}}
-	/>
-{/if}
 
 <style>
 	.form {
