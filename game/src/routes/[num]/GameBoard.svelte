@@ -160,6 +160,11 @@
 		.letter.animate {
 			animation: scale-letter 0.5s;
 		}
+
+		.letter {
+			transition: background-color, opacity;
+			transition-duration: 0.6s;
+		}
 	}
 
 	@keyframes wiggle {

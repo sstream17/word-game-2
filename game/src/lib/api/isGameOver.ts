@@ -7,5 +7,5 @@ import { NUMBER_TRIES, type HintString } from "$lib/types";
  * @returns True if all hints have been revealed for a game, false otherwise
  */
 export function isGameOver(hints: { [index: string]: HintString[] }, numberOfGames: number): boolean {
-    return hints[0].findLastIndex((guess) => !!guess) >= numberOfGames + NUMBER_TRIES - 1
+    return hints['0'].findLastIndex((guess) => !!guess) >= numberOfGames + NUMBER_TRIES - 1
 }
