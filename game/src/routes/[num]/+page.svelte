@@ -2,7 +2,6 @@
 	import { invalidateAll } from '$app/navigation';
 	import { createGameState, isGameOver, storeWinStats } from '$lib/api';
 	import { WORD_LENGTH, type HintString } from '$lib/types';
-	import { confetti } from '@neoconfetti/svelte';
 	import { Game } from '../game';
 	import { reduced_motion } from '../reduced-motion';
 	import type { PageData } from './$types';
@@ -187,6 +186,7 @@
 					rowIndex={currentGuessIndex}
 					{numberOfGames}
 					won={thisBoardWon}
+					allWon={won}
 					{winIndex}
 					guesses={storedGame.game.guesses}
 					{currentGuess}
@@ -208,19 +208,6 @@
 		/>
 	</div>
 </div>
-
-{#if won}
-	<div
-		style="position: absolute; left: 50%; top: 30%"
-		use:confetti={{
-			particleCount: $reduced_motion ? 0 : undefined,
-			force: 0.7,
-			stageWidth: window.innerWidth,
-			stageHeight: window.innerHeight,
-			colors: ['#ff3e00', '#40b3ff', '#676778']
-		}}
-	/>
-{/if}
 
 <style>
 	.form {
