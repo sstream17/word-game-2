@@ -19,6 +19,8 @@ class MainActivity : AppCompatActivity() {
         gameWebView.settings.domStorageEnabled = true
         gameWebView.loadUrl("https://sstream17.github.io/word-game-2/")
 
+        gameWebView.addJavascriptInterface(WebAppInterface(this, gameWebView), "MobileGame")
+
         callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 // Navigate within the WebView if it can go back

@@ -9,3 +9,10 @@ declare namespace App {
 }
 
 declare const APP_VERSION: string;
+
+/**
+ * Interface for mobile interactions
+ */
+declare const MobileGame: {
+	onKeyPress: () => void;
+}

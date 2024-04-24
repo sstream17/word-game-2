@@ -114,7 +114,7 @@
 		if (!isBadGuess) {
 			await animateGuess(updatedGame.guesses, updatedGame.hints);
 			currentGuessIndex = currentGuessIndex + 1;
-			
+
 			const gameWonIndex = updateWinIndexes(updatedGame.hints);
 			if (won || gameOver) {
 				storeWinStats(statsStorageKey, numberOfGames, won ? gameWonIndex : -1);
@@ -148,6 +148,8 @@
 		if (!canAcceptInput) {
 			return;
 		}
+
+		MobileGame.onKeyPress();
 
 		const key = event.detail.key;
 
