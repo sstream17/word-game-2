@@ -18,11 +18,27 @@
 
 	const currentTheme = getContext('theme') as { theme: Theme };
 
+	function notifyInterface(theme: Theme) {
+		switch (theme) {
+			case 'dark-theme':
+				MobileGame.onDarkThemeSet();
+				break;
+			case 'light-theme':
+				MobileGame.onLightThemeSet();
+				break;
+			case 'system-theme':
+				MobileGame.onSystemThemeSet();
+				break;
+		}
+	}
+
 	function update(event: MouseEvent) {
 		document.documentElement.classList.remove(currentTheme.theme);
 
 		const newTheme = (event.target as HTMLButtonElement).getAttribute('data-theme') as Theme;
 		currentTheme.theme = newTheme;
+
+		notifyInterface(newTheme);
 
 		localStorage.setItem('theme', newTheme);
 		document.documentElement.classList.add(newTheme);
