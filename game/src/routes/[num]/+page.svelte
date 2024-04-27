@@ -149,7 +149,9 @@
 			return;
 		}
 
-		MobileGame.onKeyPress();
+		if (window.MobileGame) {
+			window.MobileGame.onKeyPress();
+		}
 
 		const key = event.detail.key;
 
