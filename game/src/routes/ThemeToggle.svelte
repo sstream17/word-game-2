@@ -19,15 +19,19 @@
 	const currentTheme = getContext('theme') as { theme: Theme };
 
 	function notifyInterface(theme: Theme) {
+		if (!window.MobileGame) {
+			return;
+		}
+
 		switch (theme) {
 			case 'dark-theme':
-				MobileGame.onDarkThemeSet();
+				window.MobileGame.onDarkThemeSet();
 				break;
 			case 'light-theme':
-				MobileGame.onLightThemeSet();
+				window.MobileGame.onLightThemeSet();
 				break;
 			case 'system-theme':
-				MobileGame.onSystemThemeSet();
+				window.MobileGame.onSystemThemeSet();
 				break;
 		}
 	}
