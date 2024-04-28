@@ -1,6 +1,7 @@
 package com.stream_suite.wordgame
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
 import android.os.Bundle
 import android.webkit.WebView
 import androidx.activity.OnBackPressedCallback
@@ -10,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 class MainActivity : AppCompatActivity() {
     private lateinit var gameWebView: WebView
     private lateinit var callback: OnBackPressedCallback
+    private lateinit var themeManager: ThemeManager
 
     private val webViewStateKey = "webViewState"
 
@@ -18,6 +20,9 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
 
         gameWebView = findViewById(R.id.webview)
+        themeManager = ThemeManager(window, gameWebView)
+
+        themeManager.setSystemBarColors(resources.configuration.uiMode)
 
         if (savedInstanceState != null) {
             savedInstanceState.getBundle(webViewStateKey)?.let { gameWebView.restoreState(it) }
@@ -61,5 +66,10 @@ class MainActivity : AppCompatActivity() {
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
         savedInstanceState.getBundle(webViewStateKey)?.let { gameWebView.restoreState(it) }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        themeManager.setSystemBarColors(newConfig.uiMode)
     }
 }
