@@ -3,7 +3,6 @@
 	import { createGameState, isGameOver, storeWinStats } from '$lib/api';
 	import { WORD_LENGTH, type HintString } from '$lib/types';
 	import { Game } from '../game';
-	import { reduced_motion } from '../reduced-motion';
 	import type { PageData } from './$types';
 	import Controls from './Controls.svelte';
 	import GameBoard from './GameBoard.svelte';
@@ -25,6 +24,9 @@
 	let invalid = $state(false);
 	let currentGuessIndex = $state(Object.values(storedGame.game.hints)['0'].length || 0);
 
+	let keyboardHints: { [index: string]: HintString[] } = $state.frozen({
+		...storedGame.game.hints
+	});
 	let winIndexes: { [gameIndex: string]: number } = $state({});
 
 	/** Whether or not the user has won */
@@ -113,6 +115,7 @@
 
 		if (!isBadGuess) {
 			await animateGuess(updatedGame.guesses, updatedGame.hints);
+			keyboardHints = updatedGame.hints;
 			currentGuessIndex = currentGuessIndex + 1;
 
 			const gameWonIndex = updateWinIndexes(updatedGame.hints);
@@ -203,7 +206,9 @@
 
 		<Controls
 			on:key={handleKey}
-			data={storedGame.game}
+			hints={keyboardHints}
+			guesses={storedGame.game.guesses}
+			answers={storedGame.game.answers}
 			{won}
 			{gameOver}
 			{submittable}
