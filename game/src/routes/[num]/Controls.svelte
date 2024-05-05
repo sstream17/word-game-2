@@ -1,11 +1,13 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
-	import { WORD_LENGTH, type HintValues, type IGameData } from '$lib/types';
+	import { WORD_LENGTH, type HintString, type HintValues } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
 	import Answers from './Answers.svelte';
 
 	interface IProps {
-		data: IGameData;
+		hints: { [index: string]: HintString[] };
+		guesses: string[];
+		answers: { [index: string]: string | null };
 		won: boolean;
 		gameOver: boolean;
 		/**
@@ -19,7 +21,8 @@
 		winIndexes: { [gameIndex: string]: number };
 	}
 
-	let { data, won, gameOver, submittable, invalid, winIndexes }: IProps = $props();
+	let { hints, guesses, answers, won, gameOver, submittable, invalid, winIndexes }: IProps =
+		$props();
 
 	const colorMap = {
 		_: 'var(--color-mising)',
@@ -35,13 +38,13 @@
 	 * used for styling the keyboard
 	 */
 	let classnames: Record<string, HintValues[]> = $derived(
-		Object.values(data.hints).reduce((output, hints, gameIndex) => {
-			if (hints.length < 1) {
+		Object.values(hints).reduce((output, currentHints, gameIndex) => {
+			if (currentHints.length < 1) {
 				return output;
 			}
 
-			return data.guesses.reduce((guessOut: Record<string, HintValues[]>, guess, guessIndex) => {
-				if (guess.length !== WORD_LENGTH || !hints[guessIndex]) {
+			return guesses.reduce((guessOut: Record<string, HintValues[]>, guess, guessIndex) => {
+				if (guess.length !== WORD_LENGTH || !currentHints[guessIndex]) {
 					return output;
 				}
 
@@ -52,14 +55,21 @@
 
 					// If this board has been won, show the letter as missing so it doesn't clutter the
 					// other games. Otherwise update the color if the letter isn't already in the correct spot.
-					if (hints.includes('xxxxx')) {
+					if (currentHints.includes('xxxxx')) {
 						guessOut[letter].splice(gameIndex, 1, '_');
 					} else if (guessOut[letter][gameIndex] !== 'x') {
-						if (guessOut[letter][gameIndex] === 'c' && hints[guessIndex][letterIndex] === '_') {
+						if (
+							guessOut[letter][gameIndex] === 'c' &&
+							currentHints[guessIndex][letterIndex] === '_'
+						) {
 							return;
 						}
 
-						guessOut[letter].splice(gameIndex, 1, hints[guessIndex][letterIndex] as HintValues);
+						guessOut[letter].splice(
+							gameIndex,
+							1,
+							currentHints[guessIndex][letterIndex] as HintValues
+						);
 					}
 				});
 
@@ -105,23 +115,7 @@
 	 * A map of descriptions for all letters that have been guessed,
 	 * used for adding text for assistive technology (e.g. screen readers)
 	 */
-	let description: Record<string, string> = $derived(
-		data.hints['0'].reduce((acc: Record<string, string>, answer, i) => {
-			const guess = data.guesses[i];
-
-			// Skip replacing this magic number
-			for (let i = 0; i < 5; i += 1) {
-				const letter = guess[i];
-
-				if (answer[i] === 'x') {
-					acc[letter] = 'correct';
-				} else if (!classnames[letter]) {
-					acc[letter] = answer[i] === 'c' ? 'present' : 'absent';
-				}
-			}
-			return acc;
-		}, {})
-	);
+	// TODO
 
 	const dispatch = createEventDispatcher();
 
@@ -150,20 +144,22 @@
 	function keydown(event: KeyboardEvent) {
 		if (event.metaKey) return;
 
-		if (event.key === 'Enter' && won) {
+		const key = event.key;
+
+		if (key === 'Enter' && won) {
 			restart();
 			return;
 		}
 
-		if (event.key === 'Enter' && !submittable) {
+		if (key === 'Enter' && !submittable) {
 			badGuess();
 			return;
 		}
 
-		const key = document.querySelector(`[data-key="${event.key}" i]`)?.getAttribute('data-key');
+		const dataKey = document.querySelector(`[data-key="${key}" i]`)?.getAttribute('data-key');
 
-		if (key) {
-			dispatch('key', { key });
+		if (dataKey) {
+			dispatch('key', { key: dataKey });
 		}
 	}
 </script>
@@ -172,7 +168,7 @@
 
 <div class="controls">
 	{#if won || gameOver}
-		<Answers gameFinished={won || gameOver} answers={data.answers} {winIndexes} />
+		<Answers gameFinished={won || gameOver} {answers} {winIndexes} />
 		<button on:click={restart} data-key="enter" class="restart selected">
 			{won ? 'you won :)' : `game over :(`} play again?
 		</button>
@@ -187,7 +183,7 @@
 					aria-disabled={submittable}
 					name="key"
 					value={key}
-					aria-label="{key} {description[key] || ''}"
+					aria-label={key}
 				>
 					{key}
 				</button>
