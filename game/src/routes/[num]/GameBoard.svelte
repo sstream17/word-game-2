@@ -52,7 +52,7 @@
 						class:selected
 						class:animate
 					>
-						{value}
+						<span class="text">{value}</span>
 						<span class="visually-hidden">
 							{#if exact}
 								(correct)
@@ -81,8 +81,9 @@
 
 <style>
 	.game {
-		--game-width: 45%;
-		width: var(--game-width);
+		--_current-row-scale: 1.5;
+		--_animation-grow-scale: 1.08;
+		width: 45%;
 		display: flex;
 		flex-direction: column;
 		font-size: var(--letter-size);
@@ -96,15 +97,24 @@
 		filter: drop-shadow(0px 8px 8px #00000000);
 	}
 
+	.game .row.current {
+		margin-top: 1vh;
+		margin-bottom: calc(1vh * var(--_current-row-scale));
+	}
+
+	.game .row.current .letter {
+		transform: scaleY(var(--_current-row-scale));
+		font-size: 1.15em;
+	}
+
+	.game .row.current .letter .text {
+		transform: scaleY(calc(1 / var(--_current-row-scale)));
+	}
+
 	.game.playing .row.current {
 		filter: drop-shadow(0px 8px 8px var(--color-shadow));
 		flex-basis: 4vh;
 		z-index: 1;
-	}
-
-	.game .row.current .letter {
-		height: 6vh;
-		font-size: 1.15em;
 	}
 
 	.game.playing.invalid .row.current .letter {
@@ -181,8 +191,8 @@
 		}
 
 		.letter {
-			transition: background-color, opacity, height;
-			transition-duration: 0.6s, 0.6s, 1s;
+			transition: background-color, opacity;
+			transition-duration: 0.6s, 0.6s;
 		}
 	}
 
@@ -212,37 +222,40 @@
 
 	@keyframes wave {
 		0% {
-			transform: translateY(0);
+			transform: scaleY(var(--_current-row-scale)) translateY(0);
 		}
 		10% {
-			transform: translateY(2px);
+			transform: scaleY(var(--_current-row-scale)) translateY(2px);
 		}
 		30% {
-			transform: translateY(-4px);
+			transform: scaleY(var(--_current-row-scale)) translateY(-4px);
 		}
 		50% {
-			transform: translateY(6px);
+			transform: scaleY(var(--_current-row-scale)) translateY(6px);
 		}
 		70% {
-			transform: translateY(-4px);
+			transform: scaleY(var(--_current-row-scale)) translateY(-4px);
 		}
 		90% {
-			transform: translateY(2px);
+			transform: scaleY(var(--_current-row-scale)) translateY(2px);
 		}
 		100% {
-			transform: translateY(0);
+			transform: scaleY(var(--_current-row-scale)) translateY(0);
 		}
 	}
 
 	@keyframes scale-letter {
 		0% {
-			transform: scale(1);
+			transform: scale(1, var(--_current-row-scale));
 		}
 		50% {
-			transform: scale(1.08);
+			transform: scale(
+				var(--_animation-grow-scale),
+				calc(var(--_animation-grow-scale) * var(--_current-row-scale))
+			);
 		}
 		100% {
-			transform: scale(1);
+			transform: scale(1, var(--_current-row-scale));
 		}
 	}
 </style>
