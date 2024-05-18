@@ -232,6 +232,8 @@
 	}
 
 	.boards-container {
+		--_vertical-scroll-padding: 8px;
+		--_flex-gap: 16px;
 		display: flex;
 		flex-wrap: wrap;
 		flex-direction: row;
@@ -239,8 +241,8 @@
 		align-items: center;
 		overflow-y: auto;
 		width: 100%;
-		gap: 16px;
+		gap: calc(2vh + var(--_flex-gap)) var(--_flex-gap);
 		flex-basis: 100svh;
-		padding: 8px 0;
+		padding: var(--_vertical-scroll-padding) 0 calc(2vh + var(--_vertical-scroll-padding)) 0;
 	}
 </style>

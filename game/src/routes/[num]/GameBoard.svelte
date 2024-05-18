@@ -96,8 +96,11 @@
 	}
 
 	.game .row.current {
-		margin-top: 1vh;
-		margin-bottom: calc(1vh * var(--_current-row-scale));
+		transform:translateY(1vh);
+	}
+
+	.game .row.current ~ .row {
+		transform: translateY(2vh);
 	}
 
 	.game .row.current .letter {
