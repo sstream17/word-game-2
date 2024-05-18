@@ -32,7 +32,7 @@
 	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
-		<div class="row" class:current>
+		<div class="row" class:current-row={current}>
 			{#if !won || (won && row <= winIndex)}
 				{#each { length: WORD_LENGTH } as _, column (column)}
 					{@const guess = !won && current ? currentGuess : guesses[row]}
@@ -52,7 +52,7 @@
 						class:selected
 						class:animate
 					>
-						<span class="text">{value}</span>
+						<span class="letter-text">{value}</span>
 						<span class="visually-hidden">
 							{#if exact}
 								(correct)
@@ -87,7 +87,7 @@
 		font-size: var(--letter-size);
 	}
 
-	.game .row {
+	.row {
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
 		grid-gap: 4px;
@@ -95,35 +95,35 @@
 		filter: drop-shadow(0px 8px 8px #00000000);
 	}
 
-	.game .row.current {
-		transform:translateY(1vh);
+	.current-row {
+		transform: translateY(1vh);
 	}
 
-	.game .row.current ~ .row {
+	.current-row ~ .row {
 		transform: translateY(2vh);
 	}
 
-	.game .row.current .letter {
+	.current-row .letter {
 		transform: scaleY(var(--_current-row-scale));
 		font-size: 1.15em;
 	}
 
-	.game .row.current .letter .text {
+	.current-row .letter-text {
 		transform: scaleY(calc(1 / var(--_current-row-scale)));
 	}
 
-	.game.playing .row.current {
+	.playing .current-row {
 		filter: drop-shadow(0px 8px 8px var(--color-shadow));
 		flex-basis: 4vh;
 		z-index: 1;
 	}
 
-	.game.playing.invalid .row.current .letter {
+	.playing.invalid .current-row .letter {
 		color: var(--color-text-invalid);
 	}
 
-	.game.playing.invalid .row.current .letter::after,
-	.game.playing.invalid .row.current .letter::before {
+	.playing.invalid .current-row .letter::after,
+	.playing.invalid .current-row .letter::before {
 		height: inherit;
 		width: 50%;
 		background-size: 4px 130%;
@@ -131,13 +131,13 @@
 		position: absolute;
 	}
 
-	.game.playing.invalid .row.current .letter::before {
+	.playing.invalid .current-row .letter::before {
 		top: -2px;
 		background-image: linear-gradient(45deg, var(--color-text-invalid) 35%, transparent 0),
 			linear-gradient(-45deg, var(--color-text-invalid) 35%, transparent 0);
 	}
 
-	.game.playing.invalid .row.current .letter::after {
+	.playing.invalid .current-row .letter::after {
 		top: 0px;
 		background-image: linear-gradient(45deg, var(--color-unguessed) 35%, transparent 0),
 			linear-gradient(-45deg, var(--color-unguessed) 35%, transparent 0);
@@ -160,7 +160,7 @@
 	}
 
 	.letter.missing {
-		background-color: var(--color-mising);
+		background-color: var(--color-missing);
 		color: var(--color-text-missing);
 	}
 
@@ -175,14 +175,14 @@
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
-		.game .row {
+		.row {
 			transition: filter 0.6s;
 		}
-		.game.playing.bad-guess .row.current {
+		.playing.bad-guess .current-row {
 			animation: wiggle 0.5s;
 		}
 
-		.game.won .row.current .letter {
+		.won .current-row .letter {
 			animation: wave 0.5s;
 			animation-delay: calc(var(--_letter-anim-delay) * 0.3s);
 		}
@@ -199,25 +199,25 @@
 
 	@keyframes wiggle {
 		0% {
-			transform: translateX(0);
+			transform: translate(0, 1vh);
 		}
 		10% {
-			transform: translateX(-2px);
+			transform: translate(-2px, 1vh);
 		}
 		30% {
-			transform: translateX(4px);
+			transform: translate(4px, 1vh);
 		}
 		50% {
-			transform: translateX(-6px);
+			transform: translate(-6px, 1vh);
 		}
 		70% {
-			transform: translateX(+4px);
+			transform: translate(+4px, 1vh);
 		}
 		90% {
-			transform: translateX(-2px);
+			transform: translate(-2px, 1vh);
 		}
 		100% {
-			transform: translateX(0);
+			transform: translate(0, 1vh);
 		}
 	}
 
