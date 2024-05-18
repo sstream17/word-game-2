@@ -26,6 +26,31 @@
 		hints,
 		rowIndex
 	}: IProps = $props();
+
+	let previousGuessLength = $state(0);
+
+	const animateLetterClassName = 'animate-letter';
+
+	// Manually add letter animation so it doesn't trigger when opening a game
+	$effect(() => {
+		const currentGuessLength = currentGuess.length;
+		if (currentGuessLength === 0 && previousGuessLength === 0) {
+			return;
+		}
+
+		const currentRows = document.querySelectorAll('.playing .current-row');
+		currentRows.forEach((currentRow) => {
+			if (previousGuessLength > currentGuessLength) {
+				const letter = currentRow.children[previousGuessLength - 1];
+				letter.classList.remove(animateLetterClassName);
+			} else {
+				const letter = currentRow.children[currentGuessLength - 1];
+				letter.classList.add(animateLetterClassName);
+			}
+		});
+
+		previousGuessLength = currentGuessLength;
+	});
 </script>
 
 <div class="game" class:playing={!won} class:won={allWon} class:bad-guess={badGuess} class:invalid>
@@ -39,7 +64,6 @@
 					{@const answer = hints[row]?.[column]}
 					{@const value = guess?.[column] ?? ''}
 					{@const selected = current && column === guess.length}
-					{@const animate = guess.length > column}
 					{@const exact = answer === 'x'}
 					{@const close = answer === 'c'}
 					{@const missing = answer === '_'}
@@ -50,7 +74,6 @@
 						class:close
 						class:missing
 						class:selected
-						class:animate
 					>
 						<span class="letter-text">{value}</span>
 						<span class="visually-hidden">
@@ -118,6 +141,7 @@
 
 	.row::before {
 		content: '';
+		pointer-events: none;
 		background-color: #00000000;
 		transform: scaleY(var(--_current-row-scale)) translateY(8px);
 		width: 100%;
@@ -200,7 +224,8 @@
 			animation-delay: calc(var(--_letter-anim-delay) * 0.3s);
 		}
 
-		.letter.animate {
+		/* Use global style since the class is manually added in the script */
+		:global(.animate-letter) {
 			animation: scale-letter 0.5s;
 		}
 
