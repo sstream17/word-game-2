@@ -64,14 +64,12 @@
 								empty
 							{/if}
 						</span>
-						<input name="guess" aria-disabled={!current} type="hidden" {value} />
 					</div>
 				{/each}
 			{:else}
 				{#each { length: WORD_LENGTH } as _, column (column)}
 					<div class="letter missing">
 						<span class="visually-hidden">empty</span>
-						<input name="guess" aria-disabled={true} type="hidden" />
 					</div>
 				{/each}
 			{/if}
