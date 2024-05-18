@@ -25,10 +25,10 @@
 		$props();
 
 	const colorMap = {
-		_: 'var(--color-mising)',
+		_: 'var(--color-missing)',
 		c: 'var(--color-close)',
 		x: 'var(--color-exact)',
-		_Border: 'var(--color-mising)',
+		_Border: 'var(--color-missing)',
 		cBorder: 'var(--color-close-border)',
 		xBorder: 'var(--color-exact)'
 	};
@@ -177,7 +177,7 @@
 			{#snippet letter(key)}
 				<button
 					on:click|preventDefault={update}
-					class="letter"
+					class="letter key"
 					data-key={key}
 					style={getBackgroundForLetter(classnames, key)}
 					aria-disabled={submittable}
@@ -204,7 +204,13 @@
 			</div>
 
 			<div class="row">
-				<button on:click|preventDefault={update} data-key="backspace" name="key" value="backspace">
+				<button
+					class="key backspace-key"
+					on:click|preventDefault={update}
+					data-key="backspace"
+					name="key"
+					value="backspace"
+				>
 					<span class="visually-hidden">backspace</span>
 					<Icon path="back_icon.svg#icon_path" />
 				</button>
@@ -212,6 +218,7 @@
 					{@render letter(key)}
 				{/each}
 				<button
+					class="key enter-key"
 					on:click|preventDefault={update}
 					data-key="enter"
 					name="key"
@@ -255,7 +262,7 @@
 		width: calc(100% - 16px);
 	}
 
-	.keyboard .row {
+	.row {
 		display: flex;
 		justify-content: center;
 		gap: var(--gap);
@@ -263,7 +270,7 @@
 		flex: 1;
 	}
 
-	.keyboard button {
+	.key {
 		background-color: var(--color-unguessed);
 		color: var(--color-text);
 		border-radius: 4px;
@@ -276,7 +283,7 @@
 		font-size: var(--key-size);
 	}
 
-	.keyboard .letter {
+	.letter {
 		--_quadrant1-color: var(--quadrant1-color, var(--color-unguessed));
 		--_quadrant2-color: var(--quadrant2-color, var(--color-unguessed));
 		--_quadrant3-color: var(--quadrant3-color, var(--color-unguessed));
@@ -313,21 +320,21 @@
 		flex: 1;
 	}
 
-	.keyboard .spacer {
+	.spacer {
 		flex: 0.5;
 	}
 
-	.keyboard button:focus {
+	.key:focus {
 		outline: 2px solid var(--color-focus-ring);
 	}
 
-	.keyboard button[data-key='enter'],
-	.keyboard button[data-key='backspace'] {
+	.enter-key,
+	.backspace-key {
 		text-transform: uppercase;
 		flex: 1.6;
 	}
 
-	.keyboard button[data-key='enter'][aria-disabled='true'] {
+	.enter-key[aria-disabled='true'] {
 		opacity: 0.5;
 	}
 

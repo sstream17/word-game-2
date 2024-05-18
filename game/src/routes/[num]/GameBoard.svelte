@@ -26,20 +26,44 @@
 		hints,
 		rowIndex
 	}: IProps = $props();
+
+	let previousGuessLength = $state(0);
+
+	const animateLetterClassName = 'animate-letter';
+
+	// Manually add letter animation so it doesn't trigger when opening a game
+	$effect(() => {
+		const currentGuessLength = currentGuess.length;
+		if (currentGuessLength === 0 && previousGuessLength === 0) {
+			return;
+		}
+
+		const currentRows = document.querySelectorAll('.playing .current-row');
+		currentRows.forEach((currentRow) => {
+			if (previousGuessLength > currentGuessLength) {
+				const letter = currentRow.children[previousGuessLength - 1];
+				letter.classList.remove(animateLetterClassName);
+			} else {
+				const letter = currentRow.children[currentGuessLength - 1];
+				letter.classList.add(animateLetterClassName);
+			}
+		});
+
+		previousGuessLength = currentGuessLength;
+	});
 </script>
 
 <div class="game" class:playing={!won} class:won={allWon} class:bad-guess={badGuess} class:invalid>
 	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
-		<div class="row" class:current>
+		<div class="row" class:current-row={current}>
 			{#if !won || (won && row <= winIndex)}
 				{#each { length: WORD_LENGTH } as _, column (column)}
 					{@const guess = !won && current ? currentGuess : guesses[row]}
 					{@const answer = hints[row]?.[column]}
 					{@const value = guess?.[column] ?? ''}
 					{@const selected = current && column === guess.length}
-					{@const animate = guess.length > column}
 					{@const exact = answer === 'x'}
 					{@const close = answer === 'c'}
 					{@const missing = answer === '_'}
@@ -50,9 +74,8 @@
 						class:close
 						class:missing
 						class:selected
-						class:animate
 					>
-						<span class="text">{value}</span>
+						<span class="letter-text">{value}</span>
 						<span class="visually-hidden">
 							{#if exact}
 								(correct)
@@ -64,14 +87,12 @@
 								empty
 							{/if}
 						</span>
-						<input name="guess" aria-disabled={!current} type="hidden" {value} />
 					</div>
 				{/each}
 			{:else}
 				{#each { length: WORD_LENGTH } as _, column (column)}
 					<div class="letter missing">
 						<span class="visually-hidden">empty</span>
-						<input name="guess" aria-disabled={true} type="hidden" />
 					</div>
 				{/each}
 			{/if}
@@ -89,40 +110,57 @@
 		font-size: var(--letter-size);
 	}
 
-	.game .row {
+	.row {
 		display: grid;
 		grid-template-columns: repeat(5, 1fr);
 		grid-gap: 4px;
 		margin: 0 0 4px 0;
-		filter: drop-shadow(0px 8px 8px #00000000);
 	}
 
-	.game .row.current {
-		margin-top: 1vh;
-		margin-bottom: calc(1vh * var(--_current-row-scale));
+	.current-row {
+		transform: translateY(1vh);
 	}
 
-	.game .row.current .letter {
+	.current-row ~ .row {
+		transform: translateY(2vh);
+	}
+
+	.current-row .letter {
 		transform: scaleY(var(--_current-row-scale));
 		font-size: 1.15em;
 	}
 
-	.game .row.current .letter .text {
+	.current-row .letter-text {
 		transform: scaleY(calc(1 / var(--_current-row-scale)));
 	}
 
-	.game.playing .row.current {
-		filter: drop-shadow(0px 8px 8px var(--color-shadow));
+	.playing .current-row {
 		flex-basis: 4vh;
 		z-index: 1;
 	}
 
-	.game.playing.invalid .row.current .letter {
+	.row::before {
+		content: '';
+		pointer-events: none;
+		background-color: #00000000;
+		transform: scaleY(var(--_current-row-scale)) translateY(8px);
+		width: 100%;
+		height: 4vh;
+		position: fixed;
+		filter: blur(6px);
+	}
+
+	.playing .current-row::before {
+		content: '';
+		background-color: var(--color-shadow);
+	}
+
+	.playing.invalid .current-row .letter {
 		color: var(--color-text-invalid);
 	}
 
-	.game.playing.invalid .row.current .letter::after,
-	.game.playing.invalid .row.current .letter::before {
+	.playing.invalid .current-row .letter::after,
+	.playing.invalid .current-row .letter::before {
 		height: inherit;
 		width: 50%;
 		background-size: 4px 130%;
@@ -130,13 +168,13 @@
 		position: absolute;
 	}
 
-	.game.playing.invalid .row.current .letter::before {
+	.playing.invalid .current-row .letter::before {
 		top: -2px;
 		background-image: linear-gradient(45deg, var(--color-text-invalid) 35%, transparent 0),
 			linear-gradient(-45deg, var(--color-text-invalid) 35%, transparent 0);
 	}
 
-	.game.playing.invalid .row.current .letter::after {
+	.playing.invalid .current-row .letter::after {
 		top: 0px;
 		background-image: linear-gradient(45deg, var(--color-unguessed) 35%, transparent 0),
 			linear-gradient(-45deg, var(--color-unguessed) 35%, transparent 0);
@@ -159,7 +197,7 @@
 	}
 
 	.letter.missing {
-		background-color: var(--color-mising);
+		background-color: var(--color-missing);
 		color: var(--color-text-missing);
 	}
 
@@ -174,19 +212,20 @@
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
-		.game .row {
-			transition: filter 0.6s;
+		.playing .current-row::before {
+			transition: background-color 0.6s;
 		}
-		.game.playing.bad-guess .row.current {
+		.playing.bad-guess .current-row {
 			animation: wiggle 0.5s;
 		}
 
-		.game.won .row.current .letter {
+		.won .current-row .letter {
 			animation: wave 0.5s;
 			animation-delay: calc(var(--_letter-anim-delay) * 0.3s);
 		}
 
-		.letter.animate {
+		/* Use global style since the class is manually added in the script */
+		:global(.animate-letter) {
 			animation: scale-letter 0.5s;
 		}
 
@@ -198,25 +237,25 @@
 
 	@keyframes wiggle {
 		0% {
-			transform: translateX(0);
+			transform: translate(0, 1vh);
 		}
 		10% {
-			transform: translateX(-2px);
+			transform: translate(-2px, 1vh);
 		}
 		30% {
-			transform: translateX(4px);
+			transform: translate(4px, 1vh);
 		}
 		50% {
-			transform: translateX(-6px);
+			transform: translate(-6px, 1vh);
 		}
 		70% {
-			transform: translateX(+4px);
+			transform: translate(+4px, 1vh);
 		}
 		90% {
-			transform: translateX(-2px);
+			transform: translate(-2px, 1vh);
 		}
 		100% {
-			transform: translateX(0);
+			transform: translate(0, 1vh);
 		}
 	}
 

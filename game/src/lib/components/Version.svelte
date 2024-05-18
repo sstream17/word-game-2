@@ -8,11 +8,13 @@
 
 <style>
 	.version-info {
+		position: fixed;
+		pointer-events: none;
 		display: flex;
 		flex-direction: row;
-		position: fixed;
 		justify-content: flex-end;
 		bottom: 0;
+		right: 2px;
 		width: 100%;
 	}
 
