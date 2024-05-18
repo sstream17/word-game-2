@@ -92,7 +92,6 @@
 		grid-template-columns: repeat(5, 1fr);
 		grid-gap: 4px;
 		margin: 0 0 4px 0;
-		filter: drop-shadow(0px 8px 8px #00000000);
 	}
 
 	.current-row {
@@ -113,9 +112,23 @@
 	}
 
 	.playing .current-row {
-		filter: drop-shadow(0px 8px 8px var(--color-shadow));
 		flex-basis: 4vh;
 		z-index: 1;
+	}
+
+	.row::before {
+		content: '';
+		background-color: #00000000;
+		transform: scaleY(var(--_current-row-scale)) translateY(8px);
+		width: 100%;
+		height: 4vh;
+		position: fixed;
+		filter: blur(6px);
+	}
+
+	.playing .current-row::before {
+		content: '';
+		background-color: var(--color-shadow);
 	}
 
 	.playing.invalid .current-row .letter {
@@ -175,8 +188,8 @@
 	}
 
 	@media (prefers-reduced-motion: no-preference) {
-		.row {
-			transition: filter 0.6s;
+		.playing .current-row::before {
+			transition: background-color 0.6s;
 		}
 		.playing.bad-guess .current-row {
 			animation: wiggle 0.5s;
