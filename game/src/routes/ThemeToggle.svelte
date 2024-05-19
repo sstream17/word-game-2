@@ -1,8 +1,8 @@
 <script lang="ts">
+	import Icon from '$lib/components/Icon.svelte';
 	import type { Theme } from '$lib/types';
 	import { getContext } from 'svelte';
 	import MenuItem from './MenuItem.svelte';
-	import Icon from '$lib/components/Icon.svelte';
 
 	interface IProps {
 		activeDescendant: string | undefined;
@@ -51,11 +51,20 @@
 
 <li role="presentation">
 	<span id="theme-submenu">Theme</span>
-	<ul role="menu" aria-labelledby="theme-submenu">
+	<ul role="group" class="menu-list" aria-labelledby="theme-submenu">
 		{#each themes as [dataId, label, iconPath]}
 			{@const selected = currentTheme.theme === dataId}
 			<MenuItem id={dataId} {activeDescendant}>
-				<button data-theme={dataId} on:click={update} tabindex="-1" class:selected>
+				<button
+					id={dataId}
+					role="menuitemradio"
+					class="menu-item-command"
+					class:selected
+					aria-checked={selected}
+					data-theme={dataId}
+					on:click={update}
+					tabindex="-1"
+				>
 					<Icon path={selected ? `${iconPath}_enabled` : `${iconPath}_disabled`} />
 					{label}
 				</button>
@@ -67,7 +76,7 @@
 <style>
 	button {
 		width: 100%;
-		background: inherit;
+		background: unset;
 		color: inherit;
 		border: none;
 		padding: 0;

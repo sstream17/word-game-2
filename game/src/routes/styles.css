@@ -28,27 +28,6 @@ body {
 		linear-gradient(180deg, var(--color-bg-0) 0%, var(--color-bg-1) 15%);
 }
 
-ul[role="menu"] {
-	list-style: none;
-	padding: 0;
-	outline: none;
-}
-
-ul[role="menu"]:has(li[role='menuitem']:hover) li[role='menuitem'].focused:not(:hover) {
-	outline: none;
-}
-
-li[role='menuitem'] > * {
-	display: flex;
-	flex-direction: row;
-	gap: 8px;
-}
-
-li[role='menuitem'] a,
-li[role='menuitem'] button {
-	outline: none;
-}
-
 p {
 	line-height: 1.5;
 }
