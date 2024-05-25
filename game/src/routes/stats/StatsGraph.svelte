@@ -9,12 +9,21 @@
 
 	const { title, numberOfGames, stats }: IProps = $props();
 
+	const numberOfGuesses = [...Array(NUMBER_TRIES + 1).keys(), -1];
+
+	// Sum of games won per number of guesses.
+	// Losses count as +1 over the allowed max number of guesses.
+	const guessSum = numberOfGuesses.reduce((sum, winIndex) => {
+		const gamesWon = stats[winIndex] ?? 0;
+		const guessScore = (winIndex === -1 ? NUMBER_TRIES + 1 : winIndex) + numberOfGames;
+		return sum + guessScore * gamesWon;
+	}, 0);
+
 	const winPercentage = stats['played'] !== 0 ? (stats['wins'] / stats['played']) * 100 : 0;
+	const averageGuesses = stats['played'] !== 0 ? guessSum / stats['played'] : 0;
 	const maxHeight = 240;
 	const lineHeight = 2;
 	const maxBarHeight = `calc(${maxHeight}px - ${2 * lineHeight}em)`;
-
-	const numberOfGuesses = [...Array(NUMBER_TRIES + 1).keys(), -1];
 
 	function getAriaValueForBar(gamesWon: number): number {
 		const gamesPlayed = stats['played'];
@@ -39,6 +48,7 @@
 		{/snippet}
 		{@render stat({ title: 'Played', value: stats['played'] })}
 		{@render stat({ title: 'Won', value: `${+winPercentage.toFixed(2)}%` })}
+		{@render stat({ title: 'Avg Guess', value: +averageGuesses.toFixed(2) })}
 		{@render stat({ title: 'Streak', value: stats['streak'] })}
 		{@render stat({ title: 'Max Streak', value: stats['maxStreak'] })}
 	</div>
