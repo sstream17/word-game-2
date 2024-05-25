@@ -5,6 +5,7 @@
 	--color-bg-0: #cad8e4;
 	--color-bg-1: #cedce8;
 	--color-menu-bg: #ffffff;
+	--color-menu-hover: hsla(0, 0%, 90%, 0.40);
 	--color-shadow: #00000080;
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #4075a6;
@@ -27,6 +28,7 @@
 	--color-bg-0: hsl(208, 33%, 9%);
 	--color-bg-1: hsl(208, 36%, 11%);
 	--color-menu-bg: hsl(208, 20%, 22%);
+	--color-menu-hover: hsla(208, 20%, 32%, 0.40);
 	--color-shadow: #000000f0;
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #4075a6;
@@ -49,6 +51,7 @@
 		--color-bg-0: hsl(208, 33%, 9%);
 		--color-bg-1: hsl(208, 36%, 11%);
 		--color-menu-bg: hsl(208, 20%, 22%);
+		--color-menu-hover: hsla(208, 20%, 32%, 0.40);
 		--color-shadow: #000000f0;
 		--color-theme-1: #ff3e00;
 		--color-theme-2: #4075a6;
@@ -71,6 +74,7 @@
 		--color-bg-0: #cad8e4;
 		--color-bg-1: #cedce8;
 		--color-menu-bg: #ffffff;
+		--color-menu-hover: hsla(0, 0%, 90%, 0.40);
 		--color-shadow: #00000080;
 		--color-theme-1: #ff3e00;
 		--color-theme-2: #4075a6;

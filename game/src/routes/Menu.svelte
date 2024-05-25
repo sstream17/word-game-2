@@ -11,25 +11,13 @@
 
 	let menuRef: HTMLUListElement;
 
-	/**
-	 * Open and focus on the menu, and set visual focus to the first item
-	 */
-	function openMenu() {
+	function onOpen() {
 		isOpen = true;
-		activeDescendant = listIds[0];
-		menuRef.focus();
 	}
 
-	/**
-	 * Close the menu and clear the focus
-	 */
-	function closeMenu() {
+	function onClose() {
 		isOpen = false;
 		activeDescendant = undefined;
-	}
-
-	function toggleMenu() {
-		isOpen ? closeMenu() : openMenu();
 	}
 
 	function handleBlur(event: FocusEvent) {
@@ -38,7 +26,42 @@
 		// `currentTarget.contains()` is a function
 		// @ts-ignore
 		if (!currentTarget?.contains(relatedTarget)) {
-			closeMenu();
+			if (!isOpen) {
+				return;
+			}
+
+			onClose();
+			menuRef.hidePopover();
+		}
+	}
+
+	function popoverListener(node: HTMLUListElement) {
+		function handlePopoverToggle(event: ToggleEvent) {
+			if (event.newState === 'open') {
+				onOpen();
+			} else {
+				onClose();
+			}
+		}
+
+		node.addEventListener('toggle', handlePopoverToggle as EventListener);
+
+		return {
+			destroy() {
+				node.removeEventListener('toggle', handlePopoverToggle as EventListener);
+			}
+		};
+	}
+
+	function tryToFocusOn(id: string | undefined) {
+		if (!id) {
+			return;
+		}
+
+		const element = document.getElementById(id);
+		if (element) {
+			element.focus();
+			activeDescendant = id;
 		}
 	}
 
@@ -54,73 +77,70 @@
 		return list[newIndex];
 	}
 
-	function findFocusableElement(
-		activeDescendant: string | undefined
-	): HTMLButtonElement | HTMLAnchorElement | null {
-		const clickedItem = activeDescendant ? document.getElementById(activeDescendant) : undefined;
+	function keyboardListeners(node: HTMLDivElement) {
+		function handleKeyDown(event: KeyboardEvent) {
+			const { key } = event;
 
-		if (!clickedItem) {
-			return null;
-		}
-
-		return clickedItem.querySelector('button, [href]');
-	}
-
-	function handleKeyDown(event: KeyboardEvent) {
-		const { key } = event;
-
-		switch (key.toUpperCase()) {
-			case ' ':
-			case 'ENTER':
-				const clickedItem = findFocusableElement(activeDescendant);
-				clickedItem?.click();
-				event.stopPropagation();
-				break;
-			case 'DOWN':
-			case 'ARROWDOWN':
-				if (isOpen) {
+			switch (key.toUpperCase()) {
+				case 'DOWN':
+				case 'ARROWDOWN':
+					if (!isOpen) {
+						menuRef.showPopover();
+					}
+					event.preventDefault();
 					const nextItem = getNextItem(activeDescendant, listIds, 1);
 					activeDescendant = nextItem;
-				}
-				break;
-			case 'UP':
-			case 'ARROWUP':
-				if (isOpen) {
+					tryToFocusOn(nextItem);
+					break;
+				case 'UP':
+				case 'ARROWUP':
+					if (!isOpen) {
+						menuRef.showPopover();
+					}
+					event.preventDefault();
 					const previousItem = getNextItem(activeDescendant, listIds, -1);
 					activeDescendant = previousItem;
-				}
-				break;
-			case 'END':
-			case 'PAGEDOWN':
-				if (isOpen) {
-					activeDescendant = listIds.at(-1);
-				}
-				break;
-			case 'HOME':
-			case 'PAGEUP':
-				if (isOpen) {
-					activeDescendant = listIds[0];
-				}
-				break;
-			case 'ESC':
-			case 'ESCAPE':
-			case 'TAB':
-				closeMenu();
-				break;
-			default:
-				break;
+					tryToFocusOn(previousItem);
+					break;
+				case 'END':
+				case 'PAGEDOWN':
+					if (isOpen) {
+						event.preventDefault();
+						const lastItem = listIds.at(-1);
+						activeDescendant = lastItem;
+						tryToFocusOn(lastItem);
+					}
+					break;
+				case 'HOME':
+				case 'PAGEUP':
+					if (isOpen) {
+						event.preventDefault();
+						const firstItem = listIds[0];
+						activeDescendant = firstItem;
+						tryToFocusOn(firstItem);
+					}
+					break;
+				default:
+					break;
+			}
 		}
+
+		node.addEventListener('keydown', handleKeyDown);
+
+		return {
+			destroy() {
+				node.removeEventListener('keydown', handleKeyDown);
+			}
+		};
 	}
 </script>
 
-<div role="presentation" class="container" onfocusout={handleBlur} onkeydown={handleKeyDown}>
-	<span id="menu-label" class="visually-hidden">menu</span>
+<div class="container" onfocusout={handleBlur} use:keyboardListeners>
 	<button
 		class="menu-button"
-		onclick={toggleMenu}
+		popovertarget="menu-popover"
 		aria-haspopup="true"
-		aria-controls="game-menu"
-		aria-expanded={isOpen}
+		aria-controls="menu-popover"
 	>
 		<span class="visually-hidden">toggle menu</span>
 		<svg height="24" viewBox="0 -960 960 960" width="24">
@@ -129,29 +149,33 @@
 	</button>
 	<ul
 		role="menu"
-		id="game-menu"
-		aria-labelledby="menu-label"
-		class="menu"
-		class:visually-hidden={!isOpen}
+		id="menu-popover"
+		class="menu-list"
+		popover="auto"
 		tabindex="-1"
 		aria-activedescendant={activeDescendant}
 		bind:this={menuRef}
+		use:popoverListener
 	>
-		{#if isOpen}
-			<MenuItem id="how-to-play" {activeDescendant}>
-				<a tabindex="-1" href={`${base}/how-to-play`}>
-					<Icon path="info_icon.svg#icon_path" />
-					How to play
-				</a>
-			</MenuItem>
-			<MenuItem id="stats" {activeDescendant}>
-				<a tabindex="-1" href={`${base}/stats`}>
-					<Icon path="chart_icon.svg#icon_path" />
-					Stats
-				</a>
-			</MenuItem>
-			<ThemeToggle {activeDescendant} />
-		{/if}
+		<MenuItem id="how-to-play" {activeDescendant}>
+			<a
+				id="how-to-play"
+				role="menuitem"
+				class="menu-item-command"
+				tabindex="-1"
+				href={`${base}/how-to-play`}
+			>
+				<Icon path="info_icon.svg#icon_path" />
+				How to play
+			</a>
+		</MenuItem>
+		<MenuItem id="stats" {activeDescendant}>
+			<a id="stats" role="menuitem" class="menu-item-command" href={`${base}/stats`}>
+				<Icon path="chart_icon.svg#icon_path" />
+				Stats
+			</a>
+		</MenuItem>
+		<ThemeToggle {activeDescendant} />
 	</ul>
 </div>
 
@@ -163,6 +187,12 @@
 		flex-direction: row;
 		justify-content: end;
 		padding: var(--container-padding);
+	}
+
+	:global(.menu-list) {
+		list-style: none;
+		padding: 0;
+		outline: none;
 	}
 
 	.menu-button {
@@ -184,22 +214,22 @@
 		outline: 2px solid var(--color-focus-ring);
 	}
 
-	.menu {
+	#menu-popover {
+		position: absolute;
+		inset: unset;
+		top: calc(8px + var(--button-size) + var(--container-padding));
+		right: var(--container-padding);
+	}
+
+	:popover-open {
 		display: flex;
 		flex-direction: column;
 		gap: 4px;
-		position: absolute;
-		top: calc(var(--button-size) + var(--container-padding));
 		width: 160px;
 		padding: 8px;
-		margin: 8px 0;
 		border-radius: 4px;
+		border: none;
 		background-color: var(--color-menu-bg);
 		filter: drop-shadow(4px 4px 8px var(--color-shadow));
-		z-index: 100;
-	}
-
-	a {
-		color: var(--color-text);
 	}
 </style>
