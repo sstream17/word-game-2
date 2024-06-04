@@ -83,7 +83,10 @@
 
 	.stats-group {
 		display: flex;
-		gap: 2rem;
+		flex-direction: row;
+		gap: 32px;
+		align-items: end;
+		text-align: center;
 	}
 
 	.single-stat {
