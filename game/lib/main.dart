@@ -39,7 +39,7 @@ class MyHomePage extends StatelessWidget {
           children: <Widget>[
             Expanded(
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.grey[100]),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
                 child: const Text('Classic'),
                 onPressed: () {
                   Navigator.pushNamed(context, '/1');
@@ -48,7 +48,7 @@ class MyHomePage extends StatelessWidget {
             ),
             Expanded(
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(primary: Colors.grey[100]),
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
                 child: const Text('Duo'),
                 onPressed: () {
                   Navigator.pushNamed(context, '/2');
