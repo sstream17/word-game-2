@@ -20,7 +20,10 @@ class GameModel with ChangeNotifier {
     answers = words.sample(numberOfGames);
 
     var emptyHint = "".padRight(wordLength, "_");
-    hints = [for (var i = 0; i < numberOfGames; i++) List.filled(numberOfGuesses, emptyHint)];
+    hints = [
+      for (var i = 0; i < numberOfGames; i++)
+        List.filled(numberOfGuesses, emptyHint)
+    ];
   }
 
   GameModel(int numberOfGames) {
@@ -46,30 +49,32 @@ class GameModel with ChangeNotifier {
   }
 
   void revealHints() {
-    for (var answer in answers) {
+    for (var (gameIndex, answer) in answers.indexed) {
       var available = List.from(answer.characters);
       var hint = List.filled(wordLength, "m");
-      
+
       // First, find exact matches
-			for (var i = 0; i < wordLength; i++) {
-				if (currentGuess[i] == available[i]) {
-					hint[i] = 'x';
-					available[i] = ' ';
-				}
-			}
+      for (var i = 0; i < wordLength; i++) {
+        if (currentGuess[i] == available[i]) {
+          hint[i] = "x";
+          available[i] = " ";
+        }
+      }
 
       // Then find close matches (this has to happen
-			// in a second step, otherwise an early close
-			// match can prevent a later exact match)
-			for (var i = 0; i < wordLength; i += 1) {
-				if (hint[i] == 'm') {
-					var index = available.indexOf(currentGuess[i]);
-					if (index != -1) {
-						hint[i] = 'c';
-						available[index] = ' ';
-					}
-				}
-			}
+      // in a second step, otherwise an early close
+      // match can prevent a later exact match)
+      for (var i = 0; i < wordLength; i += 1) {
+        if (hint[i] == "m") {
+          var index = available.indexOf(currentGuess[i]);
+          if (index != -1) {
+            hint[i] = "c";
+            available[index] = " ";
+          }
+        }
+      }
+
+      hints[gameIndex][guessIndex] = hint.join("");
     }
   }
 

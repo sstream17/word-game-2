@@ -56,7 +56,7 @@ class Game extends StatelessWidget {
                       crossAxisCount: 2,
                       children: [
                         for (var i = 0; i < numberOfGames; i++)
-                          const GameBoard()
+                          GameBoard(gameIndex: i)
                       ],
                     ),
                   ),

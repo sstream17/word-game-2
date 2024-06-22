@@ -4,7 +4,9 @@ import 'package:word_game/constants.dart';
 import 'package:word_game/game_model.dart';
 
 class GameBoard extends StatelessWidget {
-  const GameBoard({Key? key}) : super(key: key);
+  const GameBoard({Key? key, required this.gameIndex}) : super(key: key);
+
+  final int gameIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -22,9 +24,11 @@ class GameBoard extends StatelessWidget {
                     currentLetter++)
                   TableCell(
                     child: Card(
+                      color: getBackgroundColor(
+                        game.hints[gameIndex][currentRow][currentLetter],
+                      ),
                       child: Center(
-                        child: currentLetter <
-                                game.guesses[currentRow].length
+                        child: currentLetter < game.guesses[currentRow].length
                             ? Text(game.guesses[currentRow][currentLetter])
                             : const Text(""),
                       ),
@@ -35,5 +39,18 @@ class GameBoard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+Color getBackgroundColor(String hint) {
+  switch (hint) {
+    case "m":
+      return Colors.white10;
+    case "x":
+      return Colors.blueAccent;
+    case "c":
+      return Colors.yellow;
+    default:
+      return Colors.white;
   }
 }
