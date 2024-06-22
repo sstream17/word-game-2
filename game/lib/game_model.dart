@@ -1,16 +1,33 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:word_game/constants.dart';
+import 'package:word_game/words.dart';
 
 class GameModel with ChangeNotifier {
   int numberOfGames = 1;
-  var guesses = [];
+  List<String> guesses = [];
   int guessIndex = 0;
   String get currentGuess => guesses[guessIndex];
 
-  GameModel(int _numberOfGames) {
-    numberOfGames = _numberOfGames;
-    guesses = [for (var i = 0; i < _numberOfGames + numberOfTries; i++) ""];
+  List<String> answers = [];
+  List<List<String>> hints = [];
+
+  void initializeGame(int numberOfGames) {
+    this.numberOfGames = numberOfGames;
+    var numberOfGuesses = numberOfGames + numberOfTries;
+
+    guesses = List.filled(numberOfGuesses, "");
+    answers = words.sample(numberOfGames);
+
+    var emptyHint = "".padRight(wordLength, "_");
+    hints = [for (var i = 0; i < numberOfGames; i++) List.filled(numberOfGuesses, emptyHint)];
   }
+
+  GameModel(int numberOfGames) {
+    initializeGame(numberOfGames);
+  }
+
+  void triedBadGuess() {}
 
   void updateGuess(String letter) {
     var lowerLetter = letter.toLowerCase();
@@ -22,17 +39,47 @@ class GameModel with ChangeNotifier {
     } else if (currentGuess.length < wordLength) {
       guesses[guessIndex] += lowerLetter;
     } else {
-      // tried bad guess
+      triedBadGuess();
     }
 
     notifyListeners();
   }
 
+  void revealHints() {
+    for (var answer in answers) {
+      var available = List.from(answer.characters);
+      var hint = List.filled(wordLength, "m");
+      
+      // First, find exact matches
+			for (var i = 0; i < wordLength; i++) {
+				if (currentGuess[i] == available[i]) {
+					hint[i] = 'x';
+					available[i] = ' ';
+				}
+			}
+
+      // Then find close matches (this has to happen
+			// in a second step, otherwise an early close
+			// match can prevent a later exact match)
+			for (var i = 0; i < wordLength; i += 1) {
+				if (hint[i] == 'm') {
+					var index = available.indexOf(currentGuess[i]);
+					if (index != -1) {
+						hint[i] = 'c';
+						available[index] = ' ';
+					}
+				}
+			}
+    }
+  }
+
   void submitGuess() {
     if (currentGuess.length < wordLength) {
+      triedBadGuess();
       return;
     }
 
+    revealHints();
     guessIndex = guessIndex + 1;
 
     notifyListeners();
