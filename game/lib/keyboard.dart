@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:word_game/game_model.dart';
+import 'package:word_game/keyboard_key.dart';
 
 class Keyboard extends StatelessWidget {
   const Keyboard({Key? key}) : super(key: key);
@@ -15,11 +16,9 @@ class Keyboard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               for (final letter in "qwertyuiop".characters)
-                ElevatedButton(
-                  onPressed: () {
-                    game.updateGuess(letter);
-                  },
-                  child: Text(letter),
+                KeyboardKey(
+                  letter: letter,
+                  onPressed: game.updateGuess,
                 ),
             ],
           ),
@@ -27,11 +26,9 @@ class Keyboard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               for (final letter in "asdfghjkl".characters)
-                ElevatedButton(
-                  onPressed: () {
-                    game.updateGuess(letter);
-                  },
-                  child: Text(letter),
+                KeyboardKey(
+                  letter: letter,
+                  onPressed: game.updateGuess,
                 ),
             ],
           ),
@@ -45,11 +42,9 @@ class Keyboard extends StatelessWidget {
                 child: const Icon(Icons.backspace_outlined),
               ),
               for (final letter in "zxcvbnm".characters)
-                ElevatedButton(
-                  onPressed: () {
-                    game.updateGuess(letter);
-                  },
-                  child: Text(letter),
+                KeyboardKey(
+                  letter: letter,
+                  onPressed: game.updateGuess,
                 ),
               ElevatedButton(
                 onPressed: () {
