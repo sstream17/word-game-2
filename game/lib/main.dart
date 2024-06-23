@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:url_strategy/url_strategy.dart';
+import 'package:word_game/colors.dart';
 
 import 'game.dart';
 
@@ -16,7 +18,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: ThemeData(primarySwatch: Colors.teal),
+      theme: ThemeData(
+        textTheme: GoogleFonts.nunitoTextTheme(),
+        colorScheme: lightScheme,
+      ),
       initialRoute: '/',
       routes: {
         '/': (context) => const MyHomePage(),
@@ -33,13 +38,26 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text("Word Game"),
+        actions: const [
+          MenuAnchor(
+            menuChildren: [
+              MenuItemButton(
+                child: Text("Menu item"),
+              ),
+            ],
+          )
+        ],
+      ),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Expanded(
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
                 child: const Text('Classic'),
                 onPressed: () {
                   Navigator.pushNamed(context, '/1');
@@ -48,7 +66,8 @@ class MyHomePage extends StatelessWidget {
             ),
             Expanded(
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
                 child: const Text('Duo'),
                 onPressed: () {
                   Navigator.pushNamed(context, '/2');
