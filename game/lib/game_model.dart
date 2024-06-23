@@ -11,6 +11,7 @@ class GameModel with ChangeNotifier {
 
   List<String> answers = [];
   List<List<String>> hints = [];
+  Map<String, String> keyHints = {};
 
   void initializeGame(int numberOfGames) {
     this.numberOfGames = numberOfGames;
@@ -24,6 +25,8 @@ class GameModel with ChangeNotifier {
       for (var i = 0; i < numberOfGames; i++)
         List.filled(numberOfGuesses, emptyHint)
     ];
+
+    keyHints = {};
   }
 
   GameModel(int numberOfGames) {

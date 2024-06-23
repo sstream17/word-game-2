@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:word_game/colors.dart';
 import 'package:word_game/constants.dart';
 import 'package:word_game/game_model.dart';
 
@@ -39,18 +40,5 @@ class GameBoard extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-Color getBackgroundColor(String hint) {
-  switch (hint) {
-    case "m":
-      return Colors.white10;
-    case "x":
-      return Colors.blueAccent;
-    case "c":
-      return Colors.yellow;
-    default:
-      return Colors.white;
   }
 }

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:word_game/colors.dart';
 
 class KeyboardKey extends StatelessWidget {
   const KeyboardKey({
@@ -14,19 +15,10 @@ class KeyboardKey extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: const SweepGradient(
+        gradient: SweepGradient(
           center: FractionalOffset.center,
-          colors: <Color>[
-            Color(0xFF4285F4), // game 4
-            Color(0xFF4285F4), // game 4
-            Color(0xFF34A853), // game 3
-            Color(0xFF34A853), // game 3
-            Color(0xFFFBBC05), // game 1
-            Color(0xFFFBBC05), // game 1
-            Color(0xFFEA4335), // game 2
-            Color(0xFFEA4335), // game 2
-          ],
-          stops: <double>[
+          colors: getKeyColor("_xcm"),
+          stops: const <double>[
             0.0,
             0.25,
             0.25,
