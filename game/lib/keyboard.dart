@@ -18,6 +18,7 @@ class Keyboard extends StatelessWidget {
               for (final letter in "qwertyuiop".characters)
                 KeyboardKey(
                   letter: letter,
+                  hints: game.keyHints[letter],
                   onPressed: game.updateGuess,
                 ),
             ],
@@ -28,6 +29,7 @@ class Keyboard extends StatelessWidget {
               for (final letter in "asdfghjkl".characters)
                 KeyboardKey(
                   letter: letter,
+                  hints: game.keyHints[letter],
                   onPressed: game.updateGuess,
                 ),
             ],
@@ -44,6 +46,7 @@ class Keyboard extends StatelessWidget {
               for (final letter in "zxcvbnm".characters)
                 KeyboardKey(
                   letter: letter,
+                  hints: game.keyHints[letter],
                   onPressed: game.updateGuess,
                 ),
               ElevatedButton(

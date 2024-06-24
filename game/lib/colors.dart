@@ -25,7 +25,7 @@ Color getBackgroundColor(String hint) {
   }
 }
 
-List<Color> getKeyColor(String hints) {
+List<Color> getKeyColor(List<String> hints) {
   if (hints.length == 4) {
     return [
       getBackgroundColor(hints[3]), // game 4
@@ -38,10 +38,17 @@ List<Color> getKeyColor(String hints) {
       getBackgroundColor(hints[1]), // game 2
     ];
   } else if (hints.length == 2) {
-    return getKeyColor("${hints[0]}${hints[1]}${hints[0]}${hints[1]}");
+    return getKeyColor(
+      [
+        hints[0],
+        hints[1],
+        hints[0],
+        hints[1],
+      ],
+    );
   } else if (hints.length == 1) {
-    return getKeyColor("${hints[0]}${hints[0]}");
+    return getKeyColor(List.filled(2, hints[0]));
   } else {
-    return getKeyColor("____");
+    return getKeyColor(List.filled(4, "_"));
   }
 }

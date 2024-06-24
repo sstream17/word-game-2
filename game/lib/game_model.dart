@@ -11,7 +11,7 @@ class GameModel with ChangeNotifier {
 
   List<String> answers = [];
   List<List<String>> hints = [];
-  Map<String, String> keyHints = {};
+  Map<String, List<String>> keyHints = {};
 
   void initializeGame(int numberOfGames) {
     this.numberOfGames = numberOfGames;
@@ -61,6 +61,14 @@ class GameModel with ChangeNotifier {
         if (currentGuess[i] == available[i]) {
           hint[i] = "x";
           available[i] = " ";
+          keyHints.update(
+            currentGuess[i],
+            (list) {
+              list[gameIndex] = "x";
+              return list;
+            },
+            ifAbsent: () => ["x", ...List.filled(answers.length - 1, "_")],
+          );
         }
       }
 
@@ -73,7 +81,31 @@ class GameModel with ChangeNotifier {
           if (index != -1) {
             hint[i] = "c";
             available[index] = " ";
+            keyHints.update(
+              currentGuess[i],
+              (list) {
+                if (list[gameIndex] != "x") {
+                  list[gameIndex] = "c";
+                }
+                return list;
+              },
+              ifAbsent: () => ["c", ...List.filled(answers.length - 1, "_")],
+            );
           }
+        }
+      }
+
+      // Finally, mark missing letters in the key hints
+      for (var i = 0; i < wordLength; i++) {
+        if (hint[i] == "m") {
+          keyHints.update(
+            currentGuess[i],
+            (list) {
+              list[gameIndex] = "m";
+              return list;
+            },
+            ifAbsent: () => ["m", ...List.filled(answers.length - 1, "_")],
+          );
         }
       }
 

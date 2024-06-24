@@ -5,10 +5,12 @@ class KeyboardKey extends StatelessWidget {
   const KeyboardKey({
     Key? key,
     required this.letter,
+    this.hints,
     required this.onPressed,
   }) : super(key: key);
 
   final String letter;
+  final List<String>? hints;
   final Function(String) onPressed;
 
   @override
@@ -17,7 +19,7 @@ class KeyboardKey extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: SweepGradient(
           center: FractionalOffset.center,
-          colors: getKeyColor("_xcm"),
+          colors: getKeyColor(hints ?? []),
           stops: const <double>[
             0.0,
             0.25,
