@@ -33,18 +33,18 @@ class KeyboardKey extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(8),
       ),
-      child: ElevatedButton(
-        style: ElevatedButton.styleFrom(
+      child: TextButton(
+        style: TextButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
         ),
         onPressed: () {
           onPressed(letter);
         },
-        child: Text(letter),
+        child: Text(
+          letter,
+          textAlign: TextAlign.center,
+        ),
       ),
     );
   }
