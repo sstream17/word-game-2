@@ -8,11 +8,11 @@ import 'game.dart';
 
 void main() {
   setPathUrlStrategy();
-  runApp(const MyApp());
+  runApp(const WordGameApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class WordGameApp extends StatelessWidget {
+  const WordGameApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) => const MyHomePage(),
+        '/': (context) => const HomePage(),
         '/1': (context) => Game(),
         '/2': (context) => Game(numberOfGames: 2),
         '/4': (context) => Game(numberOfGames: 4),
@@ -53,8 +53,8 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class MyHomePage extends StatelessWidget {
-  const MyHomePage({Key? key}) : super(key: key);
+class HomePage extends StatelessWidget {
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
