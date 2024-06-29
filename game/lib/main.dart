@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:word_game/colors.dart';
 import 'package:word_game/game_app_bar.dart';
+import 'package:word_game/how_to_play.dart';
+import 'package:word_game/routes.dart';
+import 'package:word_game/stats.dart';
 
 import 'game.dart';
 
@@ -42,12 +45,14 @@ class WordGameApp extends StatelessWidget {
               backgroundColor: WidgetStatePropertyAll<Color>(Colors.white)),
         ),
       ),
-      initialRoute: '/',
+      initialRoute: routeHome,
       routes: {
-        '/': (context) => const HomePage(),
-        '/1': (context) => Game(),
-        '/2': (context) => Game(numberOfGames: 2),
-        '/4': (context) => Game(numberOfGames: 4),
+        routeHome: (context) => const HomePage(),
+        routeGame1: (context) => Game(),
+        routeGame2: (context) => Game(numberOfGames: 2),
+        routeGame4: (context) => Game(numberOfGames: 4),
+        routeHowToPlay: (context) => const HowToPlay(),
+        routeStats: (context) => const Stats(),
       },
     );
   }
@@ -72,7 +77,7 @@ class HomePage extends StatelessWidget {
                     ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
                 child: const Text('Classic'),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/1');
+                  Navigator.pushNamed(context, routeGame1);
                 },
               ),
             ),
@@ -82,7 +87,7 @@ class HomePage extends StatelessWidget {
                     ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
                 child: const Text('Duo'),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/2');
+                  Navigator.pushNamed(context, routeGame2);
                 },
               ),
             ),
@@ -92,7 +97,7 @@ class HomePage extends StatelessWidget {
                     ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
                 child: const Text('Quad'),
                 onPressed: () {
-                  Navigator.pushNamed(context, '/4');
+                  Navigator.pushNamed(context, routeGame4);
                 },
               ),
             ),

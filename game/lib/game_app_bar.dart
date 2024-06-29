@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:word_game/routes.dart';
 
 class GameAppBar extends StatelessWidget implements PreferredSizeWidget {
   GameAppBar({super.key, this.title});
@@ -16,9 +17,24 @@ class GameAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         MenuAnchor(
           childFocusNode: _buttonFocusNode,
-          menuChildren: const [
+          menuChildren: [
             MenuItemButton(
-              child: Text("Menu item"),
+              onPressed: () {
+                if (ModalRoute.of(context)?.settings.name != routeHowToPlay) {
+                  Navigator.pushNamed(context, routeHowToPlay);
+                }
+              },
+              leadingIcon: const Icon(Icons.info_outline),
+              child: const Text("How to play"),
+            ),
+            MenuItemButton(
+              onPressed: () {
+                if (ModalRoute.of(context)?.settings.name != routeStats) {
+                  Navigator.pushNamed(context, routeStats);
+                }
+              },
+              leadingIcon: const Icon(Icons.bar_chart),
+              child: const Text("Stats"),
             ),
           ],
           builder: (
