@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
 
 class GameAppBar extends StatelessWidget implements PreferredSizeWidget {
-  GameAppBar({super.key});
+  GameAppBar({super.key, this.title});
 
+  final String? title;
   final FocusNode _buttonFocusNode = FocusNode(debugLabel: 'Menu Button');
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: const Text("Word Game"),
+      title: title != null ? Text(title!) : null,
+      centerTitle: true,
+      elevation: 0,
+      scrolledUnderElevation: 0,
       actions: [
         MenuAnchor(
           childFocusNode: _buttonFocusNode,

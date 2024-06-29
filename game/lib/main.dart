@@ -59,7 +59,9 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: GameAppBar(),
+      appBar: GameAppBar(
+        title: "Word Game",
+      ),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
