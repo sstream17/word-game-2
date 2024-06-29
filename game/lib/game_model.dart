@@ -140,7 +140,9 @@ class GameModel with ChangeNotifier {
           keyHints.update(
             currentGuess[i],
             (list) {
-              list[gameIndex] = "m";
+              if (list[gameIndex] == "_") {
+                list[gameIndex] = "m";
+              }
               return list;
             },
           );
