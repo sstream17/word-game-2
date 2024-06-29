@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:word_game/colors.dart';
+import 'package:word_game/game_app_bar.dart';
 
 import 'game.dart';
 
@@ -36,6 +37,10 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
+        menuTheme: const MenuThemeData(
+          style: MenuStyle(
+              backgroundColor: WidgetStatePropertyAll<Color>(Colors.white)),
+        ),
       ),
       initialRoute: '/',
       routes: {
@@ -54,18 +59,7 @@ class MyHomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text("Word Game"),
-        actions: const [
-          MenuAnchor(
-            menuChildren: [
-              MenuItemButton(
-                child: Text("Menu item"),
-              ),
-            ],
-          )
-        ],
-      ),
+      appBar: GameAppBar(),
       body: Center(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
