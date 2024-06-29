@@ -64,7 +64,10 @@ TableCell buildTableCell(
       child: Center(
         child: Text(
           text,
-          style: TextStyle(color: textColor),
+          style: TextStyle(
+            color: textColor,
+            fontSize: 24,
+          ),
         ),
       ),
     ),

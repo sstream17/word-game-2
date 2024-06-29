@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:provider/provider.dart';
 import 'package:word_game/controls.dart';
 import 'package:word_game/game_board.dart';
@@ -49,15 +50,26 @@ class Game extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                    child: GridView.count(
+                    child: Padding(
                       padding: const EdgeInsets.all(16.0),
-                      crossAxisSpacing: 16,
-                      mainAxisSpacing: 16,
-                      crossAxisCount: 2,
-                      children: [
-                        for (var i = 0; i < numberOfGames; i++)
-                          GameBoard(gameIndex: i)
-                      ],
+                      child: CustomScrollView(
+                        slivers: [
+                          SliverToBoxAdapter(
+                            child: LayoutGrid(
+                              columnSizes:
+                                  numberOfGames > 1 ? [1.fr, 1.fr] : [1.fr],
+                              rowSizes:
+                                  List.filled(numberOfGames + 1 ~/ 2, auto),
+                              columnGap: 16,
+                              rowGap: 16,
+                              children: [
+                                for (var i = 0; i < numberOfGames; i++)
+                                  GameBoard(gameIndex: i)
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   const Center(
