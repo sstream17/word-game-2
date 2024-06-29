@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:word_game/controls.dart';
 import 'package:word_game/game_board.dart';
 import 'package:word_game/game_model.dart';
-import 'package:word_game/keyboard.dart';
 
 class Game extends StatelessWidget {
   Game({Key? key, this.numberOfGames = 1}) : super(key: key);
@@ -61,7 +61,7 @@ class Game extends StatelessWidget {
                     ),
                   ),
                   const Center(
-                    child: Keyboard(),
+                    child: Controls(),
                   ),
                 ],
               ),

@@ -42,6 +42,7 @@ class MyApp extends StatelessWidget {
         '/': (context) => const MyHomePage(),
         '/1': (context) => Game(),
         '/2': (context) => Game(numberOfGames: 2),
+        '/4': (context) => Game(numberOfGames: 4),
       },
     );
   }
@@ -86,6 +87,16 @@ class MyHomePage extends StatelessWidget {
                 child: const Text('Duo'),
                 onPressed: () {
                   Navigator.pushNamed(context, '/2');
+                },
+              ),
+            ),
+            Expanded(
+              child: ElevatedButton(
+                style:
+                    ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
+                child: const Text('Quad'),
+                onPressed: () {
+                  Navigator.pushNamed(context, '/4');
                 },
               ),
             ),

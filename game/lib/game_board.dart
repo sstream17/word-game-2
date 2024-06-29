@@ -23,17 +23,11 @@ class GameBoard extends StatelessWidget {
                 for (var currentLetter = 0;
                     currentLetter < wordLength;
                     currentLetter++)
-                  TableCell(
-                    child: Card(
-                      color: getBackgroundColor(
-                        game.hints[gameIndex][currentRow][currentLetter],
-                      ),
-                      child: Center(
-                        child: currentLetter < game.guesses[currentRow].length
-                            ? Text(game.guesses[currentRow][currentLetter])
-                            : const Text(""),
-                      ),
-                    ),
+                  buildTableCell(
+                    game,
+                    gameIndex,
+                    currentRow,
+                    currentLetter,
                   ),
               ],
             ),
@@ -41,4 +35,38 @@ class GameBoard extends StatelessWidget {
       ),
     );
   }
+}
+
+TableCell buildTableCell(
+  GameModel game,
+  int gameIndex,
+  int currentRow,
+  int currentLetter,
+) {
+  Color textColor = game.guessIndex == currentRow && game.invalidGuess
+      ? Colors.red
+      : Colors.black;
+
+  String text = currentLetter < game.guesses[currentRow].length
+      ? game.guesses[currentRow][currentLetter]
+      : "";
+
+  if (game.winIndexes[gameIndex] != -1 &&
+      currentRow > game.winIndexes[gameIndex]) {
+    text = "";
+  }
+
+  return TableCell(
+    child: Card(
+      color: getBackgroundColor(
+        game.hints[gameIndex][currentRow][currentLetter],
+      ),
+      child: Center(
+        child: Text(
+          text,
+          style: TextStyle(color: textColor),
+        ),
+      ),
+    ),
+  );
 }
