@@ -11,6 +11,7 @@ class EndGame extends StatelessWidget {
     return Column(
       children: [
         Text("${game.answers}"),
+        Text("${game.winIndexes.map((index) => index + 1)}"),
         ElevatedButton(
           onPressed: () {
             game.restart();
