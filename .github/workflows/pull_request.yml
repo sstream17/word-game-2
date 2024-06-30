@@ -30,6 +30,7 @@ jobs:
       - name: Install Java
         uses: actions/setup-java@v4
         with:
+          distribution: 'temurin'
           java-version: '11.x'
           cache: gradle
 
@@ -42,6 +43,6 @@ jobs:
 
       - name: Get dependencies
         run: fluter pub get
-        
+
       - name: Build
         run: flutter build web
