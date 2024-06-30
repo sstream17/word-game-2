@@ -55,6 +55,10 @@ TableCell buildTableCell(
       ? game.guesses[currentRow][currentLetter]
       : "";
 
+  // TODO: Fix this for games that have already been won.
+  // Currently the row will continue to change size, but it should stay on the row that was won.
+  double fontSize = game.guessIndex == currentRow ? 36 : 24;
+
   if (game.winIndexes[gameIndex] != -1 &&
       currentRow > game.winIndexes[gameIndex]) {
     text = "";
@@ -70,7 +74,7 @@ TableCell buildTableCell(
           text,
           style: TextStyle(
             color: textColor,
-            fontSize: 24,
+            fontSize: fontSize,
           ),
         ),
       ),
