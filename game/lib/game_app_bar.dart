@@ -17,6 +17,10 @@ class GameAppBar extends StatelessWidget implements PreferredSizeWidget {
       actions: [
         MenuAnchor(
           childFocusNode: _buttonFocusNode,
+          alignmentOffset: const Offset(
+            -100,
+            0,
+          ),
           menuChildren: [
             MenuItemButton(
               onPressed: () {
