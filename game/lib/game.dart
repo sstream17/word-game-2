@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_layout_grid/flutter_layout_grid.dart';
 import 'package:provider/provider.dart';
 import 'package:word_game/controls.dart';
 import 'package:word_game/game_app_bar.dart';
@@ -53,24 +52,18 @@ class Game extends StatelessWidget {
                 children: <Widget>[
                   Expanded(
                     child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: CustomScrollView(
-                        slivers: [
-                          SliverToBoxAdapter(
-                            child: LayoutGrid(
-                              columnSizes:
-                                  numberOfGames > 1 ? [1.fr, 1.fr] : [1.fr],
-                              rowSizes:
-                                  List.filled(numberOfGames + 1 ~/ 2, auto),
-                              columnGap: 16,
-                              rowGap: 16,
-                              children: [
-                                for (var i = 0; i < numberOfGames; i++)
-                                  GameBoard(gameIndex: i)
-                              ],
-                            ),
+                      padding: const EdgeInsets.all(8),
+                      child: Center(
+                        child: SingleChildScrollView(
+                          child: Wrap(
+                            runSpacing: 16,
+                            spacing: 8,
+                            children: [
+                              for (var i = 0; i < numberOfGames; i++)
+                                GameBoard(gameIndex: i)
+                            ],
                           ),
-                        ],
+                        ),
                       ),
                     ),
                   ),

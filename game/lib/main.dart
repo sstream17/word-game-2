@@ -36,8 +36,14 @@ class WordGameApp extends StatelessWidget {
             backgroundColor: Colors.white,
             foregroundColor: Colors.black,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(4),
             ),
+          ),
+        ),
+        cardTheme: CardTheme(
+          margin: const EdgeInsets.all(2),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(2),
           ),
         ),
         menuTheme: const MenuThemeData(

@@ -13,6 +13,10 @@ class GameBoard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<GameModel>(
       builder: (context, game, child) => Table(
+        defaultColumnWidth: FixedColumnWidth(
+          (MediaQuery.of(context).size.width - 24) /
+              (game.numberOfGames == 1 ? wordLength : wordLength * 2),
+        ),
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
           for (var currentRow = 0;
