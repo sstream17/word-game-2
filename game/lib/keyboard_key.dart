@@ -31,12 +31,15 @@ class KeyboardKey extends StatelessWidget {
             1.0,
           ],
         ),
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(4),
       ),
       child: TextButton(
         style: TextButton.styleFrom(
           backgroundColor: Colors.transparent,
           shadowColor: Colors.transparent,
+          padding: const EdgeInsets.symmetric(
+            vertical: 12,
+          ),
         ),
         onPressed: () {
           onPressed(letter);
@@ -44,6 +47,9 @@ class KeyboardKey extends StatelessWidget {
         child: Text(
           letter,
           textAlign: TextAlign.center,
+          style: const TextStyle(
+            fontSize: 20,
+          ),
         ),
       ),
     );

@@ -59,10 +59,18 @@ class Keyboard extends StatelessWidget {
               SizedBox(
                 width: keyWidth * 1.5,
                 child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                    ),
+                  ),
                   onPressed: () {
                     game.updateGuess("backspace");
                   },
-                  child: const Icon(Icons.backspace_outlined),
+                  child: const Icon(
+                    Icons.backspace_outlined,
+                    size: 28,
+                  ),
                 ),
               ),
               const SizedBox(width: keyGap),
@@ -81,10 +89,18 @@ class Keyboard extends StatelessWidget {
               SizedBox(
                 width: keyWidth * 1.5,
                 child: TextButton(
+                  style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 12,
+                    ),
+                  ),
                   onPressed: () {
                     game.submitGuess();
                   },
-                  child: const Icon(Icons.send_outlined),
+                  child: const Icon(
+                    Icons.send_outlined,
+                    size: 28,
+                  ),
                 ),
               ),
             ],
