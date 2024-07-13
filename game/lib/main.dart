@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:word_game/colors.dart';
 import 'package:word_game/game_app_bar.dart';
@@ -9,8 +10,10 @@ import 'package:word_game/stats.dart';
 
 import 'game.dart';
 
-void main() {
+void main() async {
   setPathUrlStrategy();
+  await Hive.initFlutter();
+  await Hive.openBox('gameStats');
   runApp(const WordGameApp());
 }
 

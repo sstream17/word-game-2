@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:word_game/game_app_bar.dart';
+import 'package:word_game/stats_row.dart';
 
 class Stats extends StatelessWidget {
   const Stats({super.key});
@@ -8,9 +9,14 @@ class Stats extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GameAppBar(
-        title: "Word Game",
+        title: "Stats",
       ),
-      body: const Placeholder(),
+      body: Column(
+        children: [
+          for (final gameMode in [1, 2, 4])
+            StatsRow(numberOfGames: gameMode)
+        ],
+      ),
     );
   }
 }

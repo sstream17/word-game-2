@@ -1,5 +1,6 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:word_game/constants.dart';
 import 'package:word_game/words.dart';
 
@@ -168,6 +169,25 @@ class GameModel with ChangeNotifier {
     return winIndexes.none((index) => index == -1);
   }
 
+  void storeStats(bool won) {
+    var box = Hive.box('gameStats');
+
+    var previousNumberPlayed = box.get("$numberOfGames-numberPlayed") ?? 0;
+    var previousNumberWon = box.get("$numberOfGames-numberWon") ?? 0;
+    var previousStreak = box.get("$numberOfGames-streak") ?? 0;
+    var previousMaxStreak = box.get("$numberOfGames-maxStreak") ?? 0;
+
+    var newNumberWon = won ? previousNumberWon + 1 : previousNumberWon;
+    var newStreak = won ? previousStreak + 1 : 0;
+    var newMaxStreak =
+        newStreak > previousMaxStreak ? newStreak : previousMaxStreak;
+
+    box.put("$numberOfGames-numberPlayed", previousNumberPlayed + 1);
+    box.put("$numberOfGames-numberWon", newNumberWon);
+    box.put("$numberOfGames-streak", newStreak);
+    box.put("$numberOfGames-maxStreak", newMaxStreak);
+  }
+
   void submitGuess() {
     if (gameOver) {
       return;
@@ -188,6 +208,7 @@ class GameModel with ChangeNotifier {
     if (wonAllGames()) {
       gameWon = true;
       gameOver = true;
+      storeStats(gameWon);
       notifyListeners();
       return;
     }
@@ -197,6 +218,7 @@ class GameModel with ChangeNotifier {
     if (guessIndex >= numberOfGuesses) {
       gameWon = false;
       gameOver = true;
+      storeStats(gameWon);
       notifyListeners();
       return;
     }
