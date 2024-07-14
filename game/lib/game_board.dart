@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:word_game/colors.dart';
-import 'package:word_game/constants.dart';
+import 'package:word_game/constants/game.dart';
 import 'package:word_game/game_model.dart';
 
 class GameBoard extends StatelessWidget {

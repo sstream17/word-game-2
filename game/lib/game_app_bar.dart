@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:word_game/routes.dart';
+import 'package:word_game/constants/routes.dart';
 
 class GameAppBar extends StatelessWidget implements PreferredSizeWidget {
   GameAppBar({super.key, this.title});

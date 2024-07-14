@@ -1,7 +1,8 @@
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:word_game/constants.dart';
+import 'package:word_game/constants/game.dart';
+import 'package:word_game/constants/store.dart';
 import 'package:word_game/words.dart';
 
 class GameModel with ChangeNotifier {
@@ -170,22 +171,34 @@ class GameModel with ChangeNotifier {
   }
 
   void storeStats(bool won) {
-    var box = Hive.box('gameStats');
+    var box = Hive.box(storeNameStats);
 
-    var previousNumberPlayed = box.get("$numberOfGames-numberPlayed") ?? 0;
-    var previousNumberWon = box.get("$numberOfGames-numberWon") ?? 0;
-    var previousStreak = box.get("$numberOfGames-streak") ?? 0;
-    var previousMaxStreak = box.get("$numberOfGames-maxStreak") ?? 0;
+    var previousNumberPlayed = box.get(
+      "$numberOfGames-$storeKeyNumberPlayed",
+      defaultValue: 0,
+    );
+    var previousNumberWon = box.get(
+      "$numberOfGames-$storeKeyNumberWon",
+      defaultValue: 0,
+    );
+    var previousStreak = box.get(
+      "$numberOfGames-$storeKeyStreak",
+      defaultValue: 0,
+    );
+    var previousMaxStreak = box.get(
+      "$numberOfGames-$storeKeyMaxStreak",
+      defaultValue: 0,
+    );
 
     var newNumberWon = won ? previousNumberWon + 1 : previousNumberWon;
     var newStreak = won ? previousStreak + 1 : 0;
     var newMaxStreak =
         newStreak > previousMaxStreak ? newStreak : previousMaxStreak;
 
-    box.put("$numberOfGames-numberPlayed", previousNumberPlayed + 1);
-    box.put("$numberOfGames-numberWon", newNumberWon);
-    box.put("$numberOfGames-streak", newStreak);
-    box.put("$numberOfGames-maxStreak", newMaxStreak);
+    box.put("$numberOfGames-$storeKeyNumberPlayed", previousNumberPlayed + 1);
+    box.put("$numberOfGames-$storeKeyNumberWon", newNumberWon);
+    box.put("$numberOfGames-$storeKeyStreak", newStreak);
+    box.put("$numberOfGames-$storeKeyMaxStreak", newMaxStreak);
   }
 
   void submitGuess() {

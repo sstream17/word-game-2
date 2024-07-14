@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:word_game/constants.dart';
+import 'package:word_game/constants/game.dart';
 
 class StatsGraph extends StatelessWidget {
   const StatsGraph({super.key, required this.numberOfGames});

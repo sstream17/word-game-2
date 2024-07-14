@@ -3,9 +3,10 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'package:word_game/colors.dart';
+import 'package:word_game/constants/routes.dart';
+import 'package:word_game/constants/store.dart';
 import 'package:word_game/game_app_bar.dart';
 import 'package:word_game/how_to_play.dart';
-import 'package:word_game/routes.dart';
 import 'package:word_game/stats.dart';
 
 import 'game.dart';
@@ -13,7 +14,7 @@ import 'game.dart';
 void main() async {
   setPathUrlStrategy();
   await Hive.initFlutter();
-  await Hive.openBox('gameStats');
+  await Hive.openBox(storeNameStats);
   runApp(const WordGameApp());
 }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:word_game/constants/store.dart';
 import 'package:word_game/stats_graph.dart';
 
 class StatsRow extends StatelessWidget {
@@ -9,14 +10,23 @@ class StatsRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var box = Hive.box('gameStats');
-    var gamesPlayed = box.get("$numberOfGames-numberPlayed") ?? 0;
+    var box = Hive.box(storeNameStats);
+    var gamesPlayed = box.get(
+      "$numberOfGames-$storeKeyNumberPlayed",
+      defaultValue: 0,
+    );
     var winPercentage = gamesPlayed != 0
-        ? box.get("$numberOfGames-numberWon") / gamesPlayed * 100
+        ? box.get("$numberOfGames-$storeKeyNumberWon") / gamesPlayed * 100
         : 0;
     var averageGuess = 0;
-    var streak = box.get("$numberOfGames-streak") ?? 0;
-    var maxStreak = box.get("$numberOfGames-maxStreak") ?? 0;
+    var streak = box.get(
+      "$numberOfGames-$storeKeyStreak",
+      defaultValue: 0,
+    );
+    var maxStreak = box.get(
+      "$numberOfGames-$storeKeyMaxStreak",
+      defaultValue: 0,
+    );
     return Column(
       children: [
         Row(
