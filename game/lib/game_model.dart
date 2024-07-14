@@ -189,6 +189,18 @@ class GameModel with ChangeNotifier {
       "$numberOfGames-$storeKeyMaxStreak",
       defaultValue: 0,
     );
+    var storedFinishes = box.get(
+      "$numberOfGames-$storeKeyFinishes",
+      defaultValue: <int, int>{},
+    );
+    var finishes = Map<int, int>.from(storedFinishes);
+
+    var newFinishIndex = winIndexes.contains(-1) ? -1 : winIndexes.max;
+    finishes.update(
+      newFinishIndex,
+      (prev) => prev + 1,
+      ifAbsent: () => 1,
+    );
 
     var newNumberWon = won ? previousNumberWon + 1 : previousNumberWon;
     var newStreak = won ? previousStreak + 1 : 0;
@@ -199,6 +211,7 @@ class GameModel with ChangeNotifier {
     box.put("$numberOfGames-$storeKeyNumberWon", newNumberWon);
     box.put("$numberOfGames-$storeKeyStreak", newStreak);
     box.put("$numberOfGames-$storeKeyMaxStreak", newMaxStreak);
+    box.put("$numberOfGames-$storeKeyFinishes", finishes);
   }
 
   void submitGuess() {

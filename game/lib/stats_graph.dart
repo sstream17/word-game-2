@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:word_game/constants/game.dart';
 
 class StatsGraph extends StatelessWidget {
-  const StatsGraph({super.key, required this.numberOfGames});
+  const StatsGraph({
+    super.key,
+    required this.numberOfGames,
+    required this.finishes,
+  });
 
   final int numberOfGames;
+  final Map<int, int> finishes;
 
   @override
   Widget build(BuildContext context) {
@@ -13,7 +18,14 @@ class StatsGraph extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         for (final winIndex in numberOfGuesses)
-          Text("${winIndex == -1 ? "L" : winIndex + numberOfGames}")
+          Column(
+            children: [
+              Text("${finishes[winIndex] ?? ""}"),
+              Text(
+                "${winIndex == -1 ? "L" : winIndex + numberOfGames}",
+              ),
+            ],
+          )
       ],
     );
   }

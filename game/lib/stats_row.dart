@@ -27,6 +27,11 @@ class StatsRow extends StatelessWidget {
       "$numberOfGames-$storeKeyMaxStreak",
       defaultValue: 0,
     );
+    var storedFinishes = box.get(
+      "$numberOfGames-$storeKeyFinishes",
+      defaultValue: <int, int>{},
+    );
+    var finishes = Map<int, int>.from(storedFinishes);
     return Column(
       children: [
         Row(
@@ -76,6 +81,7 @@ class StatsRow extends StatelessWidget {
         ),
         StatsGraph(
           numberOfGames: numberOfGames,
+          finishes: finishes,
         )
       ],
     );
