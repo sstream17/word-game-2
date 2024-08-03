@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:word_game/constants/game.dart';
 import 'package:word_game/constants/store.dart';
 import 'package:word_game/stats_graph.dart';
 
@@ -17,8 +18,7 @@ class StatsRow extends StatelessWidget {
     );
     var winPercentage = gamesPlayed != 0
         ? box.get("$numberOfGames-$storeKeyNumberWon") / gamesPlayed * 100
-        : 0;
-    var averageGuess = 0;
+        : 0.0;
     var streak = box.get(
       "$numberOfGames-$storeKeyStreak",
       defaultValue: 0,
@@ -32,6 +32,13 @@ class StatsRow extends StatelessWidget {
       defaultValue: <int, int>{},
     );
     var finishes = Map<int, int>.from(storedFinishes);
+    var avgNumerator = finishes.entries.fold(0, (total, entry) {
+      var finishValue = entry.key == -1 ? numberOfGames + numberOfTries : entry.key;
+      return total + ((finishValue + 1) * entry.value);
+    });
+    var avgDenominator = finishes.values.fold(0, (sum, value) => sum + value);
+    var averageGuess =
+        finishes.isNotEmpty ? avgNumerator / avgDenominator : 0.0;
     return Column(
       children: [
         Row(
@@ -49,7 +56,7 @@ class StatsRow extends StatelessWidget {
               children: [
                 const Text("Won"),
                 Text(
-                  "${formatPercentage(winPercentage)}%",
+                  "${formatDecimal(winPercentage)}%",
                 ),
               ],
             ),
@@ -57,7 +64,7 @@ class StatsRow extends StatelessWidget {
               children: [
                 const Text("Avg Guess"),
                 Text(
-                  "$averageGuess",
+                  formatDecimal(averageGuess),
                 ),
               ],
             ),
@@ -88,7 +95,7 @@ class StatsRow extends StatelessWidget {
   }
 }
 
-String formatPercentage(double number) {
+String formatDecimal(double number) {
   String formatted = number.toStringAsFixed(2);
 
   // Remove trailing zeros and the decimal point if there are no fractional digits
