@@ -8,7 +8,7 @@ class HowToPlay extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: GameAppBar(
-        title: "Word Game",
+        title: "How to play",
       ),
       body: const Placeholder(),
     );
