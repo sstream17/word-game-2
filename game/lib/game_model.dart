@@ -195,7 +195,7 @@ class GameModel with ChangeNotifier {
     );
     var finishes = Map<int, int>.from(storedFinishes);
 
-    var newFinishIndex = winIndexes.contains(-1) ? -1 : winIndexes.max;
+    var newFinishIndex = winIndexes.contains(-1) ? -1 : winIndexes.max - numberOfGames + 1;
     finishes.update(
       newFinishIndex,
       (prev) => prev + 1,

@@ -14,7 +14,12 @@ class Stats extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            for (final gameMode in [1, 2, 4]) StatsRow(numberOfGames: gameMode)
+            for (final gameMode in [1, 2, 4]) Column(
+              children: [
+                StatsRow(numberOfGames: gameMode),
+                const SizedBox(height: 24),
+              ],
+            )
           ],
         ),
       ),

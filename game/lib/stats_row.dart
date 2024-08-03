@@ -33,14 +33,16 @@ class StatsRow extends StatelessWidget {
     );
     var finishes = Map<int, int>.from(storedFinishes);
     var avgNumerator = finishes.entries.fold(0, (total, entry) {
-      var finishValue = entry.key == -1 ? numberOfGames + numberOfTries : entry.key;
-      return total + ((finishValue + 1) * entry.value);
+      var finishValue = entry.key == -1 ? numberOfTries : entry.key;
+      return total + ((numberOfGames + finishValue) * entry.value);
     });
     var avgDenominator = finishes.values.fold(0, (sum, value) => sum + value);
     var averageGuess =
         finishes.isNotEmpty ? avgNumerator / avgDenominator : 0.0;
+
     return Column(
       children: [
+        getStatsTitle(numberOfGames),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -52,6 +54,7 @@ class StatsRow extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(width: 16),
             Column(
               children: [
                 const Text("Won"),
@@ -60,6 +63,7 @@ class StatsRow extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(width: 16),
             Column(
               children: [
                 const Text("Avg Guess"),
@@ -68,6 +72,7 @@ class StatsRow extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(width: 16),
             Column(
               children: [
                 const Text("Streak"),
@@ -76,6 +81,7 @@ class StatsRow extends StatelessWidget {
                 ),
               ],
             ),
+            const SizedBox(width: 16),
             Column(
               children: [
                 const Text("Max Streak"),
@@ -87,8 +93,8 @@ class StatsRow extends StatelessWidget {
           ],
         ),
         SizedBox(
-          width: 400.0,
-          height: 400.0,
+          height: 350,
+          width: 400,
           child: StatsGraph(
             numberOfGames: numberOfGames,
             finishes: finishes,
@@ -97,6 +103,16 @@ class StatsRow extends StatelessWidget {
       ],
     );
   }
+}
+
+Text getStatsTitle(int numberOfGames) {
+  const titles = {
+    1: "Classic",
+    2: "Duo",
+    4: "Quad",
+  };
+
+  return Text(titles[numberOfGames] ?? "");
 }
 
 String formatDecimal(double number) {
