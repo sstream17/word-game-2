@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:word_game/colors.dart';
 
 class KeyboardKey extends StatelessWidget {
@@ -43,6 +44,7 @@ class KeyboardKey extends StatelessWidget {
         ),
         onPressed: () {
           onPressed(letter);
+          HapticFeedback.lightImpact();
         },
         child: Text(
           letter,

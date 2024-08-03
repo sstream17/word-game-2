@@ -1,8 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:word_game/game_model.dart';
-import 'package:word_game/keyboard_key.dart';
+import 'package:word_game/keyboard_key.dart' as game_key;
 
 class Keyboard extends StatelessWidget {
   const Keyboard({super.key, required this.game});
@@ -26,7 +27,7 @@ class Keyboard extends StatelessWidget {
               for (final letter in "qwertyuiop".characters)
                 SizedBox(
                   width: keyWidth,
-                  child: KeyboardKey(
+                  child: game_key.KeyboardKey(
                     letter: letter,
                     hints: game.keyHints[letter],
                     onPressed: game.updateGuess,
@@ -42,7 +43,7 @@ class Keyboard extends StatelessWidget {
                 Row(children: [
                   SizedBox(
                     width: keyWidth,
-                    child: KeyboardKey(
+                    child: game_key.KeyboardKey(
                       letter: letter,
                       hints: game.keyHints[letter],
                       onPressed: game.updateGuess,
@@ -66,6 +67,7 @@ class Keyboard extends StatelessWidget {
                   ),
                   onPressed: () {
                     game.updateGuess("backspace");
+                    HapticFeedback.lightImpact();
                   },
                   child: const Icon(
                     Icons.backspace_outlined,
@@ -78,7 +80,7 @@ class Keyboard extends StatelessWidget {
                 Row(children: [
                   SizedBox(
                     width: keyWidth,
-                    child: KeyboardKey(
+                    child: game_key.KeyboardKey(
                       letter: letter,
                       hints: game.keyHints[letter],
                       onPressed: game.updateGuess,
@@ -96,6 +98,7 @@ class Keyboard extends StatelessWidget {
                   ),
                   onPressed: () {
                     game.submitGuess();
+                    HapticFeedback.lightImpact();
                   },
                   child: const Icon(
                     Icons.send_outlined,
