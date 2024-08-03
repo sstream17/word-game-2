@@ -11,11 +11,12 @@ class Stats extends StatelessWidget {
       appBar: GameAppBar(
         title: "Stats",
       ),
-      body: Column(
-        children: [
-          for (final gameMode in [1, 2, 4])
-            StatsRow(numberOfGames: gameMode)
-        ],
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            for (final gameMode in [1, 2, 4]) StatsRow(numberOfGames: gameMode)
+          ],
+        ),
       ),
     );
   }

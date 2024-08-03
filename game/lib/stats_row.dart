@@ -86,10 +86,14 @@ class StatsRow extends StatelessWidget {
             ),
           ],
         ),
-        StatsGraph(
-          numberOfGames: numberOfGames,
-          finishes: finishes,
-        )
+        SizedBox(
+          width: 400.0,
+          height: 400.0,
+          child: StatsGraph(
+            numberOfGames: numberOfGames,
+            finishes: finishes,
+          ),
+        ),
       ],
     );
   }
