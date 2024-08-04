@@ -33,7 +33,7 @@ class StatsRow extends StatelessWidget {
     );
     var finishes = Map<int, int>.from(storedFinishes);
     var avgNumerator = finishes.entries.fold(0, (total, entry) {
-      var finishValue = entry.key == -1 ? numberOfTries : entry.key;
+      var finishValue = entry.key == -1 ? numberOfTries + 1 : entry.key;
       return total + ((numberOfGames + finishValue) * entry.value);
     });
     var avgDenominator = finishes.values.fold(0, (sum, value) => sum + value);
