@@ -38,7 +38,7 @@ class StatsGraph extends StatelessWidget {
       fontSize: 14,
     );
 
-    var text = value == 6 ? "L" : "${numberOfGames + value}";
+    var text = value == 6 ? "L" : "${numberOfGames + value.toInt()}";
 
     return SideTitleWidget(
       axisSide: meta.axisSide,
@@ -92,7 +92,7 @@ class StatsGraph extends StatelessWidget {
         touchTooltipData: BarTouchTooltipData(
           getTooltipColor: (_) => Colors.transparent,
           getTooltipItem: (_g, _gi, rodData, _ri) {
-            var text = rodData.toY == 0 ? "" : rodData.toY;
+            var text = rodData.toY == 0 ? "" : rodData.toY.toInt();
             return BarTooltipItem(
               "$text",
               TextStyle(
