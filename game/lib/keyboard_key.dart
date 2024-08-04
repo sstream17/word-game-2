@@ -8,7 +8,10 @@ class KeyboardKey extends StatelessWidget {
     required this.letter,
     this.hints,
     required this.onPressed,
+    required this.appColors,
   }) : super(key: key);
+
+  final AppColors appColors;
 
   final String letter;
   final List<String>? hints;
@@ -16,7 +19,6 @@ class KeyboardKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final appColors = Theme.of(context).extension<AppColors>()!;
     return Container(
       decoration: BoxDecoration(
         gradient: SweepGradient(

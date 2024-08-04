@@ -2,11 +2,18 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:word_game/colors.dart';
 import 'package:word_game/game_model.dart';
 import 'package:word_game/keyboard_key.dart' as game_key;
 
 class Keyboard extends StatelessWidget {
-  const Keyboard({super.key, required this.game});
+  const Keyboard({
+    super.key,
+    required this.game,
+    required this.appColors,
+  });
+
+  final AppColors appColors;
 
   final GameModel game;
 
@@ -31,6 +38,7 @@ class Keyboard extends StatelessWidget {
                     letter: letter,
                     hints: game.keyHints[letter],
                     onPressed: game.updateGuess,
+                    appColors: appColors,
                   ),
                 ),
             ],
@@ -47,6 +55,7 @@ class Keyboard extends StatelessWidget {
                       letter: letter,
                       hints: game.keyHints[letter],
                       onPressed: game.updateGuess,
+                      appColors: appColors,
                     ),
                   ),
                   if (letter != "l") const SizedBox(width: keyGap),
@@ -84,6 +93,7 @@ class Keyboard extends StatelessWidget {
                       letter: letter,
                       hints: game.keyHints[letter],
                       onPressed: game.updateGuess,
+                      appColors: appColors,
                     ),
                   ),
                   const SizedBox(width: keyGap),

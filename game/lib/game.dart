@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:word_game/colors.dart';
 import 'package:word_game/controls.dart';
 import 'package:word_game/game_app_bar.dart';
 import 'package:word_game/game_board.dart';
@@ -14,6 +15,7 @@ class Game extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
     return ChangeNotifierProvider(
       create: (context) => GameModel(numberOfGames),
       builder: (context, _) {
@@ -60,15 +62,20 @@ class Game extends StatelessWidget {
                             spacing: 8,
                             children: [
                               for (var i = 0; i < numberOfGames; i++)
-                                GameBoard(gameIndex: i)
+                                GameBoard(
+                                  gameIndex: i,
+                                  appColors: appColors,
+                                )
                             ],
                           ),
                         ),
                       ),
                     ),
                   ),
-                  const Center(
-                    child: Controls(),
+                  Center(
+                    child: Controls(
+                      appColors: appColors,
+                    ),
                   ),
                 ],
               ),

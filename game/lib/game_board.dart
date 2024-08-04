@@ -5,13 +5,18 @@ import 'package:word_game/constants/game.dart';
 import 'package:word_game/game_model.dart';
 
 class GameBoard extends StatelessWidget {
-  const GameBoard({Key? key, required this.gameIndex}) : super(key: key);
+  const GameBoard({
+    Key? key,
+    required this.gameIndex,
+    required this.appColors,
+  }) : super(key: key);
+
+  final AppColors appColors;
 
   final int gameIndex;
 
   @override
   Widget build(BuildContext context) {
-    final appColors = Theme.of(context).extension<AppColors>()!;
     return Consumer<GameModel>(
       builder: (context, game, child) => Table(
         defaultColumnWidth: FixedColumnWidth(
