@@ -1,6 +1,7 @@
 import 'package:collection/collection.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:word_game/colors.dart';
 import 'package:word_game/constants/game.dart';
 
 class StatsGraph extends StatelessWidget {
@@ -16,15 +17,17 @@ class StatsGraph extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
+
     return BarChart(
       BarChartData(
         titlesData: titlesData,
         borderData: borderData,
-        barGroups: barGroups,
-        barTouchData: barTouchData,
+        barGroups: getBarGroups(appColors),
+        barTouchData: getBarTouchData(appColors),
         gridData: const FlGridData(show: false),
         alignment: BarChartAlignment.spaceAround,
-        maxY: 1.5 * (finishes.values.maxOrNull?.toDouble() ?? 0),
+        maxY: 1.5 * (finishes.values.maxOrNull ?? 0),
       ),
     );
   }
@@ -68,14 +71,14 @@ class StatsGraph extends StatelessWidget {
         show: false,
       );
 
-  List<BarChartGroupData> get barGroups => numberOfGuesses
+  List<BarChartGroupData> getBarGroups(AppColors appColors) => numberOfGuesses
       .mapIndexed(
         (index, winIndex) => BarChartGroupData(
           x: index,
           barRods: [
             BarChartRodData(
               toY: finishes[winIndex]?.toDouble() ?? 0,
-              color: Colors.amber,
+              color: appColors.contentColorExact,
               width: 16,
             )
           ],
@@ -84,18 +87,19 @@ class StatsGraph extends StatelessWidget {
       )
       .toList();
 
-  BarTouchData get barTouchData => BarTouchData(
+  BarTouchData getBarTouchData(AppColors appColors) => BarTouchData(
         enabled: false,
         touchTooltipData: BarTouchTooltipData(
-            getTooltipColor: (_) => Colors.transparent,
-            getTooltipItem: (_g, _gi, rodData, _ri) {
-              var text = rodData.toY == 0 ? "" : rodData.toY;
-              return BarTooltipItem(
-                "$text",
-                const TextStyle(
-                  color: Colors.black,
-                ),
-              );
-            }),
+          getTooltipColor: (_) => Colors.transparent,
+          getTooltipItem: (_g, _gi, rodData, _ri) {
+            var text = rodData.toY == 0 ? "" : rodData.toY;
+            return BarTooltipItem(
+              "$text",
+              TextStyle(
+                color: appColors.textColor,
+              ),
+            );
+          },
+        ),
       );
 }

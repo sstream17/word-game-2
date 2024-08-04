@@ -29,6 +29,17 @@ class WordGameApp extends StatelessWidget {
       theme: ThemeData(
         textTheme: GoogleFonts.nunitoTextTheme(),
         colorScheme: lightScheme,
+        extensions: [
+          AppColors(
+            contentColorExact: ColorsLight.colorExact,
+            contentColorClose: ColorsLight.colorClose,
+            contentColorMissing: ColorsLight.colorMissing,
+            contentColorUnguessed: ColorsLight.colorUnguessed,
+            textColor: ColorsLight.colorText,
+            textColorMissing: ColorsLight.colorTextMissing,
+            textColorInvalid: ColorsLight.colorTextInvalid,
+          ),
+        ],
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ElevatedButton.styleFrom(
             backgroundColor: Colors.white,
@@ -52,7 +63,9 @@ class WordGameApp extends StatelessWidget {
         ),
         menuTheme: const MenuThemeData(
           style: MenuStyle(
-              backgroundColor: WidgetStatePropertyAll<Color>(Colors.white)),
+            backgroundColor:
+                WidgetStatePropertyAll<Color>(ColorsLight.colorMenuBg),
+          ),
         ),
       ),
       initialRoute: routeHome,

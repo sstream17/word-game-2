@@ -11,11 +11,11 @@ class GameBoard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
     return Consumer<GameModel>(
       builder: (context, game, child) => Table(
         defaultColumnWidth: FixedColumnWidth(
-          (MediaQuery.of(context).size.width - 24) /
-              (game.numberOfGames == 1 ? wordLength : wordLength * 2),
+          (MediaQuery.of(context).size.width - 24) / (wordLength * 2),
         ),
         defaultVerticalAlignment: TableCellVerticalAlignment.middle,
         children: [
@@ -32,6 +32,7 @@ class GameBoard extends StatelessWidget {
                     gameIndex,
                     currentRow,
                     currentLetter,
+                    appColors,
                   ),
               ],
             ),
@@ -46,10 +47,11 @@ TableCell buildTableCell(
   int gameIndex,
   int currentRow,
   int currentLetter,
+  AppColors appColors,
 ) {
   Color textColor = game.guessIndex == currentRow && game.invalidGuess
-      ? Colors.red
-      : Colors.black;
+      ? appColors.textColorInvalid
+      : appColors.textColor;
 
   String text = currentLetter < game.guesses[currentRow].length
       ? game.guesses[currentRow][currentLetter]
@@ -68,6 +70,7 @@ TableCell buildTableCell(
     child: Card(
       color: getBackgroundColor(
         game.hints[gameIndex][currentRow][currentLetter],
+        appColors,
       ),
       child: Center(
         child: Text(

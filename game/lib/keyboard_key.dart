@@ -16,11 +16,15 @@ class KeyboardKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final appColors = Theme.of(context).extension<AppColors>()!;
     return Container(
       decoration: BoxDecoration(
         gradient: SweepGradient(
           center: FractionalOffset.center,
-          colors: getKeyColor(hints ?? []),
+          colors: getKeyColor(
+            hints ?? [],
+            appColors,
+          ),
           stops: const <double>[
             0.0,
             0.25,
