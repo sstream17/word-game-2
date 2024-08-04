@@ -15,13 +15,19 @@ class Controls extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<GameModel>(
-      builder: (context, game, child) => game.gameOver
-          ? EndGame(game: game)
-          : Keyboard(
-              game: game,
-              appColors: appColors,
-            ),
+    return SizedBox(
+      height: 160,
+      child: Consumer<GameModel>(
+        builder: (context, game, child) => game.gameOver
+            ? EndGame(
+                game: game,
+                appColors: appColors,
+              )
+            : Keyboard(
+                game: game,
+                appColors: appColors,
+              ),
+      ),
     );
   }
 }
