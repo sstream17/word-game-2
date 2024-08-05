@@ -12,33 +12,15 @@ class StatsRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var box = Hive.box(storeNameStats);
-    var gamesPlayed = box.get(
-      "$numberOfGames-$storeKeyNumberPlayed",
-      defaultValue: 0,
-    );
-    var winPercentage = gamesPlayed != 0
-        ? box.get("$numberOfGames-$storeKeyNumberWon") / gamesPlayed * 100
-        : 0.0;
-    var streak = box.get(
-      "$numberOfGames-$storeKeyStreak",
-      defaultValue: 0,
-    );
-    var maxStreak = box.get(
-      "$numberOfGames-$storeKeyMaxStreak",
-      defaultValue: 0,
-    );
-    var storedFinishes = box.get(
-      "$numberOfGames-$storeKeyFinishes",
-      defaultValue: <int, int>{},
-    );
+
+    var gamesPlayed = _getGamesPlayed(box);
+    var winPercentage = _getWinPercentage(box, gamesPlayed);
+    var streak = _getStreak(box);
+    var maxStreak = _getMaxStreak(box);
+
+    var storedFinishes = _getFinishes(box);
     var finishes = Map<int, int>.from(storedFinishes);
-    var avgNumerator = finishes.entries.fold(0, (total, entry) {
-      var finishValue = entry.key == -1 ? numberOfTries + 1 : entry.key;
-      return total + ((numberOfGames + finishValue) * entry.value);
-    });
-    var avgDenominator = finishes.values.fold(0, (sum, value) => sum + value);
-    var averageGuess =
-        finishes.isNotEmpty ? avgNumerator / avgDenominator : 0.0;
+    var averageGuess = _getAverageGuess(box, finishes);
 
     return Column(
       children: [
@@ -130,6 +112,49 @@ class StatsRow extends StatelessWidget {
       titles[numberOfGames] ?? "",
       style: Theme.of(context).textTheme.titleLarge,
     );
+  }
+
+  int _getGamesPlayed(Box box) {
+    return box.get(
+      "$numberOfGames-$storeKeyNumberPlayed",
+      defaultValue: 0,
+    );
+  }
+
+  double _getWinPercentage(Box box, int gamesPlayed) {
+    return gamesPlayed != 0
+        ? box.get("$numberOfGames-$storeKeyNumberWon") / gamesPlayed * 100
+        : 0.0;
+  }
+
+  int _getStreak(Box box) {
+    return box.get(
+      "$numberOfGames-$storeKeyStreak",
+      defaultValue: 0,
+    );
+  }
+
+  int _getMaxStreak(Box box) {
+    return box.get(
+      "$numberOfGames-$storeKeyMaxStreak",
+      defaultValue: 0,
+    );
+  }
+
+  dynamic _getFinishes(Box box) {
+    return box.get(
+      "$numberOfGames-$storeKeyFinishes",
+      defaultValue: <int, int>{},
+    );
+  }
+
+  double _getAverageGuess(Box box, Map<int, int> finishes) {
+    var avgNumerator = finishes.entries.fold(0, (total, entry) {
+      var finishValue = entry.key == -1 ? numberOfTries + 1 : entry.key;
+      return total + ((numberOfGames + finishValue) * entry.value);
+    });
+    var avgDenominator = finishes.values.fold(0, (sum, value) => sum + value);
+    return finishes.isNotEmpty ? avgNumerator / avgDenominator : 0.0;
   }
 }
 
