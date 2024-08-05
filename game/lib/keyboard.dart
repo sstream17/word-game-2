@@ -23,6 +23,8 @@ class Keyboard extends StatelessWidget {
     var screenWidth = MediaQuery.of(context).size.width;
     var maxWidth = min(screenWidth, 500.0);
     var keyWidth = (maxWidth - keyGap * 13) / 10;
+    var keyHeight = 50.0;
+
     return SizedBox(
       width: maxWidth,
       child: Column(
@@ -34,6 +36,7 @@ class Keyboard extends StatelessWidget {
               for (final letter in "qwertyuiop".characters)
                 SizedBox(
                   width: keyWidth,
+                  height: keyHeight,
                   child: game_key.KeyboardKey(
                     letter: letter,
                     hints: game.keyHints[letter],
@@ -51,6 +54,7 @@ class Keyboard extends StatelessWidget {
                 Row(children: [
                   SizedBox(
                     width: keyWidth,
+                    height: keyHeight,
                     child: game_key.KeyboardKey(
                       letter: letter,
                       hints: game.keyHints[letter],
@@ -68,6 +72,7 @@ class Keyboard extends StatelessWidget {
             children: [
               SizedBox(
                 width: keyWidth * 1.5,
+                height: keyHeight,
                 child: TextButton(
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
@@ -80,7 +85,6 @@ class Keyboard extends StatelessWidget {
                   },
                   child: const Icon(
                     Icons.backspace_outlined,
-                    size: 28,
                   ),
                 ),
               ),
@@ -89,6 +93,7 @@ class Keyboard extends StatelessWidget {
                 Row(children: [
                   SizedBox(
                     width: keyWidth,
+                    height: keyHeight,
                     child: game_key.KeyboardKey(
                       letter: letter,
                       hints: game.keyHints[letter],
@@ -100,6 +105,7 @@ class Keyboard extends StatelessWidget {
                 ]),
               SizedBox(
                 width: keyWidth * 1.5,
+                height: keyHeight,
                 child: TextButton(
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(
@@ -112,7 +118,6 @@ class Keyboard extends StatelessWidget {
                   },
                   child: const Icon(
                     Icons.send_outlined,
-                    size: 28,
                   ),
                 ),
               ),

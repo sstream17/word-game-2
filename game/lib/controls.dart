@@ -16,7 +16,7 @@ class Controls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 160,
+      height: 190,
       child: Consumer<GameModel>(
         builder: (context, game, child) => game.gameOver
             ? EndGame(
