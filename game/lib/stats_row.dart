@@ -42,13 +42,16 @@ class StatsRow extends StatelessWidget {
 
     return Column(
       children: [
-        getStatsTitle(numberOfGames),
+        _getStatsTitle(context, numberOfGames),
         Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Column(
               children: [
-                const Text("Played"),
+                const Text(
+                  "Played",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 Text(
                   "$gamesPlayed",
                 ),
@@ -57,7 +60,10 @@ class StatsRow extends StatelessWidget {
             const SizedBox(width: 16),
             Column(
               children: [
-                const Text("Won"),
+                const Text(
+                  "Won",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 Text(
                   "${formatDecimal(winPercentage)}%",
                 ),
@@ -66,7 +72,10 @@ class StatsRow extends StatelessWidget {
             const SizedBox(width: 16),
             Column(
               children: [
-                const Text("Avg Guess"),
+                const Text(
+                  "Avg Guess",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 Text(
                   formatDecimal(averageGuess),
                 ),
@@ -75,7 +84,10 @@ class StatsRow extends StatelessWidget {
             const SizedBox(width: 16),
             Column(
               children: [
-                const Text("Streak"),
+                const Text(
+                  "Streak",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 Text(
                   "$streak",
                 ),
@@ -84,7 +96,10 @@ class StatsRow extends StatelessWidget {
             const SizedBox(width: 16),
             Column(
               children: [
-                const Text("Max Streak"),
+                const Text(
+                  "Max Streak",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
                 Text(
                   "$maxStreak",
                 ),
@@ -103,16 +118,19 @@ class StatsRow extends StatelessWidget {
       ],
     );
   }
-}
 
-Text getStatsTitle(int numberOfGames) {
-  const titles = {
-    1: "Classic",
-    2: "Duo",
-    4: "Quad",
-  };
+  Text _getStatsTitle(BuildContext context, int numberOfGames) {
+    const titles = {
+      1: "Classic",
+      2: "Duo",
+      4: "Quad",
+    };
 
-  return Text(titles[numberOfGames] ?? "");
+    return Text(
+      titles[numberOfGames] ?? "",
+      style: Theme.of(context).textTheme.titleLarge,
+    );
+  }
 }
 
 String formatDecimal(double number) {

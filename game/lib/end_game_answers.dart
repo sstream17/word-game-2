@@ -22,7 +22,8 @@ class EndGameAnswers extends StatelessWidget {
 
       var word = Text(words[i]);
       var winIndex = Container(
-        width: 16,
+        width: 24,
+        alignment: Alignment.center,
         padding: const EdgeInsets.all(4),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(4),
@@ -42,10 +43,13 @@ class EndGameAnswers extends StatelessWidget {
       );
     }
 
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      children: items,
+    return DefaultTextStyle(
+      style: Theme.of(context).textTheme.titleLarge!,
+      child: Wrap(
+        spacing: 16,
+        runSpacing: 16,
+        children: items,
+      ),
     );
   }
 
