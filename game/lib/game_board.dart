@@ -18,74 +18,105 @@ class GameBoard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<GameModel>(
-      builder: (context, game, child) => Table(
-        defaultColumnWidth: FixedColumnWidth(
-          (MediaQuery.of(context).size.width - 24) / (wordLength * 2),
-        ),
-        defaultVerticalAlignment: TableCellVerticalAlignment.middle,
-        children: [
-          for (var currentRow = 0;
-              currentRow < game.guesses.length;
-              currentRow++)
-            TableRow(
-              children: [
-                for (var currentLetter = 0;
-                    currentLetter < wordLength;
-                    currentLetter++)
-                  buildTableCell(
-                    game,
-                    gameIndex,
-                    currentRow,
-                    currentLetter,
-                    appColors,
-                  ),
-              ],
-            ),
-        ],
-      ),
+      builder: (context, game, child) {
+        final columnWidth =
+            (MediaQuery.of(context).size.width - 24) / (wordLength * 2);
+        return Table(
+          defaultColumnWidth: FixedColumnWidth(columnWidth),
+          defaultVerticalAlignment: TableCellVerticalAlignment.middle,
+          children: _buildTableRows(game),
+        );
+      },
     );
   }
-}
 
-TableCell buildTableCell(
-  GameModel game,
-  int gameIndex,
-  int currentRow,
-  int currentLetter,
-  AppColors appColors,
-) {
-  Color textColor = game.guessIndex == currentRow && game.invalidGuess
-      ? appColors.textColorInvalid
-      : appColors.textColor;
-
-  String text = currentLetter < game.guesses[currentRow].length
-      ? game.guesses[currentRow][currentLetter]
-      : "";
-
-  // TODO: Fix this for games that have already been won.
-  // Currently the row will continue to change size, but it should stay on the row that was won.
-  double fontSize = game.guessIndex == currentRow ? 36 : 24;
-
-  if (game.winIndexes[gameIndex] != -1 &&
-      currentRow > game.winIndexes[gameIndex]) {
-    text = "";
+  List<TableRow> _buildTableRows(GameModel game) {
+    return List.generate(game.guesses.length, (currentRow) {
+      final isCurrentGuess = game.guessIndex == currentRow;
+      final winIndex = game.winIndexes[gameIndex];
+      final textStyle =
+          _getTextStyle(game, currentRow, isCurrentGuess, winIndex);
+      return TableRow(
+        children: List.generate(wordLength, (currentLetter) {
+          return _buildTableCell(
+            game,
+            gameIndex,
+            currentRow,
+            currentLetter,
+            isCurrentGuess,
+            winIndex,
+            textStyle,
+            appColors,
+          );
+        }),
+      );
+    });
   }
 
-  return TableCell(
-    child: Card(
-      color: getBackgroundColor(
-        game.hints[gameIndex][currentRow][currentLetter],
-        appColors,
-      ),
-      child: Center(
-        child: Text(
-          text,
-          style: TextStyle(
-            color: textColor,
-            fontSize: fontSize,
+  TableCell _buildTableCell(
+    GameModel game,
+    int gameIndex,
+    int currentRow,
+    int currentLetter,
+    bool isCurrentGuess,
+    int winIndex,
+    TextStyle textStyle,
+    AppColors appColors,
+  ) {
+    final boardFinished = winIndex != -1;
+
+    if (boardFinished && currentRow > winIndex) {
+      return TableCell(
+        child: Card(
+          elevation: 0,
+          color: appColors.contentColorMissing,
+          child: const Text(
+            "",
+            style: TextStyle(
+              fontSize: 24.0,
+            ),
+          ),
+        ),
+      );
+    }
+
+    final text = currentLetter < game.guesses[currentRow].length
+        ? game.guesses[currentRow][currentLetter]
+        : "";
+
+    final elevation = boardFinished
+        ? 0.0
+        : isCurrentGuess
+            ? 4.0
+            : 1.0;
+
+    return TableCell(
+      child: Card(
+        color: getBackgroundColor(
+          game.hints[gameIndex][currentRow][currentLetter],
+          appColors,
+        ),
+        elevation: elevation,
+        child: Center(
+          child: Text(
+            text,
+            style: textStyle,
           ),
         ),
       ),
-    ),
-  );
+    );
+  }
+
+  TextStyle _getTextStyle(
+      GameModel game, int currentRow, bool isCurrentGuess, int winIndex) {
+    final textColor = isCurrentGuess && game.invalidGuess
+        ? appColors.textColorInvalid
+        : appColors.textColor;
+    final fontSize = isCurrentGuess || currentRow == winIndex ? 36.0 : 24.0;
+
+    return TextStyle(
+      color: textColor,
+      fontSize: fontSize,
+    );
+  }
 }
