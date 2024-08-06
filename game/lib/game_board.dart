@@ -96,6 +96,16 @@ class GameBoard extends StatelessWidget {
           game.hints[gameIndex][currentRow][currentLetter],
           appColors,
         ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+          side: BorderSide(
+            color: getBorderColor(
+              game.hints[gameIndex][currentRow][currentLetter],
+              appColors,
+            ),
+            width: 4,
+          ),
+        ),
         elevation: elevation,
         child: Center(
           child: Text(

@@ -33,6 +33,7 @@ class WordGameApp extends StatelessWidget {
           AppColors(
             contentColorExact: ColorsLight.colorExact,
             contentColorClose: ColorsLight.colorClose,
+            contentColorCloseBorder: ColorsLight.colorCloseBorder,
             contentColorMissing: ColorsLight.colorMissing,
             contentColorUnguessed: ColorsLight.colorUnguessed,
             textColor: ColorsLight.colorText,

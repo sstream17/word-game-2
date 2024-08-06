@@ -65,6 +65,7 @@ var darkScheme = const ColorScheme(
 class AppColors extends ThemeExtension<AppColors> {
   final Color contentColorExact;
   final Color contentColorClose;
+  final Color contentColorCloseBorder;
   final Color contentColorMissing;
   final Color contentColorUnguessed;
 
@@ -75,6 +76,7 @@ class AppColors extends ThemeExtension<AppColors> {
   AppColors({
     required this.contentColorExact,
     required this.contentColorClose,
+    required this.contentColorCloseBorder,
     required this.contentColorMissing,
     required this.contentColorUnguessed,
     required this.textColor,
@@ -86,6 +88,7 @@ class AppColors extends ThemeExtension<AppColors> {
   AppColors copyWith(
       {Color? colorExact,
       Color? colorClose,
+      Color? colorCloseBorder,
       Color? colorMissing,
       Color? colorUnguessed,
       Color? colorText,
@@ -94,6 +97,7 @@ class AppColors extends ThemeExtension<AppColors> {
     return AppColors(
       contentColorExact: colorExact ?? contentColorExact,
       contentColorClose: colorClose ?? contentColorClose,
+      contentColorCloseBorder: colorCloseBorder ?? contentColorCloseBorder,
       contentColorMissing: colorMissing ?? contentColorMissing,
       contentColorUnguessed: colorUnguessed ?? contentColorUnguessed,
       textColor: colorText ?? textColor,
@@ -110,6 +114,8 @@ class AppColors extends ThemeExtension<AppColors> {
           Color.lerp(contentColorExact, other.contentColorExact, t)!,
       contentColorClose:
           Color.lerp(contentColorClose, other.contentColorClose, t)!,
+      contentColorCloseBorder: Color.lerp(
+          contentColorCloseBorder, other.contentColorCloseBorder, t)!,
       contentColorMissing:
           Color.lerp(contentColorMissing, other.contentColorMissing, t)!,
       contentColorUnguessed:
@@ -134,6 +140,21 @@ Color getBackgroundColor(
       return appColors.contentColorExact;
     case "c":
       return appColors.contentColorClose;
+    default:
+      return appColors.contentColorUnguessed;
+  }
+}
+
+Color getBorderColor(String hint,
+  AppColors appColors,
+) {
+  switch (hint) {
+    case "m":
+      return appColors.contentColorMissing;
+    case "x":
+      return appColors.contentColorExact;
+    case "c":
+      return appColors.contentColorCloseBorder;
     default:
       return appColors.contentColorUnguessed;
   }
