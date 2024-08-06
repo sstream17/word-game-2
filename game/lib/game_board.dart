@@ -99,9 +99,10 @@ class GameBoard extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(4),
           side: BorderSide(
-            color: getBorderColor(
+            color: getBackgroundColor(
               game.hints[gameIndex][currentRow][currentLetter],
               appColors,
+              isBorder: true,
             ),
             width: 4,
           ),

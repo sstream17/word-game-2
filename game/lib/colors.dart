@@ -131,30 +131,18 @@ class AppColors extends ThemeExtension<AppColors> {
 
 Color getBackgroundColor(
   String hint,
-  AppColors appColors,
-) {
+  AppColors appColors, {
+  bool isBorder = false,
+}) {
   switch (hint) {
     case "m":
       return appColors.contentColorMissing;
     case "x":
       return appColors.contentColorExact;
     case "c":
-      return appColors.contentColorClose;
-    default:
-      return appColors.contentColorUnguessed;
-  }
-}
-
-Color getBorderColor(String hint,
-  AppColors appColors,
-) {
-  switch (hint) {
-    case "m":
-      return appColors.contentColorMissing;
-    case "x":
-      return appColors.contentColorExact;
-    case "c":
-      return appColors.contentColorCloseBorder;
+      return isBorder
+          ? appColors.contentColorCloseBorder
+          : appColors.contentColorClose;
     default:
       return appColors.contentColorUnguessed;
   }
@@ -162,18 +150,19 @@ Color getBorderColor(String hint,
 
 List<Color> getKeyColor(
   List<String> hints,
-  AppColors appColors,
-) {
+  AppColors appColors, {
+  bool isBorder = false,
+}) {
   if (hints.length == 4) {
     return [
-      getBackgroundColor(hints[3], appColors), // game 4
-      getBackgroundColor(hints[3], appColors), // game 4
-      getBackgroundColor(hints[2], appColors), // game 3
-      getBackgroundColor(hints[2], appColors), // game 3
-      getBackgroundColor(hints[0], appColors), // game 1
-      getBackgroundColor(hints[0], appColors), // game 1
-      getBackgroundColor(hints[1], appColors), // game 2
-      getBackgroundColor(hints[1], appColors), // game 2
+      getBackgroundColor(hints[3], appColors, isBorder: isBorder), // game 4
+      getBackgroundColor(hints[3], appColors, isBorder: isBorder), // game 4
+      getBackgroundColor(hints[2], appColors, isBorder: isBorder), // game 3
+      getBackgroundColor(hints[2], appColors, isBorder: isBorder), // game 3
+      getBackgroundColor(hints[0], appColors, isBorder: isBorder), // game 1
+      getBackgroundColor(hints[0], appColors, isBorder: isBorder), // game 1
+      getBackgroundColor(hints[1], appColors, isBorder: isBorder), // game 2
+      getBackgroundColor(hints[1], appColors, isBorder: isBorder), // game 2
     ];
   } else if (hints.length == 2) {
     return getKeyColor(
@@ -184,16 +173,19 @@ List<Color> getKeyColor(
         hints[1],
       ],
       appColors,
+      isBorder: isBorder,
     );
   } else if (hints.length == 1) {
     return getKeyColor(
       List.filled(2, hints[0]),
       appColors,
+      isBorder: isBorder,
     );
   } else {
     return getKeyColor(
       List.filled(4, "_"),
       appColors,
+      isBorder: isBorder,
     );
   }
 }

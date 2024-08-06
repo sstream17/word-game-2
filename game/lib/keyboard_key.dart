@@ -26,6 +26,7 @@ class KeyboardKey extends StatelessWidget {
           colors: getKeyColor(
             hints ?? [],
             appColors,
+            isBorder: true,
           ),
           stops: const <double>[
             0.0,
@@ -40,23 +41,48 @@ class KeyboardKey extends StatelessWidget {
         ),
         borderRadius: BorderRadius.circular(4),
       ),
-      child: TextButton(
-        style: TextButton.styleFrom(
-          backgroundColor: Colors.transparent,
-          shadowColor: Colors.transparent,
-          padding: const EdgeInsets.symmetric(
-            vertical: 12,
+      child: Padding(
+        padding: const EdgeInsets.all(3),
+        child: Container(
+          decoration: BoxDecoration(
+            gradient: SweepGradient(
+              center: FractionalOffset.center,
+              colors: getKeyColor(
+                hints ?? [],
+                appColors,
+              ),
+              stops: const <double>[
+                0.0,
+                0.25,
+                0.25,
+                0.5,
+                0.5,
+                0.75,
+                0.75,
+                1.0,
+              ],
+            ),
+            borderRadius: BorderRadius.circular(4),
           ),
-        ),
-        onPressed: () {
-          onPressed(letter);
-          HapticFeedback.lightImpact();
-        },
-        child: Text(
-          letter,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-            fontSize: 20,
+          child: TextButton(
+            style: TextButton.styleFrom(
+              backgroundColor: Colors.transparent,
+              shadowColor: Colors.transparent,
+              padding: const EdgeInsets.symmetric(
+                vertical: 8,
+              ),
+            ),
+            onPressed: () {
+              onPressed(letter);
+              HapticFeedback.lightImpact();
+            },
+            child: Text(
+              letter,
+              textAlign: TextAlign.center,
+              style: const TextStyle(
+                fontSize: 20,
+              ),
+            ),
           ),
         ),
       ),
