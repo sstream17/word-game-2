@@ -10,6 +10,9 @@ class KeyboardKey extends StatelessWidget {
     required this.touchHeight,
     required this.keyWidth,
     required this.keyHeight,
+    this.left,
+    this.top,
+    this.right,
     this.hints,
     this.icon,
     required this.onPressed,
@@ -19,12 +22,18 @@ class KeyboardKey extends StatelessWidget {
   final AppColors appColors;
 
   final String letter;
+  final IconData? icon;
+
   final double touchWidth;
   final double touchHeight;
   final double keyWidth;
   final double keyHeight;
+
+  final double? left;
+  final double? top;
+  final double? right;
+
   final List<String>? hints;
-  final IconData? icon;
   final Function(String) onPressed;
 
   @override
@@ -42,7 +51,10 @@ class KeyboardKey extends StatelessWidget {
             width: touchWidth,
           ),
         ),
-        SizedBox(
+        Positioned(
+          top: top,
+          right: right,
+          left: left,
           height: keyHeight,
           width: keyWidth,
           child: Material(
