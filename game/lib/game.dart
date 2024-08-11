@@ -37,7 +37,7 @@ class Game extends StatelessWidget {
               var keyLabel = key.keyLabel.toLowerCase();
               switch (keyLabel) {
                 case "enter":
-                  game.submitGuess();
+                  game.submitGuess("");
                   break;
                 default:
                   game.updateGuess(keyLabel);

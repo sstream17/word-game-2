@@ -1,10 +1,9 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:word_game/colors.dart';
 import 'package:word_game/game_model.dart';
-import 'package:word_game/keyboard_key.dart' as game_key;
+import 'package:word_game/keyboard_key.dart';
 
 class Keyboard extends StatelessWidget {
   const Keyboard({
@@ -17,13 +16,22 @@ class Keyboard extends StatelessWidget {
 
   final GameModel game;
 
+  final defaultKeyWidth = 108;
+  final defaultKeyHeight = 144;
+  final defaultGap = 9;
+
   @override
   Widget build(BuildContext context) {
-    const keyGap = 4.0;
-    var screenWidth = MediaQuery.of(context).size.width;
-    var maxWidth = min(screenWidth, 500.0);
-    var keyWidth = (maxWidth - keyGap * 13) / 10;
-    var keyHeight = 50.0;
+    final screenWidth = MediaQuery.of(context).size.width;
+    final maxWidth = min(screenWidth, 500.0);
+    final scaleFactor = maxWidth / (10 * defaultKeyWidth);
+
+    final touchTargetWidth = defaultKeyWidth * scaleFactor;
+    final touchTargetHeight = defaultKeyHeight * scaleFactor;
+    final keyGap = defaultGap * scaleFactor;
+
+    final keyWidth = touchTargetWidth - keyGap;
+    final keyHeight = touchTargetHeight - keyGap;
 
     return SizedBox(
       width: maxWidth,
@@ -34,96 +42,80 @@ class Keyboard extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               for (final letter in "qwertyuiop".characters)
-                SizedBox(
-                  width: keyWidth,
-                  height: keyHeight,
-                  child: game_key.KeyboardKey(
-                    letter: letter,
-                    hints: game.keyHints[letter],
-                    onPressed: game.updateGuess,
-                    appColors: appColors,
-                  ),
+                KeyboardKey(
+                  letter: letter,
+                  touchWidth: touchTargetWidth,
+                  touchHeight: touchTargetHeight,
+                  keyHeight: keyHeight,
+                  keyWidth: keyWidth,
+                  hints: game.keyHints[letter],
+                  onPressed: game.updateGuess,
+                  appColors: appColors,
                 ),
             ],
           ),
-          const SizedBox(height: keyGap),
+          SizedBox(height: keyGap), // Row gap
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               for (final letter in "asdfghjkl".characters)
                 Row(children: [
-                  SizedBox(
-                    width: keyWidth,
-                    height: keyHeight,
-                    child: game_key.KeyboardKey(
-                      letter: letter,
-                      hints: game.keyHints[letter],
-                      onPressed: game.updateGuess,
-                      appColors: appColors,
-                    ),
+                  KeyboardKey(
+                    letter: letter,
+                    touchWidth: touchTargetWidth,
+                    touchHeight: touchTargetHeight,
+                    keyHeight: keyHeight,
+                    keyWidth: keyWidth,
+                    hints: game.keyHints[letter],
+                    onPressed: game.updateGuess,
+                    appColors: appColors,
                   ),
-                  if (letter != "l") const SizedBox(width: keyGap),
                 ]),
             ],
           ),
-          const SizedBox(height: keyGap),
+          SizedBox(height: keyGap), // Row gap
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(
-                width: keyWidth * 1.5,
-                height: keyHeight,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                    ),
-                  ),
-                  onPressed: () {
-                    game.updateGuess("backspace");
-                    HapticFeedback.lightImpact();
-                  },
-                  child: const Icon(
-                    Icons.backspace_outlined,
-                  ),
-                ),
+              KeyboardKey(
+                letter: "backspace",
+                icon: Icons.backspace_outlined,
+                touchWidth: touchTargetWidth,
+                touchHeight: touchTargetHeight,
+                keyHeight: keyHeight,
+                keyWidth: keyWidth * 1.5,
+                hints: null,
+                onPressed: game.updateGuess,
+                appColors: appColors,
               ),
-              const SizedBox(width: keyGap),
+              SizedBox(width: keyGap), // Gap before letter keys
               for (final letter in "zxcvbnm".characters)
                 Row(children: [
-                  SizedBox(
-                    width: keyWidth,
-                    height: keyHeight,
-                    child: game_key.KeyboardKey(
-                      letter: letter,
-                      hints: game.keyHints[letter],
-                      onPressed: game.updateGuess,
-                      appColors: appColors,
-                    ),
+                  KeyboardKey(
+                    letter: letter,
+                    touchWidth: touchTargetWidth,
+                    touchHeight: touchTargetHeight,
+                    keyHeight: keyHeight,
+                    keyWidth: keyWidth,
+                    hints: game.keyHints[letter],
+                    onPressed: game.updateGuess,
+                    appColors: appColors,
                   ),
-                  const SizedBox(width: keyGap),
                 ]),
-              SizedBox(
-                width: keyWidth * 1.5,
-                height: keyHeight,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 12,
-                    ),
-                  ),
-                  onPressed: () {
-                    game.submitGuess();
-                    HapticFeedback.lightImpact();
-                  },
-                  child: const Icon(
-                    Icons.send_outlined,
-                  ),
-                ),
+              KeyboardKey(
+                letter: "enter",
+                icon: Icons.send_outlined,
+                touchWidth: touchTargetWidth,
+                touchHeight: touchTargetHeight,
+                keyHeight: keyHeight,
+                keyWidth: keyWidth * 1.5,
+                hints: null,
+                onPressed: game.submitGuess,
+                appColors: appColors,
               ),
             ],
           ),
-          const SizedBox(height: 24),
+          const SizedBox(height: 20),
         ],
       ),
     );

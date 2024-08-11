@@ -214,7 +214,7 @@ class GameModel with ChangeNotifier {
     box.put("$numberOfGames-$storeKeyFinishes", finishes);
   }
 
-  void submitGuess() {
+  void submitGuess(String _) {
     if (gameOver) {
       return;
     }
