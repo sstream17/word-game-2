@@ -31,103 +31,131 @@ class GameBoard extends StatelessWidget {
   }
 
   List<TableRow> _buildTableRows(GameModel game) {
-    return List.generate(game.guesses.length, (currentRow) {
-      final isCurrentGuess = game.guessIndex == currentRow;
-      final winIndex = game.winIndexes[gameIndex];
-      final textStyle =
-          _getTextStyle(game, currentRow, isCurrentGuess, winIndex);
-      return TableRow(
-        children: List.generate(wordLength, (currentLetter) {
-          return _buildTableCell(
-            game,
-            gameIndex,
-            currentRow,
-            currentLetter,
-            isCurrentGuess,
-            winIndex,
-            textStyle,
-            appColors,
-          );
-        }),
-      );
-    });
-  }
+    final winIndex = game.winIndexes[gameIndex];
+    final isInvalidGuess = game.invalidGuess;
 
-  TableCell _buildTableCell(
-    GameModel game,
-    int gameIndex,
-    int currentRow,
-    int currentLetter,
-    bool isCurrentGuess,
-    int winIndex,
-    TextStyle textStyle,
-    AppColors appColors,
-  ) {
+    return List.generate(
+      game.guesses.length,
+      (currentRow) {
+        final isCurrentGuess = game.guessIndex == currentRow;
+
+        return TableRow(
+          children: List.generate(wordLength, (currentLetter) {
+            final text = currentLetter < game.guesses[currentRow].length
+                ? game.guesses[currentRow][currentLetter]
+                : "";
+            final color = getBackgroundColor(
+              game.hints[gameIndex][currentRow][currentLetter],
+              appColors,
+            );
+            final borderColor = getBackgroundColor(
+              game.hints[gameIndex][currentRow][currentLetter],
+              appColors,
+              isBorder: true,
+            );
+
+            return TableCell(
+              child: Padding(
+                padding: const EdgeInsets.all(2.0),
+                child: LetterCard(
+                  color: color,
+                  borderColor: borderColor,
+                  text: text,
+                  winIndex: winIndex,
+                  currentRow: currentRow,
+                  isCurrentGuess: isCurrentGuess,
+                  isInvalidGuess: isInvalidGuess,
+                  appColors: appColors,
+                ),
+              ),
+            );
+          }),
+        );
+      },
+    );
+  }
+}
+
+class LetterCard extends StatelessWidget {
+  const LetterCard({
+    super.key,
+    required this.color,
+    required this.borderColor,
+    required this.text,
+    required this.winIndex,
+    required this.currentRow,
+    required this.isCurrentGuess,
+    required this.appColors,
+    required this.isInvalidGuess,
+  });
+
+  final Color color;
+  final Color borderColor;
+  final String text;
+  final int winIndex;
+  final int currentRow;
+  final bool isCurrentGuess;
+  final bool isInvalidGuess;
+
+  final AppColors appColors;
+
+  @override
+  Widget build(BuildContext context) {
     final boardFinished = winIndex != -1;
 
     if (boardFinished && currentRow > winIndex) {
-      return TableCell(
-        child: Card(
-          elevation: 0,
-          color: appColors.contentColorMissing,
-          child: const Text(
-            "",
-            style: TextStyle(
-              fontSize: 24.0,
-            ),
-          ),
+      return Material(
+        color: appColors.contentColorMissing,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(4),
+        ),
+        elevation: 0,
+        child: const Center(
+          child: Text(""),
         ),
       );
     }
 
-    final text = currentLetter < game.guesses[currentRow].length
-        ? game.guesses[currentRow][currentLetter]
-        : "";
-
-    final elevation = boardFinished
-        ? 0.0
-        : isCurrentGuess
-            ? 4.0
-            : 1.0;
-
-    return TableCell(
-      child: Card(
-        color: getBackgroundColor(
-          game.hints[gameIndex][currentRow][currentLetter],
-          appColors,
+    return Material(
+      color: color,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(4),
+        side: BorderSide(
+          color: borderColor,
+          width: 3,
         ),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(4),
-          side: BorderSide(
-            color: getBackgroundColor(
-              game.hints[gameIndex][currentRow][currentLetter],
-              appColors,
-              isBorder: true,
-            ),
-            width: 4,
-          ),
-        ),
-        elevation: elevation,
-        child: Center(
-          child: Text(
-            text,
-            style: textStyle,
+      ),
+      elevation: isCurrentGuess ? 4 : 1,
+      child: Center(
+        child: Text(
+          text,
+          style: getTextStyle(
+            isInvalidGuess,
+            currentRow,
+            isCurrentGuess,
+            winIndex,
+            appColors,
           ),
         ),
       ),
     );
   }
+}
 
-  TextStyle _getTextStyle(
-      GameModel game, int currentRow, bool isCurrentGuess, int winIndex) {
-    final textColor = isCurrentGuess && game.invalidGuess
-        ? appColors.textColorInvalid
-        : appColors.textColor;
-    final fontSize = isCurrentGuess || currentRow == winIndex ? 36.0 : 24.0;
+TextStyle getTextStyle(
+  bool isInvalidGuess,
+  int currentRow,
+  bool isCurrentGuess,
+  int winIndex,
+  AppColors appColors,
+) {
+  final textColor = isCurrentGuess && isInvalidGuess
+      ? appColors.textColorInvalid
+      : appColors.textColor;
+  final fontSize = isCurrentGuess || currentRow == winIndex ? 36.0 : 24.0;
 
-    return TextStyle(
-      color: textColor,
-      fontSize: fontSize,
-    );
-  }
+  return TextStyle(
+    color: textColor,
+    fontSize: fontSize,
+  );
 }
