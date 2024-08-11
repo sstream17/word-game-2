@@ -38,6 +38,8 @@ class KeyboardKey extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final keyColors = getKeyColor(hints ?? [], appColors);
+
     return Stack(
       children: [
         GestureDetector(
@@ -76,11 +78,7 @@ class KeyboardKey extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: SweepGradient(
                         center: FractionalOffset.center,
-                        colors: getKeyColor(
-                          hints ?? [],
-                          appColors,
-                          isBorder: true,
-                        ),
+                        colors: keyColors.borderColors,
                         stops: const <double>[
                           0.0,
                           0.25,
@@ -101,10 +99,7 @@ class KeyboardKey extends StatelessWidget {
                     decoration: BoxDecoration(
                       gradient: SweepGradient(
                         center: FractionalOffset.center,
-                        colors: getKeyColor(
-                          hints ?? [],
-                          appColors,
-                        ),
+                        colors: keyColors.colors,
                         stops: const <double>[
                           0.0,
                           0.25,
