@@ -58,7 +58,8 @@ class KeyboardKey extends StatelessWidget {
           height: keyHeight,
           width: keyWidth,
           child: Material(
-            clipBehavior: Clip.hardEdge,
+            borderRadius: BorderRadius.circular(4),
+            clipBehavior: Clip.antiAlias,
             child: InkResponse(
               onTap: () {
                 onPressed(letter);
@@ -66,11 +67,69 @@ class KeyboardKey extends StatelessWidget {
               },
               highlightShape: BoxShape.rectangle,
               containedInkWell: true,
-              child: Ink(
-                height: keyHeight,
-                width: keyWidth,
-                color: Colors.white,
-                child: icon != null ? Icon(icon) : Text(letter),
+              child: Stack(
+                alignment: Alignment.center,
+                children: [
+                  Ink(
+                    height: keyHeight,
+                    width: keyWidth,
+                    decoration: BoxDecoration(
+                      gradient: SweepGradient(
+                        center: FractionalOffset.center,
+                        colors: getKeyColor(
+                          hints ?? [],
+                          appColors,
+                          isBorder: true,
+                        ),
+                        stops: const <double>[
+                          0.0,
+                          0.25,
+                          0.25,
+                          0.5,
+                          0.5,
+                          0.75,
+                          0.75,
+                          1.0,
+                        ],
+                      ),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  Ink(
+                    height: keyHeight - 6,
+                    width: keyWidth - 6,
+                    decoration: BoxDecoration(
+                      gradient: SweepGradient(
+                        center: FractionalOffset.center,
+                        colors: getKeyColor(
+                          hints ?? [],
+                          appColors,
+                        ),
+                        stops: const <double>[
+                          0.0,
+                          0.25,
+                          0.25,
+                          0.5,
+                          0.5,
+                          0.75,
+                          0.75,
+                          1.0,
+                        ],
+                      ),
+                    ),
+                  ),
+                  Center(
+                    child: icon != null
+                        ? Icon(icon)
+                        : Text(
+                            letter,
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(
+                              fontSize: 20,
+                            ),
+                          ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -78,88 +137,4 @@ class KeyboardKey extends StatelessWidget {
       ],
     );
   }
-  // return SizedBox(
-  //   height: height - padding,
-  //   width: width - padding,
-  //   child: Material(
-  //     child: InkResponse(
-  //       onTap: () {
-  //         onPressed(letter);
-  //         HapticFeedback.lightImpact();
-  //       },
-  //       highlightShape: BoxShape.rectangle,
-  //       containedInkWell: true,
-  //       child: Ink(
-  //         height: height - padding * 8,
-  //         width: width - padding * 8,
-  //         color: Colors.white,
-  //         child: Text(letter),
-  //       ),
-  //     ),
-  //   ),
-  // );
-
-  //   return GestureDetector(
-  //     onTap: () {
-  //       onPressed(letter);
-  //       HapticFeedback.lightImpact();
-  //     },
-  //     child: Container(
-  //       decoration: BoxDecoration(
-  //         gradient: SweepGradient(
-  //           center: FractionalOffset.center,
-  //           colors: getKeyColor(
-  //             hints ?? [],
-  //             appColors,
-  //             isBorder: true,
-  //           ),
-  //           stops: const <double>[
-  //             0.0,
-  //             0.25,
-  //             0.25,
-  //             0.5,
-  //             0.5,
-  //             0.75,
-  //             0.75,
-  //             1.0,
-  //           ],
-  //         ),
-  //         borderRadius: BorderRadius.circular(4),
-  //       ),
-  //       child: Padding(
-  //         padding: const EdgeInsets.all(3),
-  //         child: Container(
-  //           decoration: BoxDecoration(
-  //             gradient: SweepGradient(
-  //               center: FractionalOffset.center,
-  //               colors: getKeyColor(
-  //                 hints ?? [],
-  //                 appColors,
-  //               ),
-  //               stops: const <double>[
-  //                 0.0,
-  //                 0.25,
-  //                 0.25,
-  //                 0.5,
-  //                 0.5,
-  //                 0.75,
-  //                 0.75,
-  //                 1.0,
-  //               ],
-  //             ),
-  //           ),
-  //           child: Center(
-  //             child: Text(
-  //               letter,
-  //               textAlign: TextAlign.center,
-  //               style: const TextStyle(
-  //                 fontSize: 20,
-  //               ),
-  //             ),
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
 }
