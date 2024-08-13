@@ -4,6 +4,8 @@ import 'package:word_game/colors.dart';
 import 'package:word_game/constants/game.dart';
 import 'package:word_game/game_model.dart';
 
+const emptyChar = " ";
+
 class GameBoard extends StatelessWidget {
   const GameBoard({
     Key? key,
@@ -43,7 +45,7 @@ class GameBoard extends StatelessWidget {
           children: List.generate(wordLength, (currentLetter) {
             final text = currentLetter < game.guesses[currentRow].length
                 ? game.guesses[currentRow][currentLetter]
-                : "";
+                : emptyChar;
             final color = getBackgroundColor(
               game.hints[gameIndex][currentRow][currentLetter],
               appColors,
@@ -110,11 +112,23 @@ class LetterCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(4),
         ),
         elevation: 0,
-        child: const Center(
-          child: Text(""),
+        child: Center(
+          child: Text(
+            emptyChar,
+            style: TextStyle(
+              color: appColors.textColorMissing,
+              fontSize: 24,
+            ),
+          ),
         ),
       );
     }
+
+    final double elevation = boardFinished
+        ? 0
+        : isCurrentGuess
+            ? 4
+            : 1;
 
     return Material(
       color: color,
@@ -125,7 +139,7 @@ class LetterCard extends StatelessWidget {
           width: 3,
         ),
       ),
-      elevation: isCurrentGuess ? 4 : 1,
+      elevation: elevation,
       child: Center(
         child: Text(
           text,
@@ -149,13 +163,22 @@ TextStyle getTextStyle(
   int winIndex,
   AppColors appColors,
 ) {
-  final textColor = isCurrentGuess && isInvalidGuess
-      ? appColors.textColorInvalid
-      : appColors.textColor;
   final fontSize = isCurrentGuess || currentRow == winIndex ? 36.0 : 24.0;
 
-  return TextStyle(
-    color: textColor,
+  TextStyle textStyle = TextStyle(
+    color: appColors.textColor,
     fontSize: fontSize,
   );
+
+  if (isCurrentGuess && isInvalidGuess) {
+    textStyle = textStyle.copyWith(
+      color: appColors.textColorInvalid,
+      decoration: TextDecoration.underline,
+      decorationStyle: TextDecorationStyle.wavy,
+      decorationColor: appColors.textColorInvalid,
+      decorationThickness: 2,
+    );
+  }
+
+  return textStyle;
 }
