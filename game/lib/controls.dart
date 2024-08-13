@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:word_game/colors.dart';
@@ -13,10 +15,24 @@ class Controls extends StatelessWidget {
 
   final AppColors appColors;
 
+  final defaultKeyWidth = 108;
+  final defaultKeyHeight = 144;
+  final defaultGap = 9;
+
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final maxWidth = min(screenWidth, 500.0);
+    final scaleFactor = maxWidth / (10 * defaultKeyWidth);
+
+    final touchTargetWidth = defaultKeyWidth * scaleFactor;
+    final touchTargetHeight = defaultKeyHeight * scaleFactor;
+    final keyGap = defaultGap * scaleFactor;
+
+    final keyboardHeight = touchTargetHeight * 3 + keyGap * 2 + 36;
+
     return SizedBox(
-      height: 230,
+      height: keyboardHeight,
       child: Consumer<GameModel>(
         builder: (context, game, child) => game.gameOver
             ? EndGame(
@@ -26,6 +42,10 @@ class Controls extends StatelessWidget {
             : Keyboard(
                 game: game,
                 appColors: appColors,
+                touchTargetWidth: touchTargetWidth,
+                touchTargetHeight: touchTargetHeight,
+                keyGap: keyGap,
+                maxWidth: maxWidth,
               ),
       ),
     );

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:word_game/colors.dart';
 import 'package:word_game/game_model.dart';
@@ -10,26 +8,23 @@ class Keyboard extends StatelessWidget {
     super.key,
     required this.game,
     required this.appColors,
+    required this.touchTargetWidth,
+    required this.touchTargetHeight,
+    required this.keyGap,
+    required this.maxWidth,
   });
 
   final AppColors appColors;
 
   final GameModel game;
 
-  final defaultKeyWidth = 108;
-  final defaultKeyHeight = 144;
-  final defaultGap = 9;
+  final double touchTargetWidth;
+  final double touchTargetHeight;
+  final double keyGap;
+  final double maxWidth;
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final maxWidth = min(screenWidth, 500.0);
-    final scaleFactor = maxWidth / (10 * defaultKeyWidth);
-
-    final touchTargetWidth = defaultKeyWidth * scaleFactor;
-    final touchTargetHeight = defaultKeyHeight * scaleFactor;
-    final keyGap = defaultGap * scaleFactor;
-
     final keyWidth = touchTargetWidth - keyGap;
     final keyHeight = touchTargetHeight - keyGap;
 
@@ -62,7 +57,7 @@ class Keyboard extends StatelessWidget {
             children: [
               KeyboardKey(
                 letter: "a",
-                touchWidth: touchTargetWidth * 1.25,
+                touchWidth: touchTargetWidth * 1.4,
                 touchHeight: touchTargetHeight,
                 keyHeight: keyHeight,
                 keyWidth: keyWidth,
@@ -87,7 +82,7 @@ class Keyboard extends StatelessWidget {
                 ),
               KeyboardKey(
                 letter: "l",
-                touchWidth: touchTargetWidth * 1.25,
+                touchWidth: touchTargetWidth * 1.4,
                 touchHeight: touchTargetHeight,
                 keyHeight: keyHeight,
                 keyWidth: keyWidth,
@@ -102,12 +97,13 @@ class Keyboard extends StatelessWidget {
           SizedBox(height: keyGap), // Row gap
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               KeyboardKey(
                 letter: "backspace",
                 icon: Icons.backspace_outlined,
                 touchWidth: touchTargetWidth * 1.5,
-                touchHeight: touchTargetHeight,
+                touchHeight: touchTargetHeight * 1.2,
                 keyHeight: keyHeight,
                 keyWidth: keyWidth * 1.5,
                 top: keyGap / 2,
@@ -133,7 +129,7 @@ class Keyboard extends StatelessWidget {
                 letter: "enter",
                 icon: Icons.send_outlined,
                 touchWidth: touchTargetWidth * 1.5,
-                touchHeight: touchTargetHeight,
+                touchHeight: touchTargetHeight * 1.2,
                 keyHeight: keyHeight,
                 keyWidth: keyWidth * 1.5,
                 top: keyGap / 2,
@@ -144,7 +140,6 @@ class Keyboard extends StatelessWidget {
               ),
             ],
           ),
-          const SizedBox(height: 20),
         ],
       ),
     );
