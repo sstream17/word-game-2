@@ -4,7 +4,21 @@ on:
     paths:
       - 'game/**'
 jobs:
-  check_version:
+  # check_version:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./game
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+        
+  #     - name: Check Version
+  #       uses: del-systems/check-if-version-bumped@v2
+  #       with:
+  #         path: "game/package.json"
+        
+  build_web:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -12,32 +26,23 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
-      - name: Check Version
-        uses: del-systems/check-if-version-bumped@v2
+
+      - name: Install Java
+        uses: actions/setup-java@v4
         with:
-          path: "game/package.json"
-        
-  build_site:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./game
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+          distribution: 'temurin'
+          java-version: '11.x'
+          cache: gradle
 
-      - name: Install Node.js
-        uses: actions/setup-node@v4
+      - name: Install Flutter
+        uses: subosito/flutter-action@v2
         with:
-          node-version: 18
-          cache: npm
-          cache-dependency-path: game/package-lock.json
+          channel: stable
+          flutter-version-file: "game/pubspec.yaml"
+          cache: true
 
-      - name: Install dependencies
-        run: npm install
+      - name: Get dependencies
+        run: flutter pub get
 
-      - name: build
-        env:
-          BASE_PATH: '/word-game-2'
-        run: npm run build # No need to touch .nojekyll file in PR
+      - name: Build
+        run: flutter build web --base-href '/word-game-2/'
