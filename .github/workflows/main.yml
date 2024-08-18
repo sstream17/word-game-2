@@ -36,7 +36,7 @@ jobs:
         env:
           BASE_HREF: '/word-game-2/'
         run: |
-          flutter build web --base-href $(BASE_HREF) --output './build/' --release
+          flutter build web --base-href '/word-game-2/' --release
           touch build/.nojekyll
 
       - name: Upload Artifacts
