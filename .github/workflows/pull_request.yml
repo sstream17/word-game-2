@@ -45,4 +45,6 @@ jobs:
         run: flutter pub get
 
       - name: Build
-        run: flutter build web
+        env:
+          BASE_HREF: '/word-game-2/'
+        run: flutter build web --base-href $(BASE_HREF) --output './build/'
