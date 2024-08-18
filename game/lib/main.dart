@@ -92,40 +92,45 @@ class HomePage extends StatelessWidget {
         title: "Word Game",
       ),
       body: Center(
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Expanded(
-              child: ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
-                child: const Text('Classic'),
-                onPressed: () {
-                  Navigator.pushNamed(context, routeGame1);
-                },
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Expanded(
+                child: ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
+                  child: const Text('Classic'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, routeGame1);
+                  },
+                ),
               ),
-            ),
-            Expanded(
-              child: ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
-                child: const Text('Duo'),
-                onPressed: () {
-                  Navigator.pushNamed(context, routeGame2);
-                },
+              const SizedBox(width: 16),
+              Expanded(
+                child: ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
+                  child: const Text('Duo'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, routeGame2);
+                  },
+                ),
               ),
-            ),
-            Expanded(
-              child: ElevatedButton(
-                style:
-                    ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
-                child: const Text('Quad'),
-                onPressed: () {
-                  Navigator.pushNamed(context, routeGame4);
-                },
+              const SizedBox(width: 16),
+              Expanded(
+                child: ElevatedButton(
+                  style:
+                      ElevatedButton.styleFrom(backgroundColor: Colors.grey[100]),
+                  child: const Text('Quad'),
+                  onPressed: () {
+                    Navigator.pushNamed(context, routeGame4);
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
