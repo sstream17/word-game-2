@@ -33,16 +33,14 @@ jobs:
         run: flutter pub get
 
       - name: Build
-        env:
-          BASE_HREF: '/word-game-2/'
         run: |
           flutter build web --base-href '/word-game-2/' --release
-          touch build/.nojekyll
+          touch build/web/.nojekyll
 
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v2
         with:
-          path: 'game/build/'
+          path: 'game/build/web/'
 
   deploy:
     needs: build_web
