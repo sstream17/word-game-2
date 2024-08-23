@@ -8,7 +8,7 @@ export default function RootLayout() {
         <Stack.Screen name="index" options={{title: "Word Game"}}/>
         <Stack.Screen name="1" options={{title: ""}} />
         <Stack.Screen name="2" options={{title: ""}} />
-        <Stack.Screen name="3" options={{title: ""}} />
+        <Stack.Screen name="4" options={{title: ""}} />
         <Stack.Screen name="how-to-play" options={{title: "How to play"}} />
         <Stack.Screen name="stats" options={{title: "Stats"}} />
       </Stack>
