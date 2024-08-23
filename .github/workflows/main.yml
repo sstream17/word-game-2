@@ -6,7 +6,7 @@ on:
     paths:
       - 'game/**'
 jobs:
-  build_web:
+  build_site:
     runs-on: ubuntu-latest
     defaults:
       run:
@@ -15,35 +15,30 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Java
-        uses: actions/setup-java@v4
+      - name: Install Node.js
+        uses: actions/setup-node@v4
         with:
-          distribution: 'temurin'
-          java-version: '11.x'
-          cache: gradle
+          node-version: 18
+          cache: npm
+          cache-dependency-path: game/package-lock.json
 
-      - name: Install Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          flutter-version-file: 'game/pubspec.yaml'
-          cache: true
+      - name: Install dependencies
+        run: npm install
 
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Build
+      - name: build
+        env:
+          BASE_PATH: '/word-game-2'
         run: |
-          flutter build web --base-href '/word-game-2/' --release
-          touch build/web/.nojekyll
+          npm run build-web
+          touch dist/.nojekyll
 
       - name: Upload Artifacts
         uses: actions/upload-pages-artifact@v2
         with:
-          path: 'game/build/web/'
+          path: 'game/dist/'
 
   deploy:
-    needs: build_web
+    needs: build_site
     runs-on: ubuntu-latest
 
     permissions:
