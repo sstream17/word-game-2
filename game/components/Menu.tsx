@@ -1,6 +1,6 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { useCallback, useState } from "react";
-import { Modal, Pressable, StyleSheet, View } from "react-native";
+import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 import MenuItem from "./MenuItem";
 
 export default function Menu() {
@@ -63,9 +63,19 @@ const styles = StyleSheet.create({
   modalContent: {
     position: "absolute",
     backgroundColor: "#fff",
-    shadowColor: "#00000088",
-    shadowRadius: 4,
     borderRadius: 8,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#00000088",
+        shadowRadius: 4,
+      },
+      web: {
+        boxShadow: "0 0 8px #00000088",
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
     top: 56,
     right: 16,
   },
