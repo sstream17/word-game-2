@@ -1,7 +1,6 @@
-import { View, StyleSheet} from "react-native";
-import { ThemedText } from "./ThemedText";
-import { Keyboard } from "./Keyboard";
+import { StyleSheet, View } from "react-native";
 import { GameBoard } from "./GameBoard";
+import { Keyboard } from "./Keyboard";
 
 interface IProps {
     numberOfGames: number;
