@@ -1,13 +1,29 @@
 import { Link } from "expo-router";
-import { StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function Index() {
   return (
     <View
       style={styles.container}
     >
-      <Text>Yeet</Text>
-      <Link href="/1">Go to game 1</Link>
+      <Link href="/1" asChild>
+      <Pressable>
+        
+      <Text>Classic</Text>
+      </Pressable>
+      </Link>
+      <Link href="/2" asChild>
+      <Pressable>
+        
+      <Text>Duo</Text>
+      </Pressable>
+      </Link>
+      <Link href="/4" asChild>
+      <Pressable>
+        
+      <Text>Quad</Text>
+      </Pressable>
+      </Link>
     </View>
   );
 }
