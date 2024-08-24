@@ -2,13 +2,15 @@ import { View } from "react-native";
 import { ThemedText } from "./ThemedText";
 
 interface IProps {
-    gameIndex: number;
+  gameIndex: number;
 }
 
 export function GameBoard(props: IProps) {
-    const {gameIndex} = props;
+  const { gameIndex } = props;
 
-    return <View>
-        <ThemedText>Game {gameIndex}</ThemedText>
+  return (
+    <View>
+      <ThemedText>Game {gameIndex}</ThemedText>
     </View>
+  );
 }
