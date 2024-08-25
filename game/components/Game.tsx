@@ -1,4 +1,11 @@
-import { useCallback, useState } from "react";
+import {
+  deleteLetterFromGuess,
+  selectGuess,
+  updateGuess,
+  useGameDispatch,
+  useGameSelector,
+} from "@/store";
+import { useCallback } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { GameBoard } from "./GameBoard";
 import { Keyboard } from "./Keyboard";
@@ -10,22 +17,19 @@ interface IProps {
 export function Game(props: IProps) {
   const { numberOfGames } = props;
 
-  const [guess, setGuess] = useState("");
+  const guess = useGameSelector(selectGuess);
+  const dispatch = useGameDispatch();
 
-  const updateGuess = useCallback(
+  const handleUpdateGuess = useCallback(
     (newKey: string) => {
       if (newKey === "backspace") {
-        setGuess((prev) => prev.slice(0, -1));
+        dispatch(deleteLetterFromGuess());
         return;
       }
 
-      if (guess.length === 5) {
-        return;
-      }
-
-      setGuess((prev) => `${prev}${newKey}`);
+      dispatch(updateGuess(newKey));
     },
-    [guess.length],
+    [dispatch],
   );
 
   const submitGuess = useCallback(() => {}, []);
@@ -38,7 +42,7 @@ export function Game(props: IProps) {
           <GameBoard key={gameIndex} gameIndex={gameIndex} />
         ))}
       </View>
-      <Keyboard updateGuess={updateGuess} submitGuess={submitGuess} />
+      <Keyboard updateGuess={handleUpdateGuess} submitGuess={submitGuess} />
     </View>
   );
 }
