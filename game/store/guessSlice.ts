@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { RootGameState } from "./gameState";
+import { RootGameState } from "./gameStore";
 
 interface IGuessState {
   value: string;

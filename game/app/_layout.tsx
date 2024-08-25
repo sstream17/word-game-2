@@ -1,12 +1,12 @@
 import Menu from "@/components/Menu";
-import gameState from "@/store";
+import gameStore from "@/store";
 import { DarkTheme, ThemeProvider } from "@react-navigation/native";
 import { Stack } from "expo-router";
 import { Provider } from "react-redux";
 
 export default function RootLayout() {
   return (
-    <Provider store={gameState}>
+    <Provider store={gameStore}>
       <ThemeProvider value={DarkTheme}>
         <Stack
           screenOptions={{
