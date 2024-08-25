@@ -1,11 +1,13 @@
 import {
   deleteLetterFromGuess,
   selectGuess,
+  startGame,
+  submitGuess,
   updateGuess,
   useGameDispatch,
   useGameSelector,
 } from "@/store";
-import { useCallback } from "react";
+import { useCallback, useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { GameBoard } from "./GameBoard";
 import { Keyboard } from "./Keyboard";
@@ -20,6 +22,10 @@ export function Game(props: IProps) {
   const guess = useGameSelector(selectGuess);
   const dispatch = useGameDispatch();
 
+  useEffect(() => {
+    dispatch(startGame(numberOfGames));
+  }, [dispatch, numberOfGames]);
+
   const handleUpdateGuess = useCallback(
     (newKey: string) => {
       if (newKey === "backspace") {
@@ -32,7 +38,9 @@ export function Game(props: IProps) {
     [dispatch],
   );
 
-  const submitGuess = useCallback(() => {}, []);
+  const handleSubmitGuess = useCallback(() => {
+    dispatch(submitGuess(""));
+  }, [dispatch]);
 
   return (
     <View style={styles.gameWrapper}>
@@ -42,7 +50,10 @@ export function Game(props: IProps) {
           <GameBoard key={gameIndex} gameIndex={gameIndex} />
         ))}
       </View>
-      <Keyboard updateGuess={handleUpdateGuess} submitGuess={submitGuess} />
+      <Keyboard
+        updateGuess={handleUpdateGuess}
+        submitGuess={handleSubmitGuess}
+      />
     </View>
   );
 }
