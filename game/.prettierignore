@@ -11,6 +11,9 @@ npm-debug.*
 *.orig.*
 web-build/
 
+# The list of words to guess from
+constants/words.ts
+
 # macOS
 .DS_Store
 
