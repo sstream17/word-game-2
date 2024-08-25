@@ -13,7 +13,11 @@ export function KeyboardKey(props: IProps) {
   return (
     <Pressable onPress={() => updateGuess(letter)}>
       <View style={styles.keyContianer}>
-        {icon ? <MaterialCommunityIcons name={icon} /> : <Text>{letter}</Text>}
+        {icon ? (
+          <MaterialCommunityIcons name={icon} />
+        ) : (
+          <Text selectable={false}>{letter}</Text>
+        )}
       </View>
     </Pressable>
   );
