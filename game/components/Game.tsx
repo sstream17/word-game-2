@@ -39,7 +39,7 @@ export function Game(props: IProps) {
   );
 
   const handleSubmitGuess = useCallback(() => {
-    dispatch(submitGuess(""));
+    dispatch(submitGuess());
   }, [dispatch]);
 
   return (

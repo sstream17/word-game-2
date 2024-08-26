@@ -1,51 +1,9 @@
-import { sampleSize } from "@/api";
+import { getResult, sampleSize } from "@/api";
+import { WORD_LENGTH } from "@/constants/game";
 import { words } from "@/constants/words";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootGameState } from "./gameStore";
-import { WORD_LENGTH } from "@/constants/game";
-
-function getResult(answer: string, guess: string): string {
-  const available = Array.from(answer);
-  const hint = Array(WORD_LENGTH).fill("_");
-
-  // first, find exact matches
-  for (let i = 0; i < WORD_LENGTH; i += 1) {
-    if (guess[i] === available[i]) {
-      hint[i] = "x";
-      available[i] = " ";
-    }
-  }
-
-  // then find close matches (this has to happen in a second step,
-  // otherwise an early close match can prevent a later exact match)
-  for (let i = 0; i < WORD_LENGTH; i += 1) {
-    if (hint[i] === "_") {
-      const index = available.indexOf(guess[i]);
-      if (index !== -1) {
-        hint[i] = "c";
-        available[index] = " ";
-      }
-    }
-  }
-
-  return hint.join("");
-}
-
-interface IGuess {
-  guess: string;
-  result: string;
-}
-
-interface IGame {
-  answer: string;
-  guesses: IGuess[];
-  status: "inProgress" | "won";
-}
-
-interface IGamesState {
-  currentGuess: string;
-  value: { [gameId: string]: IGame };
-}
+import { IGamesState } from "./types";
 
 const initialState: IGamesState = {
   currentGuess: "",
@@ -70,7 +28,7 @@ export const gamesSlice = createSlice({
     },
     updateGuess: (state, action: PayloadAction<string>) => {
       const previousValue = state.currentGuess;
-      if (previousValue.length === 5) {
+      if (previousValue.length === WORD_LENGTH) {
         return;
       }
 
@@ -86,6 +44,11 @@ export const gamesSlice = createSlice({
     },
     submitGuess: (state) => {
       const submittedGuess = state.currentGuess;
+
+      if (submittedGuess.length !== WORD_LENGTH) {
+        return;
+      }
+
       Object.keys(state.value).forEach((gameIndex) => {
         const answer = state.value[gameIndex].answer;
         const result = getResult(answer, submittedGuess);
@@ -95,6 +58,8 @@ export const gamesSlice = createSlice({
           result,
         });
       });
+
+      state.currentGuess = "";
     },
   },
 });
