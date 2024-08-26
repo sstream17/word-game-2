@@ -1,5 +1,15 @@
-import { useCallback, useState } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import {
+  deleteLetterFromGuess,
+  selectCurrentGuess,
+  selectGuessIndex,
+  startGame,
+  submitGuess,
+  updateGuess,
+  useGameDispatch,
+  useGameSelector,
+} from "@/store";
+import { useCallback, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
 import { GameBoard } from "./GameBoard";
 import { Keyboard } from "./Keyboard";
 
@@ -10,35 +20,47 @@ interface IProps {
 export function Game(props: IProps) {
   const { numberOfGames } = props;
 
-  const [guess, setGuess] = useState("");
+  const currentGuess = useGameSelector(selectCurrentGuess);
+  const guessIndex = useGameSelector(selectGuessIndex);
+  const dispatch = useGameDispatch();
 
-  const updateGuess = useCallback(
+  useEffect(() => {
+    dispatch(startGame(numberOfGames));
+  }, [dispatch, numberOfGames]);
+
+  const handleUpdateGuess = useCallback(
     (newKey: string) => {
       if (newKey === "backspace") {
-        setGuess((prev) => prev.slice(0, -1));
+        dispatch(deleteLetterFromGuess());
         return;
       }
 
-      if (guess.length === 5) {
-        return;
-      }
-
-      setGuess((prev) => `${prev}${newKey}`);
+      dispatch(updateGuess(newKey));
     },
-    [guess.length],
+    [dispatch],
   );
 
-  const submitGuess = useCallback(() => {}, []);
+  const handleSubmitGuess = useCallback(() => {
+    dispatch(submitGuess());
+  }, [dispatch]);
 
   return (
     <View style={styles.gameWrapper}>
-      <Text>{guess}</Text>
       <View style={styles.gamesArea}>
         {[...Array(numberOfGames)].map((_, gameIndex) => (
-          <GameBoard key={gameIndex} gameIndex={gameIndex} />
+          <GameBoard
+            key={gameIndex}
+            gameIndex={gameIndex}
+            numberOfGames={numberOfGames}
+            currentGuess={currentGuess}
+            guessIndex={guessIndex}
+          />
         ))}
       </View>
-      <Keyboard updateGuess={updateGuess} submitGuess={submitGuess} />
+      <Keyboard
+        updateGuess={handleUpdateGuess}
+        submitGuess={handleSubmitGuess}
+      />
     </View>
   );
 }
@@ -46,13 +68,16 @@ export function Game(props: IProps) {
 const styles = StyleSheet.create({
   gameWrapper: {
     flex: 1,
-    backgroundColor: "#0022f8",
+    backgroundColor: "lightblue",
     alignItems: "center",
     justifyContent: "center",
   },
   gamesArea: {
     flex: 1,
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
     backgroundColor: "#00ff00",
-    flexGrow: 1,
+    width: "50%",
   },
 });
