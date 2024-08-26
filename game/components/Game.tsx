@@ -8,7 +8,7 @@ import {
   useGameSelector,
 } from "@/store";
 import { useCallback, useEffect } from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import { GameBoard } from "./GameBoard";
 import { Keyboard } from "./Keyboard";
 
@@ -19,7 +19,7 @@ interface IProps {
 export function Game(props: IProps) {
   const { numberOfGames } = props;
 
-  const guess = useGameSelector(selectGuess);
+  const currentGuess = useGameSelector(selectGuess);
   const dispatch = useGameDispatch();
 
   useEffect(() => {
@@ -44,10 +44,14 @@ export function Game(props: IProps) {
 
   return (
     <View style={styles.gameWrapper}>
-      <Text>{guess}</Text>
       <View style={styles.gamesArea}>
         {[...Array(numberOfGames)].map((_, gameIndex) => (
-          <GameBoard key={gameIndex} gameIndex={gameIndex} />
+          <GameBoard
+            key={gameIndex}
+            gameIndex={gameIndex}
+            numberOfGames={numberOfGames}
+            currentGuess={currentGuess}
+          />
         ))}
       </View>
       <Keyboard
