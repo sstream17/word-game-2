@@ -1,4 +1,5 @@
 import { NUMBER_OF_TRIES } from "@/constants/game";
+import { selectGameGuesses, useGameSelector } from "@/store";
 import { StyleSheet, View } from "react-native";
 import { GuessRow } from "./GuessRow";
 
@@ -6,16 +7,25 @@ interface IProps {
   gameIndex: number;
   numberOfGames: number;
   currentGuess: string;
+  guessIndex: number;
 }
 
 export function GameBoard(props: IProps) {
-  const { gameIndex, numberOfGames, currentGuess } = props;
+  const { gameIndex, numberOfGames, currentGuess, guessIndex } = props;
+
+  const guesses = useGameSelector((state) =>
+    selectGameGuesses(state, gameIndex),
+  );
 
   return (
     <View style={styles.gameBoard}>
-      {[...Array(numberOfGames + NUMBER_OF_TRIES)].map((_, rowIndex) => (
-        <GuessRow key={rowIndex} currentGuess={currentGuess} />
-      ))}
+      {[...Array(numberOfGames + NUMBER_OF_TRIES)].map((_, rowIndex) => {
+        const isCurrentGuess = rowIndex === guessIndex;
+        const guessToDisplay = isCurrentGuess
+          ? currentGuess
+          : (guesses[rowIndex]?.guess ?? "");
+        return <GuessRow key={rowIndex} guess={guessToDisplay} />;
+      })}
     </View>
   );
 }

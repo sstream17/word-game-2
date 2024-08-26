@@ -2,7 +2,9 @@ import gameStore from "./gameStore";
 
 export {
   deleteLetterFromGuess,
-  selectGuess,
+  selectCurrentGuess,
+  selectGameGuesses,
+  selectGuessIndex,
   startGame,
   submitGuess,
   updateGuess,

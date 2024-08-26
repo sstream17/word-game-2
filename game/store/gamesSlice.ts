@@ -7,6 +7,7 @@ import { IGamesState } from "./types";
 
 const initialState: IGamesState = {
   currentGuess: "",
+  guessIndex: 0,
   value: {},
 };
 
@@ -25,6 +26,9 @@ export const gamesSlice = createSlice({
           status: "inProgress",
         };
       }
+
+      state.currentGuess = "";
+      state.guessIndex = 0;
     },
     updateGuess: (state, action: PayloadAction<string>) => {
       const previousValue = state.currentGuess;
@@ -60,6 +64,7 @@ export const gamesSlice = createSlice({
       });
 
       state.currentGuess = "";
+      state.guessIndex += 1;
     },
   },
 });
@@ -68,6 +73,13 @@ export const gamesSlice = createSlice({
 export const { deleteLetterFromGuess, startGame, submitGuess, updateGuess } =
   gamesSlice.actions;
 
-export const selectGuess = (state: RootGameState) => state.games.currentGuess;
+export const selectCurrentGuess = (state: RootGameState) =>
+  state.games.currentGuess;
+
+export const selectGuessIndex = (state: RootGameState) =>
+  state.games.guessIndex;
+
+export const selectGameGuesses = (state: RootGameState, gameIndex: number) =>
+  state.games.value[gameIndex]?.guesses ?? [];
 
 export default gamesSlice.reducer;

@@ -1,6 +1,7 @@
 import {
   deleteLetterFromGuess,
-  selectGuess,
+  selectCurrentGuess,
+  selectGuessIndex,
   startGame,
   submitGuess,
   updateGuess,
@@ -19,7 +20,8 @@ interface IProps {
 export function Game(props: IProps) {
   const { numberOfGames } = props;
 
-  const currentGuess = useGameSelector(selectGuess);
+  const currentGuess = useGameSelector(selectCurrentGuess);
+  const guessIndex = useGameSelector(selectGuessIndex);
   const dispatch = useGameDispatch();
 
   useEffect(() => {
@@ -51,6 +53,7 @@ export function Game(props: IProps) {
             gameIndex={gameIndex}
             numberOfGames={numberOfGames}
             currentGuess={currentGuess}
+            guessIndex={guessIndex}
           />
         ))}
       </View>
