@@ -68,13 +68,16 @@ export function Game(props: IProps) {
 const styles = StyleSheet.create({
   gameWrapper: {
     flex: 1,
-    backgroundColor: "#0022f8",
+    backgroundColor: "lightblue",
     alignItems: "center",
     justifyContent: "center",
   },
   gamesArea: {
     flex: 1,
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
     backgroundColor: "#00ff00",
-    flexGrow: 1,
+    width: "50%",
   },
 });
