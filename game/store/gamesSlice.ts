@@ -1,11 +1,12 @@
 import { getResult, sampleSize } from "@/api";
-import { WORD_LENGTH } from "@/constants/game";
+import { NUMBER_OF_TRIES, WORD_LENGTH } from "@/constants/game";
 import { words } from "@/constants/words";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootGameState } from "./gameStore";
 import { IGamesState } from "./types";
 
 const initialState: IGamesState = {
+  numberOfGames: 1,
   currentGuess: "",
   guessIndex: 0,
   value: {},
@@ -15,9 +16,11 @@ export const gamesSlice = createSlice({
   name: "games",
   initialState,
   reducers: {
-    startGame: (state, action: PayloadAction<number>) => {
-      const numberOfGames = action.payload;
+    startGame: (state, action: PayloadAction<number | undefined>) => {
+      const numberOfGames = action.payload ?? state.numberOfGames;
       const answers = sampleSize(words, numberOfGames);
+
+      state.numberOfGames = numberOfGames;
 
       for (let i = 0; i < numberOfGames; i++) {
         state.value[`${i}`] = {
@@ -54,6 +57,10 @@ export const gamesSlice = createSlice({
       }
 
       Object.keys(state.value).forEach((gameIndex) => {
+        if (state.value[gameIndex].status === "won") {
+          return;
+        }
+
         const answer = state.value[gameIndex].answer;
         const result = getResult(answer, submittedGuess);
 
@@ -61,6 +68,24 @@ export const gamesSlice = createSlice({
           guess: submittedGuess,
           result,
         });
+
+        if (result === "xxxxx") {
+          state.value[gameIndex].status = "won";
+
+          const previousGuesses = state.value[gameIndex].guesses;
+          state.value[gameIndex].guesses = [
+            ...previousGuesses,
+            ...Array.from(
+              {
+                length:
+                  state.numberOfGames +
+                  NUMBER_OF_TRIES -
+                  previousGuesses.length,
+              },
+              () => ({ guess: "", result: "_____" }),
+            ),
+          ];
+        }
       });
 
       state.currentGuess = "";
@@ -81,5 +106,8 @@ export const selectGuessIndex = (state: RootGameState) =>
 
 export const selectGameGuesses = (state: RootGameState, gameIndex: number) =>
   state.games.value[gameIndex]?.guesses ?? [];
+
+export const selectGameStatus = (state: RootGameState, gameIndex: number) =>
+  state.games.value[gameIndex]?.status ?? "inProgress";
 
 export default gamesSlice.reducer;

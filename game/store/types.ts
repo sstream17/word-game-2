@@ -10,6 +10,7 @@ export interface IGame {
 }
 
 export interface IGamesState {
+  numberOfGames: number;
   currentGuess: string;
   guessIndex: number;
   value: { [gameId: string]: IGame };
