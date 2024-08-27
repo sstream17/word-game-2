@@ -54,8 +54,16 @@ export const gamesSlice = createSlice({
       }
 
       Object.keys(state.value).forEach((gameIndex) => {
+        if (state.value[gameIndex].status === "won") {
+          return;
+        }
+
         const answer = state.value[gameIndex].answer;
         const result = getResult(answer, submittedGuess);
+
+        if (result === "xxxxx") {
+          state.value[gameIndex].status = "won";
+        }
 
         state.value[gameIndex].guesses.push({
           guess: submittedGuess,

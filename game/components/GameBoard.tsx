@@ -24,7 +24,14 @@ export function GameBoard(props: IProps) {
         const guessToDisplay = isCurrentGuess
           ? currentGuess
           : (guesses[rowIndex]?.guess ?? "");
-        return <GuessRow key={rowIndex} guess={guessToDisplay} />;
+        const resultToDisplay = guesses[rowIndex]?.result ?? "";
+        return (
+          <GuessRow
+            key={rowIndex}
+            guess={guessToDisplay}
+            result={resultToDisplay}
+          />
+        );
       })}
     </View>
   );
