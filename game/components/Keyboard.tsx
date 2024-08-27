@@ -1,5 +1,7 @@
-import { StyleSheet, View } from "react-native";
+import { startGame, useGameDispatch } from "@/store";
+import { Button, StyleSheet, View } from "react-native";
 import { KeyboardKey } from "./KeyboardKey";
+import { useCallback } from "react";
 
 interface IProps {
   updateGuess: (letter: string) => void;
@@ -8,6 +10,12 @@ interface IProps {
 
 export function Keyboard(props: IProps) {
   const { updateGuess, submitGuess } = props;
+
+  const dispatch = useGameDispatch();
+
+  const handleReset = useCallback(() => {
+    dispatch(startGame());
+  }, [dispatch]);
 
   return (
     <View style={styles.container}>
@@ -36,13 +44,16 @@ export function Keyboard(props: IProps) {
           icon="send-outline"
         />
       </View>
+      <View style={styles.keyboardRow}>
+        <Button onPress={handleReset} title={"Reset"}></Button>
+      </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    height: 300,
+    height: 200,
     display: "flex",
     flexDirection: "column",
     backgroundColor: "#0000ff",

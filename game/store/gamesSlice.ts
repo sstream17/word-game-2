@@ -6,7 +6,7 @@ import { RootGameState } from "./gameStore";
 import { IGamesState } from "./types";
 
 const initialState: IGamesState = {
-  numberOfGames: 0,
+  numberOfGames: 1,
   currentGuess: "",
   guessIndex: 0,
   value: {},
@@ -16,8 +16,8 @@ export const gamesSlice = createSlice({
   name: "games",
   initialState,
   reducers: {
-    startGame: (state, action: PayloadAction<number>) => {
-      const numberOfGames = action.payload;
+    startGame: (state, action: PayloadAction<number | undefined>) => {
+      const numberOfGames = action.payload ?? state.numberOfGames;
       const answers = sampleSize(words, numberOfGames);
 
       state.numberOfGames = numberOfGames;
