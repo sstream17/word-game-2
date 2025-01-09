@@ -14,7 +14,7 @@
 		flex-direction: row;
 		justify-content: flex-end;
 		bottom: 0;
-		right: 2px;
+		right: 4px;
 		width: 100%;
 	}
 
