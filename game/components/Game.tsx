@@ -28,21 +28,36 @@ export function Game(props: IProps) {
     dispatch(startGame(numberOfGames));
   }, [dispatch, numberOfGames]);
 
+  const submit = useCallback(() => {
+    // Check bad guess
+
+    // Update storage
+
+    // If not bad guess
+    // - submit
+    dispatch(submitGuess());
+    // - animate
+    // - handle win
+
+    // else, tried bad guess
+  }, [dispatch]);
+
   const handleUpdateGuess = useCallback(
     (newKey: string) => {
-      if (newKey === "backspace") {
-        dispatch(deleteLetterFromGuess());
-        return;
+      switch (newKey) {
+        case "enter":
+          submit();
+          break;
+        case "backspace":
+          dispatch(deleteLetterFromGuess());
+          break;
+        default:
+          dispatch(updateGuess(newKey));
+          break;
       }
-
-      dispatch(updateGuess(newKey));
     },
-    [dispatch],
+    [dispatch, submit],
   );
-
-  const handleSubmitGuess = useCallback(() => {
-    dispatch(submitGuess());
-  }, [dispatch]);
 
   return (
     <View style={styles.gameWrapper}>
@@ -57,10 +72,7 @@ export function Game(props: IProps) {
           />
         ))}
       </View>
-      <Keyboard
-        updateGuess={handleUpdateGuess}
-        submitGuess={handleSubmitGuess}
-      />
+      <Keyboard onKeyPress={handleUpdateGuess} />
     </View>
   );
 }
