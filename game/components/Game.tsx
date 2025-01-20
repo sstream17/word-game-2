@@ -1,15 +1,17 @@
+import { useCallback, useEffect } from "react";
+import { StyleSheet, View } from "react-native";
+
 import {
   deleteLetterFromGuess,
   selectCurrentGuess,
   selectGuessIndex,
+  selectOverallStatus,
   startGame,
   submitGuess,
   updateGuess,
   useGameDispatch,
   useGameSelector,
 } from "@/store";
-import { useCallback, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
 import { GameBoard } from "./GameBoard";
 import { Keyboard } from "./Keyboard";
 
@@ -22,6 +24,7 @@ export function Game(props: IProps) {
 
   const currentGuess = useGameSelector(selectCurrentGuess);
   const guessIndex = useGameSelector(selectGuessIndex);
+  const overallStatus = useGameSelector(selectOverallStatus);
   const dispatch = useGameDispatch();
 
   useEffect(() => {
@@ -42,11 +45,18 @@ export function Game(props: IProps) {
     // else, tried bad guess
   }, [dispatch]);
 
+  const restart = useCallback(() => {
+    dispatch(startGame());
+  }, [dispatch]);
+
   const handleUpdateGuess = useCallback(
     (newKey: string) => {
       switch (newKey) {
         case "enter":
           submit();
+          break;
+        case "restart":
+          restart();
           break;
         case "backspace":
           dispatch(deleteLetterFromGuess());
@@ -56,7 +66,7 @@ export function Game(props: IProps) {
           break;
       }
     },
-    [dispatch, submit],
+    [dispatch, restart, submit],
   );
 
   return (
@@ -72,7 +82,7 @@ export function Game(props: IProps) {
           />
         ))}
       </View>
-      <Keyboard onKeyPress={handleUpdateGuess} />
+      <Keyboard onKeyPress={handleUpdateGuess} overallStatus={overallStatus} />
     </View>
   );
 }

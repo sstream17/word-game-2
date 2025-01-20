@@ -14,4 +14,5 @@ export interface IGamesState {
   currentGuess: string;
   guessIndex: number;
   value: { [gameId: string]: IGame };
+  status: "inProgress" | "won" | "lost";
 }

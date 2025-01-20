@@ -1,19 +1,18 @@
 import { useCallback, useEffect } from "react";
+import { Button, StyleSheet, View } from "react-native";
 
 import { VALID_GAMES, VALID_KEYS } from "@/constants/game";
-import { startGame, useGameDispatch } from "@/store";
 import { usePathname } from "expo-router";
-import { Button, StyleSheet, View } from "react-native";
 import { KeyboardKey } from "./KeyboardKey";
 
 interface IProps {
   onKeyPress: (letter: string) => void;
+  overallStatus: "inProgress" | "won" | "lost";
 }
 
 export function Keyboard(props: IProps) {
-  const { onKeyPress } = props;
+  const { onKeyPress, overallStatus } = props;
 
-  const dispatch = useGameDispatch();
   const pathname = usePathname();
 
   const handleKey = useCallback(
@@ -61,8 +60,8 @@ export function Keyboard(props: IProps) {
   }, [handleKey]);
 
   const handleReset = useCallback(() => {
-    dispatch(startGame());
-  }, [dispatch]);
+    onKeyPress("restart");
+  }, [onKeyPress]);
 
   return (
     <View style={styles.container}>
@@ -91,9 +90,11 @@ export function Keyboard(props: IProps) {
           icon="send-outline"
         />
       </View>
-      <View style={styles.keyboardRow}>
-        <Button onPress={handleReset} title={"Reset"}></Button>
-      </View>
+      {overallStatus !== "inProgress" && (
+        <View style={styles.keyboardRow}>
+          <Button onPress={handleReset} title={"Reset"}></Button>
+        </View>
+      )}
     </View>
   );
 }

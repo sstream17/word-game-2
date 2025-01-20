@@ -10,6 +10,7 @@ const initialState: IGamesState = {
   currentGuess: "",
   guessIndex: 0,
   value: {},
+  status: "inProgress",
 };
 
 export const gamesSlice = createSlice({
@@ -21,6 +22,7 @@ export const gamesSlice = createSlice({
       const answers = sampleSize(words, numberOfGames);
 
       state.numberOfGames = numberOfGames;
+      state.value = {};
 
       for (let i = 0; i < numberOfGames; i++) {
         state.value[`${i}`] = {
@@ -32,6 +34,7 @@ export const gamesSlice = createSlice({
 
       state.currentGuess = "";
       state.guessIndex = 0;
+      state.status = "inProgress";
     },
     updateGuess: (state, action: PayloadAction<string>) => {
       const previousValue = state.currentGuess;
@@ -56,8 +59,11 @@ export const gamesSlice = createSlice({
         return;
       }
 
+      let winCount = 0;
+
       Object.keys(state.value).forEach((gameIndex) => {
         if (state.value[gameIndex].status === "won") {
+          winCount = winCount + 1;
           return;
         }
 
@@ -71,6 +77,7 @@ export const gamesSlice = createSlice({
 
         if (result === "xxxxx") {
           state.value[gameIndex].status = "won";
+          winCount = winCount + 1;
 
           const previousGuesses = state.value[gameIndex].guesses;
           state.value[gameIndex].guesses = [
@@ -90,6 +97,14 @@ export const gamesSlice = createSlice({
 
       state.currentGuess = "";
       state.guessIndex += 1;
+
+      const allWon = winCount === state.numberOfGames;
+
+      if (allWon) {
+        state.status = "won";
+      } else if (state.guessIndex >= state.numberOfGames + NUMBER_OF_TRIES) {
+        state.status = "lost";
+      }
     },
   },
 });
@@ -103,6 +118,8 @@ export const selectCurrentGuess = (state: RootGameState) =>
 
 export const selectGuessIndex = (state: RootGameState) =>
   state.games.guessIndex;
+
+export const selectOverallStatus = (state: RootGameState) => state.games.status;
 
 export const selectGameGuesses = (state: RootGameState, gameIndex: number) =>
   state.games.value[gameIndex]?.guesses ?? [];
