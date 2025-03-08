@@ -1,6 +1,7 @@
-import { getResult, sampleSize } from "@/api";
-import { NUMBER_OF_TRIES, WORD_LENGTH } from "@/constants/game";
+import { getResult, sampleSize, updateHints } from "@/api";
+import { NUMBER_OF_TRIES, VALID_KEYS, WORD_LENGTH } from "@/constants/game";
 import { words } from "@/constants/words";
+import { IHints } from "@/types/game";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootGameState } from "./gameStore";
 import { IGamesState } from "./types";
@@ -10,6 +11,7 @@ const initialState: IGamesState = {
   currentGuess: "",
   guessIndex: 0,
   value: {},
+  hints: {},
   status: "inProgress",
 };
 
@@ -23,12 +25,22 @@ export const gamesSlice = createSlice({
 
       state.numberOfGames = numberOfGames;
       state.value = {};
+      state.hints = {};
+
+      const initialHints = Object.keys(VALID_KEYS).reduce((acc, key) => {
+        acc[key] = "unknown";
+        return acc;
+      }, {} as IHints);
 
       for (let i = 0; i < numberOfGames; i++) {
         state.value[`${i}`] = {
           answer: answers[i],
           guesses: [],
           status: "inProgress",
+        };
+
+        state.hints[`${i}`] = {
+          ...initialHints,
         };
       }
 
@@ -61,6 +73,11 @@ export const gamesSlice = createSlice({
 
       let winCount = 0;
 
+      const gameFinishedHints = Object.keys(VALID_KEYS).reduce((acc, key) => {
+        acc[key] = "missing";
+        return acc;
+      }, {} as IHints);
+
       Object.keys(state.value).forEach((gameIndex) => {
         if (state.value[gameIndex].status === "won") {
           winCount = winCount + 1;
@@ -92,6 +109,18 @@ export const gamesSlice = createSlice({
               () => ({ guess: "", result: "_____" }),
             ),
           ];
+
+          // If the game is won, clear out all hints so they can be ignored.
+          // It isn't valuable to know the status of a letter if the board can't be played.
+          state.hints[gameIndex] = {
+            ...gameFinishedHints,
+          };
+        } else {
+          state.hints[gameIndex] = updateHints(
+            state.hints[gameIndex],
+            submittedGuess,
+            result,
+          );
         }
       });
 

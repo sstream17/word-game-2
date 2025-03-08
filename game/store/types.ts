@@ -1,3 +1,5 @@
+import { IHints } from "@/types/game";
+
 export interface IGuess {
   guess: string;
   result: string;
@@ -14,5 +16,6 @@ export interface IGamesState {
   currentGuess: string;
   guessIndex: number;
   value: { [gameId: string]: IGame };
+  hints: { [gameId: string]: IHints };
   status: "inProgress" | "won" | "lost";
 }
