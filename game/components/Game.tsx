@@ -5,6 +5,7 @@ import {
   deleteLetterFromGuess,
   selectCurrentGuess,
   selectGuessIndex,
+  selectHints,
   selectOverallStatus,
   startGame,
   submitGuess,
@@ -25,6 +26,8 @@ export function Game(props: IProps) {
   const currentGuess = useGameSelector(selectCurrentGuess);
   const guessIndex = useGameSelector(selectGuessIndex);
   const overallStatus = useGameSelector(selectOverallStatus);
+  const hints = useGameSelector(selectHints);
+
   const dispatch = useGameDispatch();
 
   useEffect(() => {
@@ -82,7 +85,11 @@ export function Game(props: IProps) {
           />
         ))}
       </View>
-      <Keyboard onKeyPress={handleUpdateGuess} overallStatus={overallStatus} />
+      <Keyboard
+        overallStatus={overallStatus}
+        hints={hints}
+        onKeyPress={handleUpdateGuess}
+      />
     </View>
   );
 }

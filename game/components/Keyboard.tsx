@@ -2,16 +2,18 @@ import { useCallback, useEffect } from "react";
 import { Button, StyleSheet, View } from "react-native";
 
 import { VALID_GAMES, VALID_KEYS } from "@/constants/game";
+import { IHints } from "@/types/game";
 import { usePathname } from "expo-router";
 import { KeyboardKey } from "./KeyboardKey";
 
 interface IProps {
-  onKeyPress: (letter: string) => void;
   overallStatus: "inProgress" | "won" | "lost";
+  hints: { [gameId: string]: IHints };
+  onKeyPress: (letter: string) => void;
 }
 
 export function Keyboard(props: IProps) {
-  const { onKeyPress, overallStatus } = props;
+  const { overallStatus, hints, onKeyPress } = props;
 
   const pathname = usePathname();
 
@@ -67,27 +69,42 @@ export function Keyboard(props: IProps) {
     <View style={styles.container}>
       <View style={styles.keyboardRow}>
         {[..."qwertyuiop"].map((char) => (
-          <KeyboardKey key={char} letter={char} onClick={onKeyPress} />
+          <KeyboardKey
+            key={char}
+            letter={char}
+            hints={hints}
+            onClick={onKeyPress}
+          />
         ))}
       </View>
       <View style={styles.keyboardRow}>
         {[..."asdfghjkl"].map((char) => (
-          <KeyboardKey key={char} letter={char} onClick={onKeyPress} />
+          <KeyboardKey
+            key={char}
+            letter={char}
+            hints={hints}
+            onClick={onKeyPress}
+          />
         ))}
       </View>
       <View style={styles.keyboardRow}>
         <KeyboardKey
           letter={"backspace"}
-          onClick={onKeyPress}
           icon="backspace-outline"
+          onClick={onKeyPress}
         />
         {[..."zxcvbnm"].map((char) => (
-          <KeyboardKey key={char} letter={char} onClick={onKeyPress} />
+          <KeyboardKey
+            key={char}
+            letter={char}
+            hints={hints}
+            onClick={onKeyPress}
+          />
         ))}
         <KeyboardKey
           letter={"enter"}
-          onClick={onKeyPress}
           icon="send-outline"
+          onClick={onKeyPress}
         />
       </View>
       {overallStatus !== "inProgress" && (

@@ -150,6 +150,8 @@ export const selectGuessIndex = (state: RootGameState) =>
 
 export const selectOverallStatus = (state: RootGameState) => state.games.status;
 
+export const selectHints = (state: RootGameState) => state.games.hints;
+
 export const selectGameGuesses = (state: RootGameState, gameIndex: number) =>
   state.games.value[gameIndex]?.guesses ?? [];
 
