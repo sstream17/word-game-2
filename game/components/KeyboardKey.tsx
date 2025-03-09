@@ -20,7 +20,18 @@ function getLetterColors(
     return ["unknown", "unknown", "unknown", "unknown"];
   }
 
-  return Object.keys(hints).map((gameId) => hints[gameId][letter]);
+  const colors = Object.keys(hints).map((gameId) => hints[gameId][letter]);
+
+  switch (colors.length) {
+    case 1:
+      return [colors[0], colors[0], colors[0], colors[0]];
+    case 2:
+      return [colors[0], colors[1], colors[0], colors[1]];
+    case 4:
+      return colors;
+    default:
+      return ["unknown", "unknown", "unknown", "unknown"];
+  }
 }
 
 export function KeyboardKey(props: IProps) {
