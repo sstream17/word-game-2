@@ -1,3 +1,5 @@
+export type KeyStatus = "unknown" | "missing" | "close" | "exact";
+
 export interface IHints {
-  [key: string]: "unknown" | "missing" | "close" | "exact";
+  [key: string]: KeyStatus;
 }
