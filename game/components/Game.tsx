@@ -13,6 +13,7 @@ import {
   useGameDispatch,
   useGameSelector,
 } from "@/store";
+import { ScrollView } from "react-native-gesture-handler";
 import { GameBoard } from "./GameBoard";
 import { Keyboard } from "./Keyboard";
 
@@ -74,7 +75,10 @@ export function Game(props: IProps) {
 
   return (
     <View style={styles.gameWrapper}>
-      <View style={styles.gamesArea}>
+      <ScrollView
+        contentContainerStyle={styles.gamesArea}
+        style={styles.scrollArea}
+      >
         {[...Array(numberOfGames)].map((_, gameIndex) => (
           <GameBoard
             key={gameIndex}
@@ -84,7 +88,7 @@ export function Game(props: IProps) {
             guessIndex={guessIndex}
           />
         ))}
-      </View>
+      </ScrollView>
       <Keyboard
         overallStatus={overallStatus}
         hints={hints}
@@ -99,13 +103,19 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    width: "100%",
+  },
+  scrollArea: {
+    width: "50%",
+    height: "100%",
   },
   gamesArea: {
-    flex: 1,
     display: "flex",
+    flexGrow: 1,
     flexDirection: "row",
     flexWrap: "wrap",
-    backgroundColor: "#00ff00",
-    width: "50%",
+    justifyContent: "center",
+    alignItems: "center",
+    overflow: "hidden",
   },
 });

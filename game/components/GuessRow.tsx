@@ -1,5 +1,7 @@
-import { WORD_LENGTH } from "@/constants/game";
 import { StyleSheet, Text, View } from "react-native";
+
+import { Colors } from "@/constants/Colors";
+import { WORD_LENGTH } from "@/constants/game";
 
 interface IProps {
   guess: string;
@@ -33,17 +35,20 @@ const styles = StyleSheet.create({
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor: "#fff",
-    width: 20,
-    height: 20,
+    backgroundColor: Colors.light.unknown,
+    borderRadius: 4,
+    width: 30,
+    height: 40,
   },
   c: {
-    backgroundColor: "yellow",
+    backgroundColor: Colors.light.close,
+    borderWidth: 2,
+    borderColor: Colors.light.closeBorder,
   },
   x: {
-    backgroundColor: "cyan",
+    backgroundColor: Colors.light.exact,
   },
   _: {
-    backgroundColor: "lightgray",
+    backgroundColor: Colors.light.missing,
   },
 });
