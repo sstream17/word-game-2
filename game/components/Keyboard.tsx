@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { Button, StyleSheet, View } from "react-native";
 
+import { Colors } from "@/constants/Colors";
 import { VALID_GAMES, VALID_KEYS } from "@/constants/game";
 import { IHints } from "@/types/game";
 import { usePathname } from "expo-router";
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     height: 200,
     display: "flex",
     flexDirection: "column",
-    backgroundColor: "#0000ff",
+    backgroundColor: Colors.light.background,
     alignItems: "center",
     justifyContent: "center",
     gap: 8,

@@ -97,7 +97,6 @@ export function Game(props: IProps) {
 const styles = StyleSheet.create({
   gameWrapper: {
     flex: 1,
-    backgroundColor: "lightblue",
     alignItems: "center",
     justifyContent: "center",
   },

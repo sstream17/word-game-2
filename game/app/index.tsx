@@ -1,9 +1,10 @@
+import GradientBackgroundView from "@/components/GradientBackgroundView";
 import { Link } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, StyleSheet, Text } from "react-native";
 
 export default function Index() {
   return (
-    <View style={styles.container}>
+    <GradientBackgroundView style={styles.container}>
       <Link href="/1" asChild>
         <Pressable>
           <Text>Classic</Text>
@@ -19,14 +20,13 @@ export default function Index() {
           <Text>Quad</Text>
         </Pressable>
       </Link>
-    </View>
+    </GradientBackgroundView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },

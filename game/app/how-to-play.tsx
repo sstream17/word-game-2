@@ -1,17 +1,17 @@
-import { StyleSheet, Text, View } from "react-native";
+import GradientBackgroundView from "@/components/GradientBackgroundView";
+import { StyleSheet, Text } from "react-native";
 
 export default function HowToPlay() {
   return (
-    <View style={styles.container}>
+    <GradientBackgroundView style={styles.container}>
       <Text>How to play</Text>
-    </View>
+    </GradientBackgroundView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
