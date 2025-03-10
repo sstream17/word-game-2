@@ -18,7 +18,9 @@ export function GuessRow(props: IProps) {
           key={columnIndex}
           style={[styles.tile, styles[result[columnIndex] as "x" | "c" | "_"]]}
         >
-          <Text selectable={false}>{guess[columnIndex] ?? ""}</Text>
+          <Text style={styles.text} selectable={false}>
+            {guess[columnIndex] ?? ""}
+          </Text>
         </View>
       ))}
     </View>
@@ -37,8 +39,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: Colors.light.unknown,
     borderRadius: 4,
-    width: 30,
-    height: 40,
+    width: 40,
+    height: 50,
+  },
+  text: {
+    fontSize: 24,
   },
   c: {
     backgroundColor: Colors.light.close,

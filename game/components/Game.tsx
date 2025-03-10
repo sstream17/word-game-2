@@ -109,7 +109,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   scrollArea: {
-    width: "50%",
     height: "100%",
   },
   gamesArea: {
