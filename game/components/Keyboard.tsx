@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { Button, StyleSheet, View } from "react-native";
+import { Button, StyleSheet, View, Platform } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { VALID_GAMES, VALID_KEYS } from "@/constants/game";
@@ -51,12 +51,12 @@ export function Keyboard(props: IProps) {
   );
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
+    if (Platform.OS === "web") {
       document.addEventListener("keydown", handleKey, true);
     }
 
     return () => {
-      if (typeof window !== "undefined") {
+      if (Platform.OS === "web") {
         document.removeEventListener("keydown", handleKey, true);
       }
     };

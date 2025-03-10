@@ -1,5 +1,5 @@
 import { useCallback, useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet } from "react-native";
 
 import {
   deleteLetterFromGuess,
@@ -13,7 +13,10 @@ import {
   useGameDispatch,
   useGameSelector,
 } from "@/store";
-import { ScrollView } from "react-native-gesture-handler";
+import {
+  GestureHandlerRootView,
+  ScrollView,
+} from "react-native-gesture-handler";
 import { GameBoard } from "./GameBoard";
 import { Keyboard } from "./Keyboard";
 
@@ -74,7 +77,7 @@ export function Game(props: IProps) {
   );
 
   return (
-    <View style={styles.gameWrapper}>
+    <GestureHandlerRootView style={styles.gameWrapper}>
       <ScrollView
         contentContainerStyle={styles.gamesArea}
         style={styles.scrollArea}
@@ -94,7 +97,7 @@ export function Game(props: IProps) {
         hints={hints}
         onKeyPress={handleUpdateGuess}
       />
-    </View>
+    </GestureHandlerRootView>
   );
 }
 
