@@ -7,6 +7,8 @@ import { KeyBackground } from "./KeyBackground";
 
 interface IProps {
   letter: string;
+  width: number;
+  height: number;
   icon?: keyof typeof MaterialCommunityIcons.glyphMap;
   hints?: { [gameId: string]: IHints };
   onClick: (letter: string) => void;
@@ -35,15 +37,20 @@ function getLetterColors(
 }
 
 export function KeyboardKey(props: IProps) {
-  const { letter, icon, hints, onClick: updateGuess } = props;
+  const { letter, width, height, icon, hints, onClick: updateGuess } = props;
 
   const theme = Colors["light"];
   const colors = getLetterColors(letter, hints);
 
   return (
     <Pressable onPress={() => updateGuess(letter)}>
-      <View style={styles.keyContainer}>
-        <KeyBackground width={24} height={30} colors={colors} theme={theme} />
+      <View style={[styles.keyContainer, { width, height }]}>
+        <KeyBackground
+          width={width}
+          height={height}
+          colors={colors}
+          theme={theme}
+        />
         {icon ? (
           <MaterialCommunityIcons style={styles.letter} name={icon} />
         ) : (
@@ -58,8 +65,6 @@ export function KeyboardKey(props: IProps) {
 
 const styles = StyleSheet.create({
   keyContainer: {
-    width: 24,
-    height: 30,
     justifyContent: "center",
     alignItems: "center",
   },

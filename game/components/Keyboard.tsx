@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
-import { Button, StyleSheet, View, Platform } from "react-native";
+import { Button, Platform, StyleSheet, View } from "react-native";
 
+import { useKeySizes } from "@/api";
 import { Colors } from "@/constants/Colors";
 import { VALID_GAMES, VALID_KEYS } from "@/constants/game";
 import { IHints } from "@/types/game";
@@ -15,6 +16,8 @@ interface IProps {
 
 export function Keyboard(props: IProps) {
   const { overallStatus, hints, onKeyPress } = props;
+
+  const { keyWidth, keyHeight, keyGap } = useKeySizes();
 
   const pathname = usePathname();
 
@@ -67,30 +70,36 @@ export function Keyboard(props: IProps) {
   }, [onKeyPress]);
 
   return (
-    <View style={styles.container}>
-      <View style={styles.keyboardRow}>
+    <View style={[styles.container, { gap: keyGap * 2 }]}>
+      <View style={[styles.keyboardRow, { gap: keyGap }]}>
         {[..."qwertyuiop"].map((char) => (
           <KeyboardKey
             key={char}
             letter={char}
+            width={keyWidth}
+            height={keyHeight}
             hints={hints}
             onClick={onKeyPress}
           />
         ))}
       </View>
-      <View style={styles.keyboardRow}>
+      <View style={[styles.keyboardRow, { gap: keyGap }]}>
         {[..."asdfghjkl"].map((char) => (
           <KeyboardKey
             key={char}
             letter={char}
+            width={keyWidth}
+            height={keyHeight}
             hints={hints}
             onClick={onKeyPress}
           />
         ))}
       </View>
-      <View style={styles.keyboardRow}>
+      <View style={[styles.keyboardRow, { gap: keyGap }]}>
         <KeyboardKey
           letter={"backspace"}
+          width={keyWidth * 1.5}
+          height={keyHeight}
           icon="backspace-outline"
           onClick={onKeyPress}
         />
@@ -98,12 +107,16 @@ export function Keyboard(props: IProps) {
           <KeyboardKey
             key={char}
             letter={char}
+            width={keyWidth}
+            height={keyHeight}
             hints={hints}
             onClick={onKeyPress}
           />
         ))}
         <KeyboardKey
           letter={"enter"}
+          width={keyWidth * 1.5}
+          height={keyHeight}
           icon="send-outline"
           onClick={onKeyPress}
         />
@@ -125,11 +138,9 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.background,
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
   },
   keyboardRow: {
     display: "flex",
     flexDirection: "row",
-    gap: 4,
   },
 });
