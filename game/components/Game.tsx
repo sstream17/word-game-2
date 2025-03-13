@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { StyleSheet } from "react-native";
 
+import { useTileSizes } from "@/api";
 import {
   deleteLetterFromGuess,
   selectCurrentGuess,
@@ -26,6 +27,8 @@ interface IProps {
 
 export function Game(props: IProps) {
   const { numberOfGames } = props;
+
+  const { tileWidth, maxWidth } = useTileSizes(numberOfGames === 1 ? 1 : 2);
 
   const currentGuess = useGameSelector(selectCurrentGuess);
   const guessIndex = useGameSelector(selectGuessIndex);
@@ -79,7 +82,14 @@ export function Game(props: IProps) {
   return (
     <GestureHandlerRootView style={styles.gameWrapper}>
       <ScrollView
-        contentContainerStyle={styles.gamesArea}
+        contentContainerStyle={[
+          styles.gamesArea,
+          {
+            width: maxWidth,
+            // Conditionally wrap to fix vertical centering issue
+            flexWrap: numberOfGames === 4 ? "wrap" : "nowrap",
+          },
+        ]}
         style={styles.scrollArea}
       >
         {[...Array(numberOfGames)].map((_, gameIndex) => (
@@ -89,6 +99,7 @@ export function Game(props: IProps) {
             numberOfGames={numberOfGames}
             currentGuess={currentGuess}
             guessIndex={guessIndex}
+            tileWidth={tileWidth}
           />
         ))}
       </ScrollView>
@@ -115,7 +126,6 @@ const styles = StyleSheet.create({
     display: "flex",
     flexGrow: 1,
     flexDirection: "row",
-    flexWrap: "wrap",
     justifyContent: "center",
     alignItems: "center",
     overflow: "hidden",
