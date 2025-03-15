@@ -1,7 +1,8 @@
-import { PropsWithChildren, useMemo } from "react";
+import { PropsWithChildren } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 
 import { Colors } from "@/constants/Colors";
+import { useUniqueElementId } from "@/hooks/useUniqueElementId";
 import Svg, { Circle, Defs, RadialGradient, Stop } from "react-native-svg";
 
 interface IProps extends PropsWithChildren {
@@ -15,7 +16,7 @@ const circleRadius = circleSize / 2;
 function GradientBackgroundView(props: IProps) {
   const { children, style } = props;
 
-  const id = useMemo(() => Math.random().toString(36).substring(7), []);
+  const id = useUniqueElementId();
 
   return (
     <View style={styles.background}>

@@ -1,6 +1,5 @@
-import { useMemo } from "react";
-
 import { Colors } from "@/constants/Colors";
+import { useUniqueElementId } from "@/hooks/useUniqueElementId";
 import { KeyStatus } from "@/types/game";
 import Svg, { ClipPath, Defs, G, Path, Rect } from "react-native-svg";
 
@@ -20,7 +19,7 @@ export function KeyBackground(props: IProps) {
   const halfWidth = width / 2;
   const halfHeight = height / 2;
 
-  const id = useMemo(() => Math.random().toString(36).substring(7), []);
+  const id = useUniqueElementId();
 
   return (
     <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
