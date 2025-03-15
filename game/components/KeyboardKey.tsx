@@ -1,10 +1,12 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useCallback } from "react";
+import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
+import { KEY_FONT_SIZE } from "@/constants/layout";
 import { IHints, KeyStatus } from "@/types/game";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { KeyBackground } from "./KeyBackground";
-import { KEY_FONT_SIZE } from "@/constants/layout";
 
 interface IProps {
   letter: string;
@@ -40,11 +42,18 @@ function getLetterColors(
 export function KeyboardKey(props: IProps) {
   const { letter, width, height, icon, hints, onClick: updateGuess } = props;
 
+  const onPress = useCallback(() => {
+    updateGuess(letter);
+    if (Platform.OS === "android") {
+      impactAsync(ImpactFeedbackStyle.Medium);
+    }
+  }, [letter, updateGuess]);
+
   const theme = Colors["light"];
   const colors = getLetterColors(letter, hints);
 
   return (
-    <Pressable onPress={() => updateGuess(letter)}>
+    <Pressable onPress={onPress}>
       <View style={[styles.keyContainer, { width, height }]}>
         <KeyBackground
           width={width}
