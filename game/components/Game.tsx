@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { StyleSheet } from "react-native";
 
+import { BOARD_GAP, TILE_GAP } from "@/constants/layout";
 import { useTileSizes } from "@/hooks/useTileSizes";
 import {
   deleteLetterFromGuess,
@@ -126,8 +127,9 @@ const styles = StyleSheet.create({
     display: "flex",
     flexGrow: 1,
     flexDirection: "row",
+    gap: TILE_GAP * 3,
     justifyContent: "center",
     alignItems: "center",
-    overflow: "hidden",
+    paddingVertical: BOARD_GAP,
   },
 });

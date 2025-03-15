@@ -2,6 +2,7 @@ import { Platform, StyleSheet, Text, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { WORD_LENGTH } from "@/constants/game";
+import { TILE_GAP } from "@/constants/layout";
 
 interface IProps {
   guess: string;
@@ -40,7 +41,7 @@ const styles = StyleSheet.create({
   gameRow: {
     display: "flex",
     flexDirection: "row",
-    gap: 8,
+    gap: TILE_GAP,
   },
   tile: {
     display: "flex",

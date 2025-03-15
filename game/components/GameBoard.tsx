@@ -1,6 +1,8 @@
-import { NUMBER_OF_TRIES } from "@/constants/game";
-import { selectGameGuesses, selectGameStatus, useGameSelector } from "@/store";
 import { StyleSheet, View } from "react-native";
+
+import { NUMBER_OF_TRIES } from "@/constants/game";
+import { TILE_GAP } from "@/constants/layout";
+import { selectGameGuesses, selectGameStatus, useGameSelector } from "@/store";
 import { GuessRow } from "./GuessRow";
 
 interface IProps {
@@ -50,9 +52,8 @@ const styles = StyleSheet.create({
   gameBoard: {
     display: "flex",
     flexDirection: "column",
-    gap: 8,
-    flexBasis: "50%",
-    marginBottom: 16,
+    gap: TILE_GAP,
+    marginBottom: 2, // Just enough to render the shadow
     alignItems: "center",
   },
 });

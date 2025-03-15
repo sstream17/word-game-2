@@ -1,3 +1,4 @@
+import { TILE_GAP } from "@/constants/layout";
 import { useWindowDimensions } from "react-native";
 
 export function useTileSizes(numberOfColumns: 1 | 2 = 1) {
@@ -7,7 +8,7 @@ export function useTileSizes(numberOfColumns: 1 | 2 = 1) {
 
   const maxWidth = Math.min(availableWidth, 450);
   const tileWidth =
-    (maxWidth - 6 * numberOfColumns * 8) / (5 * numberOfColumns);
+    (maxWidth - 6 * numberOfColumns * TILE_GAP) / (5 * numberOfColumns);
 
   return { tileWidth, maxWidth };
 }
