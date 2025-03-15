@@ -15,6 +15,7 @@ export interface IGamesState {
   numberOfGames: number;
   currentGuess: string;
   guessIndex: number;
+  isGuessInvalid: boolean;
   value: { [gameId: string]: IGame };
   hints: { [gameId: string]: IHints };
   status: "inProgress" | "won" | "lost";

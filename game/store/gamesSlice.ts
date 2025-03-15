@@ -1,4 +1,4 @@
-import { getResult, sampleSize } from "@/api";
+import { getResult, sampleSize, validateGuess } from "@/api";
 import { NUMBER_OF_TRIES, VALID_KEYS, WORD_LENGTH } from "@/constants/game";
 import { words } from "@/constants/words";
 import { IHints } from "@/types/game";
@@ -10,6 +10,7 @@ const initialState: IGamesState = {
   numberOfGames: 1,
   currentGuess: "",
   guessIndex: 0,
+  isGuessInvalid: false,
   value: {},
   hints: {},
   status: "inProgress",
@@ -26,6 +27,7 @@ export const gamesSlice = createSlice({
       state.numberOfGames = numberOfGames;
       state.value = {};
       state.hints = {};
+      state.isGuessInvalid = false;
 
       const initialHints = Object.keys(VALID_KEYS).reduce((acc, key) => {
         acc[key] = "unknown";
@@ -54,7 +56,15 @@ export const gamesSlice = createSlice({
         return;
       }
 
+      if (state.isGuessInvalid) {
+        state.isGuessInvalid = false;
+      }
+
       state.currentGuess = `${previousValue}${action.payload}`;
+
+      if (state.currentGuess.length === WORD_LENGTH) {
+        state.isGuessInvalid = !validateGuess(state.currentGuess);
+      }
     },
     deleteLetterFromGuess: (state) => {
       const previousValue = state.currentGuess;
@@ -62,12 +72,16 @@ export const gamesSlice = createSlice({
         return;
       }
 
+      if (state.isGuessInvalid) {
+        state.isGuessInvalid = false;
+      }
+
       state.currentGuess = `${previousValue.slice(0, -1)}`;
     },
     submitGuess: (state) => {
       const submittedGuess = state.currentGuess;
 
-      if (submittedGuess.length !== WORD_LENGTH) {
+      if (submittedGuess.length !== WORD_LENGTH || state.isGuessInvalid) {
         return;
       }
 
