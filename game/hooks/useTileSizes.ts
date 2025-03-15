@@ -1,5 +1,7 @@
-import { TILE_GAP } from "@/constants/layout";
 import { useWindowDimensions } from "react-native";
+
+import { WORD_LENGTH } from "@/constants/game";
+import { TILE_GAP } from "@/constants/layout";
 
 export function useTileSizes(numberOfColumns: 1 | 2 = 1) {
   const { width } = useWindowDimensions();
@@ -8,7 +10,8 @@ export function useTileSizes(numberOfColumns: 1 | 2 = 1) {
 
   const maxWidth = Math.min(availableWidth, 450);
   const tileWidth =
-    (maxWidth - 6 * numberOfColumns * TILE_GAP) / (5 * numberOfColumns);
+    (maxWidth - (WORD_LENGTH + 1) * numberOfColumns * TILE_GAP) /
+    (WORD_LENGTH * numberOfColumns);
 
   return { tileWidth, maxWidth };
 }

@@ -4,6 +4,7 @@ import { Colors } from "@/constants/Colors";
 import { IHints, KeyStatus } from "@/types/game";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { KeyBackground } from "./KeyBackground";
+import { KEY_FONT_SIZE } from "@/constants/layout";
 
 interface IProps {
   letter: string;
@@ -71,7 +72,7 @@ const styles = StyleSheet.create({
   letter: {
     position: "absolute",
     textAlign: "center",
-    fontSize: 18,
+    fontSize: KEY_FONT_SIZE,
     color: "#000",
   },
 });

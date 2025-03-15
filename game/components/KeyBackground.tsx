@@ -1,4 +1,5 @@
 import { Colors } from "@/constants/Colors";
+import { BORDER_RADIUS, BORDER_WIDTH } from "@/constants/layout";
 import { useUniqueElementId } from "@/hooks/useUniqueElementId";
 import { KeyStatus } from "@/types/game";
 import Svg, { ClipPath, Defs, G, Path, Rect } from "react-native-svg";
@@ -10,8 +11,8 @@ interface IProps {
   theme: (typeof Colors)["light"] | (typeof Colors)["dark"];
 }
 
-const radius = 4;
-const borderWidth = 4;
+const radius = BORDER_RADIUS;
+const borderWidth = BORDER_WIDTH * 2;
 
 export function KeyBackground(props: IProps) {
   const { width, height, colors, theme } = props;

@@ -2,7 +2,13 @@ import { Platform, StyleSheet, Text, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { WORD_LENGTH } from "@/constants/game";
-import { TILE_GAP } from "@/constants/layout";
+import {
+  BORDER_RADIUS,
+  BORDER_WIDTH,
+  TILE_FONT_SIZE,
+  TILE_FONT_SIZE_SMALL,
+  TILE_GAP,
+} from "@/constants/layout";
 
 interface IProps {
   guess: string;
@@ -26,7 +32,11 @@ export function GuessRow(props: IProps) {
           ]}
         >
           <Text
-            style={isCurrentRow ? { fontSize: 24 } : { fontSize: 16 }}
+            style={
+              isCurrentRow
+                ? { fontSize: TILE_FONT_SIZE }
+                : { fontSize: TILE_FONT_SIZE_SMALL }
+            }
             selectable={false}
           >
             {guess[columnIndex] ?? ""}
@@ -48,7 +58,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     backgroundColor: Colors.light.unknown,
-    borderRadius: 4,
+    borderRadius: BORDER_RADIUS,
     ...Platform.select({
       ios: {
         shadowColor: "#00000088",
@@ -64,7 +74,7 @@ const styles = StyleSheet.create({
   },
   c: {
     backgroundColor: Colors.light.close,
-    borderWidth: 2,
+    borderWidth: BORDER_WIDTH,
     borderColor: Colors.light.closeBorder,
   },
   x: {
