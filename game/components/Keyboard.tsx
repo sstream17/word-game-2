@@ -17,7 +17,7 @@ interface IProps {
 export function Keyboard(props: IProps) {
   const { overallStatus, hints, onKeyPress } = props;
 
-  const { keyWidth, keyHeight, keyGap } = useKeySizes();
+  const { keyWidth, keyHeight, keyGap, keyboardHeight } = useKeySizes();
 
   const pathname = usePathname();
 
@@ -70,7 +70,12 @@ export function Keyboard(props: IProps) {
   }, [onKeyPress]);
 
   return (
-    <View style={[styles.container, { gap: keyGap * 2 }]}>
+    <View
+      style={[
+        styles.container,
+        { height: keyboardHeight, paddingTop: keyGap, gap: keyGap * 2 },
+      ]}
+    >
       <View style={[styles.keyboardRow, { gap: keyGap }]}>
         {[..."qwertyuiop"].map((char) => (
           <KeyboardKey
@@ -132,12 +137,12 @@ export function Keyboard(props: IProps) {
 
 const styles = StyleSheet.create({
   container: {
-    height: 200,
     display: "flex",
     flexDirection: "column",
     backgroundColor: Colors.light.background,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+    width: "100%",
   },
   keyboardRow: {
     display: "flex",

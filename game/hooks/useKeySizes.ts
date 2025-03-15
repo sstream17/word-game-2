@@ -14,5 +14,7 @@ export function useKeySizes() {
   const keyHeight = keyHeightRatio * scaleFactor;
   const keyGap = defaultGap * scaleFactor;
 
-  return { keyWidth, keyHeight, keyGap };
+  const keyboardHeight = keyHeight * 3 + keyGap * 2 + 36;
+
+  return { keyWidth, keyHeight, keyGap, keyboardHeight };
 }
