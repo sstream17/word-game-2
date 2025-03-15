@@ -162,6 +162,9 @@ export const selectCurrentGuess = (state: RootGameState) =>
 export const selectGuessIndex = (state: RootGameState) =>
   state.games.guessIndex;
 
+export const selectIsGuessInvalid = (state: RootGameState) =>
+  state.games.isGuessInvalid;
+
 export const selectOverallStatus = (state: RootGameState) => state.games.status;
 
 export const selectHints = (state: RootGameState) => state.games.hints;

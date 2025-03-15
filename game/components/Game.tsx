@@ -7,6 +7,7 @@ import {
   deleteLetterFromGuess,
   selectCurrentGuess,
   selectGuessIndex,
+  selectIsGuessInvalid,
   selectHints,
   selectOverallStatus,
   startGame,
@@ -33,6 +34,7 @@ export function Game(props: IProps) {
 
   const currentGuess = useGameSelector(selectCurrentGuess);
   const guessIndex = useGameSelector(selectGuessIndex);
+  const isGuessInvalid = useGameSelector(selectIsGuessInvalid);
   const overallStatus = useGameSelector(selectOverallStatus);
   const hints = useGameSelector(selectHints);
 
@@ -101,6 +103,7 @@ export function Game(props: IProps) {
             currentGuess={currentGuess}
             guessIndex={guessIndex}
             tileWidth={tileWidth}
+            isGuessInvalid={isGuessInvalid}
           />
         ))}
       </ScrollView>

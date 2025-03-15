@@ -9,16 +9,24 @@ import {
   TILE_FONT_SIZE_SMALL,
   TILE_GAP,
 } from "@/constants/layout";
+import Svg, { Path } from "react-native-svg";
 
 interface IProps {
   guess: string;
   result: string;
   width: number;
   isCurrentRow: boolean;
+  isInvalid: boolean;
 }
 
 export function GuessRow(props: IProps) {
-  const { guess, result, width, isCurrentRow = false } = props;
+  const {
+    guess,
+    result,
+    width,
+    isCurrentRow = false,
+    isInvalid = false,
+  } = props;
 
   return (
     <View style={styles.gameRow}>
@@ -32,15 +40,34 @@ export function GuessRow(props: IProps) {
           ]}
         >
           <Text
-            style={
-              isCurrentRow
-                ? { fontSize: TILE_FONT_SIZE }
-                : { fontSize: TILE_FONT_SIZE_SMALL }
-            }
+            style={{
+              fontSize: isCurrentRow ? TILE_FONT_SIZE : TILE_FONT_SIZE_SMALL,
+              ...(isInvalid
+                ? {
+                    color: "red",
+                  }
+                : null),
+            }}
             selectable={false}
           >
             {guess[columnIndex] ?? ""}
           </Text>
+          {isCurrentRow ? (
+            <Svg
+              height="8"
+              width="70%"
+              viewBox="0 0 100 10"
+              preserveAspectRatio="none"
+              style={{ marginTop: -2 }}
+            >
+              <Path
+                d="M4 5 L 14 0 L 24 5 L 34 0 L 44 5 L 54 0 L 64 5 L 74 0 L 84 5 L 94 0"
+                stroke={isInvalid ? "red" : "transparent"}
+                strokeWidth="2"
+                fill="transparent"
+              />
+            </Svg>
+          ) : null}
         </View>
       ))}
     </View>
@@ -82,5 +109,8 @@ const styles = StyleSheet.create({
   },
   _: {
     backgroundColor: Colors.light.missing,
+  },
+  text: {
+    color: Colors.light.text,
   },
 });

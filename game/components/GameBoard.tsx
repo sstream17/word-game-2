@@ -10,12 +10,19 @@ interface IProps {
   numberOfGames: number;
   currentGuess: string;
   guessIndex: number;
+  isGuessInvalid: boolean;
   tileWidth: number;
 }
 
 export function GameBoard(props: IProps) {
-  const { gameIndex, numberOfGames, currentGuess, guessIndex, tileWidth } =
-    props;
+  const {
+    gameIndex,
+    numberOfGames,
+    currentGuess,
+    guessIndex,
+    isGuessInvalid,
+    tileWidth,
+  } = props;
 
   const guesses = useGameSelector((state) =>
     selectGameGuesses(state, gameIndex),
@@ -41,6 +48,7 @@ export function GameBoard(props: IProps) {
             result={resultToDisplay}
             width={tileWidth}
             isCurrentRow={isCurrentGuess}
+            isInvalid={isGuessInvalid && isCurrentGuess}
           />
         );
       })}
