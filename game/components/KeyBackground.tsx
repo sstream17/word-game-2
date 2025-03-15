@@ -1,3 +1,5 @@
+import { useMemo } from "react";
+
 import { Colors } from "@/constants/Colors";
 import { KeyStatus } from "@/types/game";
 import Svg, { ClipPath, Defs, G, Path, Rect } from "react-native-svg";
@@ -18,14 +20,16 @@ export function KeyBackground(props: IProps) {
   const halfWidth = width / 2;
   const halfHeight = height / 2;
 
+  const id = useMemo(() => Math.random().toString(36).substring(7), []);
+
   return (
     <Svg width={width} height={height} viewBox={`0 0 ${width} ${height}`}>
       <Defs>
-        <ClipPath id="borderClip">
+        <ClipPath id={`borderClip-${id}`}>
           <Rect width={width} height={height} rx={radius} ry={radius} />
         </ClipPath>
 
-        <ClipPath id="innerClip">
+        <ClipPath id={`innerClip-${id}`}>
           <Rect
             x={borderWidth / 2}
             y={borderWidth / 2}
@@ -37,7 +41,7 @@ export function KeyBackground(props: IProps) {
         </ClipPath>
       </Defs>
 
-      <G clipPath="url(#borderClip)">
+      <G clipPath={`url(#borderClip-${id})`}>
         <Path
           d={`M 0,0 H ${halfWidth} V ${halfHeight} H 0 Z`}
           fill={theme[`${colors[0]}Border`] ?? theme.unknown}
@@ -56,7 +60,7 @@ export function KeyBackground(props: IProps) {
         />
       </G>
 
-      <G clipPath="url(#innerClip)">
+      <G clipPath={`url(#innerClip-${id})`}>
         <Path
           d={`M 0,0 H ${halfWidth} V ${halfHeight} H 0 Z`}
           fill={theme[colors[0]] ?? theme.unknown}
