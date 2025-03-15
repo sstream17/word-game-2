@@ -38,6 +38,7 @@ export const gamesSlice = createSlice({
         state.value[`${i}`] = {
           answer: answers[i],
           guesses: [],
+          activeIndex: 0,
           status: "inProgress",
         };
 
@@ -135,6 +136,7 @@ export const gamesSlice = createSlice({
           };
         } else {
           state.hints[gameIndex] = newHints;
+          state.value[gameIndex].activeIndex += 1;
         }
       });
 
@@ -174,5 +176,10 @@ export const selectGameGuesses = (state: RootGameState, gameIndex: number) =>
 
 export const selectGameStatus = (state: RootGameState, gameIndex: number) =>
   state.games.value[gameIndex]?.status ?? "inProgress";
+
+export const selectGameActiveIndex = (
+  state: RootGameState,
+  gameIndex: number,
+) => state.games.value[gameIndex]?.activeIndex ?? 0;
 
 export default gamesSlice.reducer;

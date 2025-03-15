@@ -2,30 +2,32 @@ import { StyleSheet, View } from "react-native";
 
 import { NUMBER_OF_TRIES } from "@/constants/game";
 import { TILE_GAP } from "@/constants/layout";
-import { selectGameGuesses, selectGameStatus, useGameSelector } from "@/store";
+import {
+  selectGameActiveIndex,
+  selectGameGuesses,
+  selectGameStatus,
+  useGameSelector,
+} from "@/store";
 import { GuessRow } from "./GuessRow";
 
 interface IProps {
   gameIndex: number;
   numberOfGames: number;
   currentGuess: string;
-  guessIndex: number;
   isGuessInvalid: boolean;
   tileWidth: number;
 }
 
 export function GameBoard(props: IProps) {
-  const {
-    gameIndex,
-    numberOfGames,
-    currentGuess,
-    guessIndex,
-    isGuessInvalid,
-    tileWidth,
-  } = props;
+  const { gameIndex, numberOfGames, currentGuess, isGuessInvalid, tileWidth } =
+    props;
 
   const guesses = useGameSelector((state) =>
     selectGameGuesses(state, gameIndex),
+  );
+
+  const activeIndex = useGameSelector((state) =>
+    selectGameActiveIndex(state, gameIndex),
   );
 
   const status = useGameSelector((state) => selectGameStatus(state, gameIndex));
@@ -34,7 +36,7 @@ export function GameBoard(props: IProps) {
   return (
     <View style={styles.gameBoard}>
       {[...Array(numberOfGames + NUMBER_OF_TRIES)].map((_, rowIndex) => {
-        const isCurrentGuess = rowIndex === guessIndex;
+        const isCurrentGuess = rowIndex === activeIndex;
         const guessToDisplay =
           isCurrentGuess && !isGameWon
             ? currentGuess
@@ -48,7 +50,7 @@ export function GameBoard(props: IProps) {
             result={resultToDisplay}
             width={tileWidth}
             isCurrentRow={isCurrentGuess}
-            isInvalid={isGuessInvalid && isCurrentGuess}
+            isInvalid={isGuessInvalid && isCurrentGuess && !isGameWon}
           />
         );
       })}

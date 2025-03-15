@@ -6,9 +6,8 @@ import { useTileSizes } from "@/hooks/useTileSizes";
 import {
   deleteLetterFromGuess,
   selectCurrentGuess,
-  selectGuessIndex,
-  selectIsGuessInvalid,
   selectHints,
+  selectIsGuessInvalid,
   selectOverallStatus,
   startGame,
   submitGuess,
@@ -33,7 +32,6 @@ export function Game(props: IProps) {
   const { tileWidth, maxWidth } = useTileSizes(numberOfGames === 1 ? 1 : 2);
 
   const currentGuess = useGameSelector(selectCurrentGuess);
-  const guessIndex = useGameSelector(selectGuessIndex);
   const isGuessInvalid = useGameSelector(selectIsGuessInvalid);
   const overallStatus = useGameSelector(selectOverallStatus);
   const hints = useGameSelector(selectHints);
@@ -101,7 +99,6 @@ export function Game(props: IProps) {
             gameIndex={gameIndex}
             numberOfGames={numberOfGames}
             currentGuess={currentGuess}
-            guessIndex={guessIndex}
             tileWidth={tileWidth}
             isGuessInvalid={isGuessInvalid}
           />
