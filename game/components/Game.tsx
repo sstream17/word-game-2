@@ -1,7 +1,7 @@
 import { useCallback, useEffect } from "react";
 import { StyleSheet } from "react-native";
 
-import { useTileSizes } from "@/api";
+import { useTileSizes } from "@/hooks/useTileSizes";
 import {
   deleteLetterFromGuess,
   selectCurrentGuess,

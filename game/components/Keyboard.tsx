@@ -1,9 +1,9 @@
 import { useCallback, useEffect } from "react";
 import { Button, Platform, StyleSheet, View } from "react-native";
 
-import { useKeySizes } from "@/api";
 import { Colors } from "@/constants/Colors";
 import { VALID_GAMES, VALID_KEYS } from "@/constants/game";
+import { useKeySizes } from "@/hooks/useKeySizes";
 import { IHints } from "@/types/game";
 import { usePathname } from "expo-router";
 import { KeyboardKey } from "./KeyboardKey";
