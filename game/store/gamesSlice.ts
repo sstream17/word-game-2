@@ -1,4 +1,4 @@
-import { getResult, sampleSize, updateHints } from "@/api";
+import { getResult, sampleSize } from "@/api";
 import { NUMBER_OF_TRIES, VALID_KEYS, WORD_LENGTH } from "@/constants/game";
 import { words } from "@/constants/words";
 import { IHints } from "@/types/game";
@@ -85,7 +85,11 @@ export const gamesSlice = createSlice({
         }
 
         const answer = state.value[gameIndex].answer;
-        const result = getResult(answer, submittedGuess);
+        const [result, newHints] = getResult(
+          answer,
+          submittedGuess,
+          state.hints[gameIndex],
+        );
 
         state.value[gameIndex].guesses.push({
           guess: submittedGuess,
@@ -116,11 +120,7 @@ export const gamesSlice = createSlice({
             ...gameFinishedHints,
           };
         } else {
-          state.hints[gameIndex] = updateHints(
-            state.hints[gameIndex],
-            submittedGuess,
-            result,
-          );
+          state.hints[gameIndex] = newHints;
         }
       });
 

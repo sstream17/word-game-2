@@ -1,14 +1,29 @@
 import { WORD_LENGTH } from "@/constants/game";
+import { IHints } from "@/types/game";
 
-export function getResult(answer: string, guess: string): string {
+export function getResult(
+  answer: string,
+  guess: string,
+  keyHints: IHints,
+): [string, IHints] {
   const available = Array.from(answer);
   const hint = Array(WORD_LENGTH).fill("_");
+  const newHints = { ...keyHints };
+
+  // initialize newHints with all guessed letters missing
+  // if they are not already marked as exact
+  for (let i = 0; i < WORD_LENGTH; i += 1) {
+    if (newHints[guess[i]] !== "exact") {
+      newHints[guess[i]] = "missing";
+    }
+  }
 
   // first, find exact matches
   for (let i = 0; i < WORD_LENGTH; i += 1) {
     if (guess[i] === available[i]) {
       hint[i] = "x";
       available[i] = " ";
+      newHints[guess[i]] = "exact";
     }
   }
 
@@ -20,9 +35,12 @@ export function getResult(answer: string, guess: string): string {
       if (index !== -1) {
         hint[i] = "c";
         available[index] = " ";
+        if (newHints[guess[i]] !== "exact") {
+          newHints[guess[i]] = "close";
+        }
       }
     }
   }
 
-  return hint.join("");
+  return [hint.join(""), newHints];
 }
