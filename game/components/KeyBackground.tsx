@@ -34,23 +34,23 @@ export function KeyBackground(props: IProps) {
             y={borderWidth / 2}
             width={width - borderWidth}
             height={height - borderWidth}
-            rx={radius}
-            ry={radius}
+            rx={radius - 1}
+            ry={radius - 1}
           />
         </ClipPath>
       </Defs>
 
       <G clipPath={`url(#borderClip-${id})`}>
         <Path
-          d={`M 0,0 H ${halfWidth} V ${halfHeight} H 0 Z`}
+          d={`M 0,0 H ${halfWidth + 1} V ${halfHeight + 1} H 0 Z`}
           fill={theme[`${colors[0]}Border`] ?? theme.unknown}
         />
         <Path
-          d={`M ${halfWidth},0 H ${width} V ${halfHeight} H ${halfWidth} Z`}
+          d={`M ${halfWidth},0 H ${width} V ${halfHeight + 1} H ${halfWidth} Z`}
           fill={theme[`${colors[1]}Border`] ?? theme.unknown}
         />
         <Path
-          d={`M 0,${halfHeight} H ${halfWidth} V ${height} H 0 Z`}
+          d={`M 0,${halfHeight} H ${halfWidth + 1} V ${height} H 0 Z`}
           fill={theme[`${colors[2]}Border`] ?? theme.unknown}
         />
         <Path
@@ -61,15 +61,15 @@ export function KeyBackground(props: IProps) {
 
       <G clipPath={`url(#innerClip-${id})`}>
         <Path
-          d={`M 0,0 H ${halfWidth} V ${halfHeight} H 0 Z`}
+          d={`M 0,0 H ${halfWidth + 1} V ${halfHeight + 1} H 0 Z`}
           fill={theme[colors[0]] ?? theme.unknown}
         />
         <Path
-          d={`M ${halfWidth},0 H ${width} V ${halfHeight} H ${halfWidth} Z`}
+          d={`M ${halfWidth},0 H ${width} V ${halfHeight + 1} H ${halfWidth} Z`}
           fill={theme[colors[1]] ?? theme.unknown}
         />
         <Path
-          d={`M 0,${halfHeight} H ${halfWidth} V ${height} H 0 Z`}
+          d={`M 0,${halfHeight} H ${halfWidth + 1} V ${height} H 0 Z`}
           fill={theme[colors[2]] ?? theme.unknown}
         />
         <Path
