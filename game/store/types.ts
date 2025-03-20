@@ -9,6 +9,7 @@ export interface IGame {
   answer: string;
   guesses: IGuess[];
   activeIndex: number;
+  winIndex: number | undefined;
   status: "inProgress" | "won";
 }
 

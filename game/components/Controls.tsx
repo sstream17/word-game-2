@@ -11,11 +11,12 @@ interface IProps {
   overallStatus: "inProgress" | "won" | "lost";
   hints: { [gameId: string]: IHints };
   answers: { [gameId: string]: string };
+  winIndexes: { [gameId: string]: number | undefined };
   onKeyPress: (letter: string) => void;
 }
 
 export function Controls(props: IProps) {
-  const { overallStatus, hints, answers, onKeyPress } = props;
+  const { overallStatus, hints, answers, winIndexes, onKeyPress } = props;
 
   const { keyWidth, keyHeight, keyGap, keyboardHeight } = useKeySizes();
 
@@ -40,7 +41,7 @@ export function Controls(props: IProps) {
         />
       ) : (
         <View style={styles.endGameWrapper}>
-          <EndGame answers={answers} />
+          <EndGame answers={answers} winIndexes={winIndexes} />
           <Button onPress={handleReset} title={"Reset"}></Button>
         </View>
       )}
@@ -63,5 +64,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     gap: 10,
+    height: "100%",
   },
 });

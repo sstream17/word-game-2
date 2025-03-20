@@ -39,6 +39,7 @@ export const gamesSlice = createSlice({
           answer: answers[i],
           guesses: [],
           activeIndex: 0,
+          winIndex: undefined,
           status: "inProgress",
         };
 
@@ -113,6 +114,7 @@ export const gamesSlice = createSlice({
 
         if (result === "xxxxx") {
           state.value[gameIndex].status = "won";
+          state.value[gameIndex].winIndex = state.value[gameIndex].activeIndex;
           winCount = winCount + 1;
 
           const previousGuesses = state.value[gameIndex].guesses;
@@ -136,7 +138,12 @@ export const gamesSlice = createSlice({
           };
         } else {
           state.hints[gameIndex] = newHints;
-          state.value[gameIndex].activeIndex += 1;
+          const activeIndex = state.value[gameIndex].activeIndex + 1;
+          state.value[gameIndex].activeIndex = activeIndex;
+
+          if (activeIndex >= state.numberOfGames + NUMBER_OF_TRIES) {
+            state.value[gameIndex].winIndex = -1;
+          }
         }
       });
 
@@ -176,6 +183,15 @@ export const selectAnswers = (state: RootGameState) =>
       return acc;
     },
     {} as { [gameId: string]: string },
+  );
+
+export const selectWinIndexes = (state: RootGameState) =>
+  Object.keys(state.games.value).reduce(
+    (acc, gameIndex) => {
+      acc[gameIndex] = state.games.value[gameIndex].winIndex;
+      return acc;
+    },
+    {} as { [gameId: string]: number | undefined },
   );
 
 export const selectHints = (state: RootGameState) => state.games.hints;

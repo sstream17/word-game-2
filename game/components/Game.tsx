@@ -10,6 +10,7 @@ import {
   selectHints,
   selectIsGuessInvalid,
   selectOverallStatus,
+  selectWinIndexes,
   startGame,
   submitGuess,
   updateGuess,
@@ -36,6 +37,7 @@ export function Game(props: IProps) {
   const isGuessInvalid = useGameSelector(selectIsGuessInvalid);
   const overallStatus = useGameSelector(selectOverallStatus);
   const answers = useGameSelector(selectAnswers);
+  const winIndexes = useGameSelector(selectWinIndexes);
   const hints = useGameSelector(selectHints);
 
   const dispatch = useGameDispatch();
@@ -110,6 +112,7 @@ export function Game(props: IProps) {
         overallStatus={overallStatus}
         hints={hints}
         answers={answers}
+        winIndexes={winIndexes}
         onKeyPress={handleUpdateGuess}
       />
     </GestureHandlerRootView>
