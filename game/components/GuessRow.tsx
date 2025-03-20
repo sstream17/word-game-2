@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, Text, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { WORD_LENGTH } from "@/constants/game";
@@ -10,6 +10,7 @@ import {
   TILE_GAP,
 } from "@/constants/layout";
 import Svg, { Path } from "react-native-svg";
+import { ThemedText } from "./ThemedText";
 
 interface IProps {
   guess: string;
@@ -39,7 +40,7 @@ export function GuessRow(props: IProps) {
             { width, height: isCurrentRow ? width * 1.2 : width },
           ]}
         >
-          <Text
+          <ThemedText
             style={{
               fontSize: isCurrentRow ? TILE_FONT_SIZE : TILE_FONT_SIZE_SMALL,
               ...(isInvalid
@@ -51,7 +52,7 @@ export function GuessRow(props: IProps) {
             selectable={false}
           >
             {guess[columnIndex] ?? ""}
-          </Text>
+          </ThemedText>
           {isCurrentRow ? (
             <Svg
               height="8"

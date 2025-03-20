@@ -1,10 +1,12 @@
+import { StyleSheet } from "react-native";
+
 import GradientBackgroundView from "@/components/GradientBackgroundView";
-import { StyleSheet, Text } from "react-native";
+import { ThemedText } from "@/components/ThemedText";
 
 export default function HowToPlay() {
   return (
     <GradientBackgroundView style={styles.container}>
-      <Text>How to play</Text>
+      <ThemedText>How to play</ThemedText>
     </GradientBackgroundView>
   );
 }

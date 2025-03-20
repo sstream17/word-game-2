@@ -1,4 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
+
+import { ThemedText } from "./ThemedText";
 
 interface IProps {
   answers: { [gameId: string]: string };
@@ -10,9 +12,9 @@ export function EndGame(props: IProps) {
   return (
     <View style={styles.wrapper}>
       {Object.keys(answers).map((gameId) => (
-        <Text key={gameId} style={styles.answer}>
+        <ThemedText key={gameId} style={styles.answer}>
           {answers[gameId]}
-        </Text>
+        </ThemedText>
       ))}
     </View>
   );

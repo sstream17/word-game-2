@@ -1,6 +1,8 @@
+import { Pressable, StyleSheet, View } from "react-native";
+
 import { MaterialIcons } from "@expo/vector-icons";
 import { Href, Link } from "expo-router";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { ThemedText } from "./ThemedText";
 
 interface IProps {
   label: string;
@@ -17,7 +19,7 @@ export default function MenuItem(props: IProps) {
       <Pressable onPress={onClick}>
         <View style={styles.menuItem}>
           <MaterialIcons name={icon} size={16} />
-          <Text>{label}</Text>
+          <ThemedText>{label}</ThemedText>
         </View>
       </Pressable>
     </Link>

@@ -1,5 +1,5 @@
 import { useCallback } from "react";
-import { Platform, Pressable, StyleSheet, Text, View } from "react-native";
+import { Platform, Pressable, StyleSheet, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { KEY_FONT_SIZE } from "@/constants/layout";
@@ -7,6 +7,7 @@ import { IHints, KeyStatus } from "@/types/game";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { KeyBackground } from "./KeyBackground";
+import { ThemedText } from "./ThemedText";
 
 interface IProps {
   letter: string;
@@ -64,9 +65,9 @@ export function KeyboardKey(props: IProps) {
         {icon ? (
           <MaterialCommunityIcons style={styles.letter} name={icon} />
         ) : (
-          <Text style={styles.letter} selectable={false}>
+          <ThemedText style={styles.letter} selectable={false}>
             {letter}
-          </Text>
+          </ThemedText>
         )}
       </View>
     </Pressable>
