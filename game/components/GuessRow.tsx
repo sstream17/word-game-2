@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
@@ -29,6 +30,18 @@ export function GuessRow(props: IProps) {
     isInvalid = false,
   } = props;
 
+  const textStyle = useMemo(
+    () => ({
+      fontSize: isCurrentRow ? TILE_FONT_SIZE : TILE_FONT_SIZE_SMALL,
+      ...(isInvalid
+        ? {
+            color: "red",
+          }
+        : null),
+    }),
+    [isCurrentRow, isInvalid],
+  );
+
   return (
     <View style={styles.gameRow}>
       {[...Array(WORD_LENGTH)].map((_, columnIndex) => (
@@ -40,17 +53,7 @@ export function GuessRow(props: IProps) {
             { width, height: isCurrentRow ? width * 1.2 : width },
           ]}
         >
-          <ThemedText
-            style={{
-              fontSize: isCurrentRow ? TILE_FONT_SIZE : TILE_FONT_SIZE_SMALL,
-              ...(isInvalid
-                ? {
-                    color: "red",
-                  }
-                : null),
-            }}
-            selectable={false}
-          >
+          <ThemedText style={textStyle} selectable={false}>
             {guess[columnIndex] ?? ""}
           </ThemedText>
           {isCurrentRow ? (
