@@ -19,8 +19,8 @@ import {
   GestureHandlerRootView,
   ScrollView,
 } from "react-native-gesture-handler";
+import { Controls } from "./Controls";
 import { GameBoard } from "./GameBoard";
-import { Keyboard } from "./Keyboard";
 
 interface IProps {
   numberOfGames: number;
@@ -104,7 +104,7 @@ export function Game(props: IProps) {
           />
         ))}
       </ScrollView>
-      <Keyboard
+      <Controls
         overallStatus={overallStatus}
         hints={hints}
         onKeyPress={handleUpdateGuess}

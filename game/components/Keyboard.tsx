@@ -1,23 +1,21 @@
 import { useCallback, useEffect } from "react";
-import { Button, Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
 import { VALID_GAMES, VALID_KEYS } from "@/constants/game";
-import { useKeySizes } from "@/hooks/useKeySizes";
 import { IHints } from "@/types/game";
 import { usePathname } from "expo-router";
 import { KeyboardKey } from "./KeyboardKey";
 
 interface IProps {
-  overallStatus: "inProgress" | "won" | "lost";
+  keyWidth: number;
+  keyHeight: number;
+  keyGap: number;
   hints: { [gameId: string]: IHints };
   onKeyPress: (letter: string) => void;
 }
 
 export function Keyboard(props: IProps) {
-  const { overallStatus, hints, onKeyPress } = props;
-
-  const { keyWidth, keyHeight, keyGap, keyboardHeight } = useKeySizes();
+  const { keyWidth, keyHeight, keyGap, hints, onKeyPress } = props;
 
   const pathname = usePathname();
 
@@ -65,17 +63,8 @@ export function Keyboard(props: IProps) {
     };
   }, [handleKey]);
 
-  const handleReset = useCallback(() => {
-    onKeyPress("restart");
-  }, [onKeyPress]);
-
   return (
-    <View
-      style={[
-        styles.container,
-        { height: keyboardHeight, paddingTop: keyGap, gap: keyGap * 2 },
-      ]}
-    >
+    <>
       <View style={[styles.keyboardRow, { gap: keyGap }]}>
         {[..."qwertyuiop"].map((char) => (
           <KeyboardKey
@@ -126,24 +115,11 @@ export function Keyboard(props: IProps) {
           onClick={onKeyPress}
         />
       </View>
-      {overallStatus !== "inProgress" && (
-        <View style={styles.keyboardRow}>
-          <Button onPress={handleReset} title={"Reset"}></Button>
-        </View>
-      )}
-    </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
-  container: {
-    display: "flex",
-    flexDirection: "column",
-    backgroundColor: Colors.light.background,
-    alignItems: "center",
-    justifyContent: "flex-start",
-    width: "100%",
-  },
   keyboardRow: {
     display: "flex",
     flexDirection: "row",
