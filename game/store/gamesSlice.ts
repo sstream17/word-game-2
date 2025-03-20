@@ -169,6 +169,15 @@ export const selectIsGuessInvalid = (state: RootGameState) =>
 
 export const selectOverallStatus = (state: RootGameState) => state.games.status;
 
+export const selectAnswers = (state: RootGameState) =>
+  Object.keys(state.games.value).reduce(
+    (acc, gameIndex) => {
+      acc[gameIndex] = state.games.value[gameIndex].answer;
+      return acc;
+    },
+    {} as { [gameId: string]: string },
+  );
+
 export const selectHints = (state: RootGameState) => state.games.hints;
 
 export const selectGameGuesses = (state: RootGameState, gameIndex: number) =>

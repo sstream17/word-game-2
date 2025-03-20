@@ -4,16 +4,18 @@ import { Button, StyleSheet, View } from "react-native";
 import { Colors } from "@/constants/Colors";
 import { useKeySizes } from "@/hooks/useKeySizes";
 import { IHints } from "@/types/game";
+import { EndGame } from "./EndGame";
 import { Keyboard } from "./Keyboard";
 
 interface IProps {
   overallStatus: "inProgress" | "won" | "lost";
   hints: { [gameId: string]: IHints };
+  answers: { [gameId: string]: string };
   onKeyPress: (letter: string) => void;
 }
 
 export function Controls(props: IProps) {
-  const { overallStatus, hints, onKeyPress } = props;
+  const { overallStatus, hints, answers, onKeyPress } = props;
 
   const { keyWidth, keyHeight, keyGap, keyboardHeight } = useKeySizes();
 
@@ -37,7 +39,8 @@ export function Controls(props: IProps) {
           onKeyPress={onKeyPress}
         />
       ) : (
-        <View style={styles.keyboardRow}>
+        <View style={styles.endGameWrapper}>
+          <EndGame answers={answers} />
           <Button onPress={handleReset} title={"Reset"}></Button>
         </View>
       )}
@@ -54,8 +57,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     width: "100%",
   },
-  keyboardRow: {
+  endGameWrapper: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    gap: 10,
   },
 });

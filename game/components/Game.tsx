@@ -5,6 +5,7 @@ import { BOARD_GAP, TILE_GAP } from "@/constants/layout";
 import { useTileSizes } from "@/hooks/useTileSizes";
 import {
   deleteLetterFromGuess,
+  selectAnswers,
   selectCurrentGuess,
   selectHints,
   selectIsGuessInvalid,
@@ -34,6 +35,7 @@ export function Game(props: IProps) {
   const currentGuess = useGameSelector(selectCurrentGuess);
   const isGuessInvalid = useGameSelector(selectIsGuessInvalid);
   const overallStatus = useGameSelector(selectOverallStatus);
+  const answers = useGameSelector(selectAnswers);
   const hints = useGameSelector(selectHints);
 
   const dispatch = useGameDispatch();
@@ -107,6 +109,7 @@ export function Game(props: IProps) {
       <Controls
         overallStatus={overallStatus}
         hints={hints}
+        answers={answers}
         onKeyPress={handleUpdateGuess}
       />
     </GestureHandlerRootView>
