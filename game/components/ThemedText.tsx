@@ -1,5 +1,5 @@
 import { memo } from "react";
-import { Platform, StyleSheet, Text, type TextProps } from "react-native";
+import { StyleSheet, Text, type TextProps } from "react-native";
 
 export const ThemedText = memo(function ThemedText(props: TextProps) {
   const { style, ...rest } = props;
@@ -10,9 +10,6 @@ export const ThemedText = memo(function ThemedText(props: TextProps) {
 
 const styles = StyleSheet.create({
   text: {
-    fontFamily: Platform.select({
-      android: "Nunito_400Regular",
-      ios: "Nunito-Regular",
-    }),
+    fontFamily: "Nunito_400Regular",
   },
 });
