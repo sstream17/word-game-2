@@ -17,6 +17,7 @@ const keyColors = {
 export const Colors = {
   light: {
     text: "#11181C",
+    invalid: "#f33e48",
     background: "#cad8e4",
     backgroundLighter: "#cedce8",
     backgroundLightest: "#ffffff",
@@ -24,6 +25,7 @@ export const Colors = {
   },
   dark: {
     text: "#ECEDEE",
+    invalid: "#d65c62",
     background: "#151718",
     icon: "#9BA1A6",
     tabIconDefault: "#9BA1A6",

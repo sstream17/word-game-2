@@ -35,7 +35,7 @@ export function GuessRow(props: IProps) {
       fontSize: isCurrentRow ? TILE_FONT_SIZE : TILE_FONT_SIZE_SMALL,
       ...(isInvalid
         ? {
-            color: "red",
+            color: Colors.light.invalid,
           }
         : null),
     }),
@@ -66,7 +66,7 @@ export function GuessRow(props: IProps) {
             >
               <Path
                 d="M4 5 L 14 0 L 24 5 L 34 0 L 44 5 L 54 0 L 64 5 L 74 0 L 84 5 L 94 0"
-                stroke={isInvalid ? "red" : "transparent"}
+                stroke={isInvalid ? Colors.light.invalid : "transparent"}
                 strokeWidth="2"
                 fill="transparent"
               />
