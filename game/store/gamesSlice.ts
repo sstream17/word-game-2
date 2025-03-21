@@ -157,6 +157,8 @@ export const gamesSlice = createSlice({
       } else if (state.guessIndex >= state.numberOfGames + NUMBER_OF_TRIES) {
         state.status = "lost";
       }
+
+      return state;
     },
   },
 });
