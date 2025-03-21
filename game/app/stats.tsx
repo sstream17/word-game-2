@@ -5,7 +5,7 @@ import { ThemedText } from "@/components/ThemedText";
 import { useGameSelector } from "@/store";
 import { selectGameStats } from "@/store/statsSlice";
 
-export default function HowToPlay() {
+export default function Stats() {
   const statsClassic = useGameSelector((state) => selectGameStats(state, 1));
   const statsDuo = useGameSelector((state) => selectGameStats(state, 2));
   const statsQuad = useGameSelector((state) => selectGameStats(state, 4));
