@@ -1,7 +1,8 @@
-import { StyleSheet } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 import GradientBackgroundView from "@/components/GradientBackgroundView";
 import { SingleGameStats } from "@/components/SingleGameStats";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const gameModes = [
   ["Classic", 1],
@@ -10,24 +11,43 @@ const gameModes = [
 ] as [string, number][];
 
 export default function Stats() {
-  // https://github.com/indiespirit/react-native-chart-kit?tab=readme-ov-file#bar-chart
-  // https://github.com/JesperLekland/react-native-svg-charts?tab=readme-ov-file#barchart
-
   return (
     <GradientBackgroundView style={styles.container}>
-      {gameModes.map(([title, numberOfGames]) => (
-        <SingleGameStats
-          key={numberOfGames}
-          title={title}
-          numberOfGames={numberOfGames}
-        />
-      ))}
+      <GestureHandlerRootView style={styles.gameWrapper}>
+        <ScrollView
+          contentContainerStyle={styles.stats}
+          style={styles.scrollArea}
+        >
+          {gameModes.map(([title, numberOfGames]) => (
+            <SingleGameStats
+              key={numberOfGames}
+              title={title}
+              numberOfGames={numberOfGames}
+            />
+          ))}
+        </ScrollView>
+      </GestureHandlerRootView>
     </GradientBackgroundView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  gameWrapper: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
+  scrollArea: {
+    height: "100%",
+    width: "100%",
+  },
+  stats: {
     display: "flex",
     flexDirection: "column",
     gap: 32,
