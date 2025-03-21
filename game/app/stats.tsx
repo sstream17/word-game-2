@@ -1,30 +1,37 @@
 import { StyleSheet } from "react-native";
 
 import GradientBackgroundView from "@/components/GradientBackgroundView";
-import { ThemedText } from "@/components/ThemedText";
-import { useGameSelector } from "@/store";
-import { selectGameStats } from "@/store/statsSlice";
+import { SingleGameStats } from "@/components/SingleGameStats";
+
+const gameModes = [
+  ["Classic", 1],
+  ["Duo", 2],
+  ["Quad", 4],
+] as [string, number][];
 
 export default function Stats() {
-  const statsClassic = useGameSelector((state) => selectGameStats(state, 1));
-  const statsDuo = useGameSelector((state) => selectGameStats(state, 2));
-  const statsQuad = useGameSelector((state) => selectGameStats(state, 4));
+  // https://github.com/indiespirit/react-native-chart-kit?tab=readme-ov-file#bar-chart
+  // https://github.com/JesperLekland/react-native-svg-charts?tab=readme-ov-file#barchart
 
   return (
     <GradientBackgroundView style={styles.container}>
-      <ThemedText>Classic</ThemedText>
-      <ThemedText>{JSON.stringify(statsClassic)}</ThemedText>
-      <ThemedText>Duo</ThemedText>
-      <ThemedText>{JSON.stringify(statsDuo)}</ThemedText>
-      <ThemedText>Quad</ThemedText>
-      <ThemedText>{JSON.stringify(statsQuad)}</ThemedText>
+      {gameModes.map(([title, numberOfGames]) => (
+        <SingleGameStats
+          key={numberOfGames}
+          title={title}
+          numberOfGames={numberOfGames}
+        />
+      ))}
     </GradientBackgroundView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    gap: 32,
+    padding: 16,
     alignItems: "center",
     justifyContent: "center",
   },
