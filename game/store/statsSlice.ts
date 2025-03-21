@@ -1,7 +1,7 @@
+import { getFinishIndex } from "@/api/getFinishIndex";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootGameState } from "./gameStore";
 import { IStats, IStatsState } from "./types";
-import { NUMBER_OF_TRIES } from "@/constants/game";
 
 interface IPayload {
   numberOfGames: number;
@@ -36,6 +36,7 @@ export const statsSlice = createSlice({
       const newStats = { ...state.value[numberOfGames] };
 
       newStats.gamesPlayed = newStats.gamesPlayed + 1;
+
       if (won) {
         newStats.gamesWon = newStats.gamesWon + 1;
         newStats.currentWinStreak = newStats.currentWinStreak + 1;
@@ -47,18 +48,11 @@ export const statsSlice = createSlice({
         newStats.currentWinStreak = 0;
       }
 
-      const finishIndex = Object.values(winIndexes).reduce<number>(
-        (acc, winIndex) => {
-          if (winIndex === undefined || winIndex === -1) {
-            return numberOfGames + NUMBER_OF_TRIES;
-          }
+      const finishIndex = getFinishIndex(numberOfGames, winIndexes, won);
 
-          return Math.max(acc ?? -1, winIndex);
-        },
-        -1,
-      );
+      newStats.sumOfFinishes =
+        newStats.sumOfFinishes + numberOfGames + finishIndex;
 
-      newStats.sumOfFinishes = newStats.sumOfFinishes + finishIndex + 1;
       newStats.finishCounts[finishIndex] =
         (newStats.finishCounts[finishIndex] ?? 0) + 1;
 
