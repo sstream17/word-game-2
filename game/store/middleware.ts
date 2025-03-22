@@ -10,6 +10,7 @@ import {
 import { GameDispatch, RootGameState } from "./gameStore";
 import { updateHydrationStatus } from "./persistenceSlice";
 import { updateStats } from "./statsSlice";
+import { updateGameStats } from "@/persistence/updateGameStats";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -64,5 +65,18 @@ startAppListening({
 
     const gameProgress = data.games[numberOfGames];
     listenerApi.dispatch(hydrate(gameProgress));
+  },
+});
+
+startAppListening({
+  actionCreator: updateStats,
+  effect: async (_action, listenerApi) => {
+    const state = listenerApi.getState();
+
+    const { numberOfGames } = state.games;
+
+    const stats = state.stats.value[numberOfGames];
+
+    await updateGameStats(stats, numberOfGames);
   },
 });
