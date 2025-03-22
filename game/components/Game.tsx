@@ -9,6 +9,7 @@ import {
   selectCurrentGuess,
   selectHints,
   selectIsGuessInvalid,
+  selectNumberOfGames,
   selectOverallStatus,
   selectWinIndexes,
   startGame,
@@ -36,6 +37,7 @@ export function Game(props: IProps) {
   const currentGuess = useGameSelector(selectCurrentGuess);
   const isGuessInvalid = useGameSelector(selectIsGuessInvalid);
   const overallStatus = useGameSelector(selectOverallStatus);
+  const storedNumberOfGames = useGameSelector(selectNumberOfGames);
   const answers = useGameSelector(selectAnswers);
   const winIndexes = useGameSelector(selectWinIndexes);
   const hints = useGameSelector(selectHints);
@@ -43,8 +45,13 @@ export function Game(props: IProps) {
   const dispatch = useGameDispatch();
 
   useEffect(() => {
-    dispatch(startGame(numberOfGames));
-  }, [dispatch, numberOfGames]);
+    if (
+      overallStatus === "notStarted" ||
+      storedNumberOfGames !== numberOfGames
+    ) {
+      dispatch(startGame(numberOfGames));
+    }
+  }, [dispatch, numberOfGames, overallStatus, storedNumberOfGames]);
 
   const submit = useCallback(() => {
     // Check bad guess

@@ -3,12 +3,12 @@ import { Button, StyleSheet, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { useKeySizes } from "@/hooks/useKeySizes";
-import { IHints } from "@/types/game";
+import { GameStatus, IHints } from "@/types/game";
 import { EndGame } from "./EndGame";
 import { Keyboard } from "./Keyboard";
 
 interface IProps {
-  overallStatus: "inProgress" | "won" | "lost";
+  overallStatus: GameStatus;
   hints: { [gameId: string]: IHints };
   answers: { [gameId: string]: string };
   winIndexes: { [gameId: string]: number | undefined };

@@ -13,7 +13,7 @@ const initialState: IGamesState = {
   isGuessInvalid: false,
   value: {},
   hints: {},
-  status: "inProgress",
+  status: "notStarted",
 };
 
 export const gamesSlice = createSlice({
@@ -177,6 +177,9 @@ export const selectIsGuessInvalid = (state: RootGameState) =>
   state.games.isGuessInvalid;
 
 export const selectOverallStatus = (state: RootGameState) => state.games.status;
+
+export const selectNumberOfGames = (state: RootGameState) =>
+  state.games.numberOfGames;
 
 export const selectAnswers = (state: RootGameState) =>
   Object.keys(state.games.value).reduce(

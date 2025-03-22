@@ -1,4 +1,4 @@
-import { IHints } from "@/types/game";
+import { GameStatus, IHints } from "@/types/game";
 
 export interface IGuess {
   guess: string;
@@ -20,7 +20,7 @@ export interface IGamesState {
   isGuessInvalid: boolean;
   value: { [gameId: string]: IGame };
   hints: { [gameId: string]: IHints };
-  status: "inProgress" | "won" | "lost";
+  status: GameStatus;
 }
 
 export interface IStats {
