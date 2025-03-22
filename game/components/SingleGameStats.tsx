@@ -1,10 +1,9 @@
 import { StyleSheet, View } from "react-native";
 
-import { useGameSelector } from "@/store";
-import { selectGameStats } from "@/store/statsSlice";
-import { ThemedText } from "./ThemedText";
-import { StatsRow } from "./StatsRow";
+import { selectGameStats, useGameSelector } from "@/store";
 import { StatsGraph } from "./StatsGraph";
+import { StatsRow } from "./StatsRow";
+import { ThemedText } from "./ThemedText";
 
 interface IProps {
   numberOfGames: number;
