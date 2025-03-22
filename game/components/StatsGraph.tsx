@@ -32,5 +32,4 @@ export function StatsGraph(props: IProps) {
 
 const styles = StyleSheet.create({
   container: { display: "flex", flexDirection: "column", alignItems: "center" },
-  heading: { fontSize: 24, fontWeight: "bold" },
 });

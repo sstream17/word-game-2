@@ -40,5 +40,5 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-  heading: { fontSize: 24, fontWeight: "bold" },
+  heading: { fontSize: 24, fontFamily: "Nunito_700Bold" },
 });
