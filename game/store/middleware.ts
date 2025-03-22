@@ -2,7 +2,7 @@ import { getData } from "@/persistence/getData";
 import { updateGameProgress } from "@/persistence/updateGameProgress";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import {
-  hydrate,
+  hydrateGame,
   selectWinIndexes,
   startGame,
   submitGuess,
@@ -67,7 +67,7 @@ startAppListening({
     }
 
     const gameProgress = data.games[numberOfGames];
-    listenerApi.dispatch(hydrate(gameProgress));
+    listenerApi.dispatch(hydrateGame(gameProgress));
   },
 });
 

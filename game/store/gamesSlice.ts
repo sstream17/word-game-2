@@ -164,7 +164,7 @@ export const gamesSlice = createSlice({
 
 // Action creators are generated for each case reducer function
 export const {
-  hydrate,
+  hydrate: hydrateGame,
   deleteLetterFromGuess,
   startGame,
   submitGuess,
