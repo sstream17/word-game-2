@@ -1,4 +1,4 @@
-import { ScrollView, StyleSheet } from "react-native";
+import { ScrollView, StyleSheet, useWindowDimensions } from "react-native";
 
 import GradientBackgroundView from "@/components/GradientBackgroundView";
 import { SingleGameStats } from "@/components/SingleGameStats";
@@ -11,6 +11,10 @@ const gameModes = [
 ] as [string, number][];
 
 export default function Stats() {
+  const { width: screenWidth } = useWindowDimensions();
+
+  const maxWidth = Math.min(screenWidth, 500);
+
   return (
     <GradientBackgroundView style={styles.container}>
       <GestureHandlerRootView style={styles.gameWrapper}>
@@ -23,6 +27,7 @@ export default function Stats() {
               key={numberOfGames}
               title={title}
               numberOfGames={numberOfGames}
+              maxWidth={maxWidth}
             />
           ))}
         </ScrollView>
@@ -50,8 +55,8 @@ const styles = StyleSheet.create({
   stats: {
     display: "flex",
     flexDirection: "column",
-    gap: 32,
-    padding: 16,
+    gap: 64,
+    padding: 32,
     alignItems: "center",
     justifyContent: "center",
   },

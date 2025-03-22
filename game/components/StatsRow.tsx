@@ -12,10 +12,11 @@ interface IStats {
 
 interface IProps {
   stats: IStats;
+  maxWidth: number;
 }
 
 export function StatsRow(props: IProps) {
-  const { stats } = props;
+  const { stats, maxWidth } = props;
 
   const {
     gamesPlayed,
@@ -29,26 +30,28 @@ export function StatsRow(props: IProps) {
   const averageGuess = gamesPlayed !== 0 ? sumOfFinishes / gamesPlayed : 0;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { width: maxWidth }]}>
       <View style={styles.singleStat}>
-        <ThemedText>Played</ThemedText>
-        <ThemedText>{gamesPlayed}</ThemedText>
+        <ThemedText style={styles.text}>Played</ThemedText>
+        <ThemedText style={styles.text}>{gamesPlayed}</ThemedText>
       </View>
       <View style={styles.singleStat}>
-        <ThemedText>Won</ThemedText>
-        <ThemedText>{`${+winPercentage.toFixed(2)}%`}</ThemedText>
+        <ThemedText style={styles.text}>Won</ThemedText>
+        <ThemedText
+          style={styles.text}
+        >{`${+winPercentage.toFixed(2)}%`}</ThemedText>
       </View>
       <View style={styles.singleStat}>
-        <ThemedText>Avg Guess</ThemedText>
-        <ThemedText>{+averageGuess.toFixed(2)}</ThemedText>
+        <ThemedText style={styles.text}>Avg Guess</ThemedText>
+        <ThemedText style={styles.text}>{+averageGuess.toFixed(2)}</ThemedText>
       </View>
       <View style={styles.singleStat}>
-        <ThemedText>Streak</ThemedText>
-        <ThemedText>{currentWinStreak}</ThemedText>
+        <ThemedText style={styles.text}>Streak</ThemedText>
+        <ThemedText style={styles.text}>{currentWinStreak}</ThemedText>
       </View>
       <View style={styles.singleStat}>
-        <ThemedText>Max Streak</ThemedText>
-        <ThemedText>{maxWinStreak}</ThemedText>
+        <ThemedText style={styles.text}>Max Streak</ThemedText>
+        <ThemedText style={styles.text}>{maxWinStreak}</ThemedText>
       </View>
     </View>
   );
@@ -59,12 +62,18 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "flex-end",
-    gap: 32,
+    justifyContent: "center",
     textAlign: "center",
+    paddingHorizontal: 8,
+    gap: 8,
   },
   singleStat: {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
+    flexGrow: 1,
+  },
+  text: {
+    textAlign: "center",
   },
 });

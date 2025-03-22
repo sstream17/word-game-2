@@ -4,10 +4,11 @@ import { BarChart, IChartData } from "./BarChart";
 interface IProps {
   numberOfGames: number;
   finishCounts: Record<number, number>;
+  maxWidth: number;
 }
 
 export function StatsGraph(props: IProps) {
-  const { numberOfGames, finishCounts } = props;
+  const { numberOfGames, finishCounts, maxWidth } = props;
 
   const data = Object.keys(finishCounts).reduce(
     (acc, key) => {
@@ -24,7 +25,7 @@ export function StatsGraph(props: IProps) {
 
   return (
     <View style={styles.container}>
-      <BarChart data={data} width={500} height={400} />
+      <BarChart data={data} width={maxWidth} height={400} />
     </View>
   );
 }
