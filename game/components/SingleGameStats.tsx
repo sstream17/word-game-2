@@ -4,6 +4,7 @@ import { useGameSelector } from "@/store";
 import { selectGameStats } from "@/store/statsSlice";
 import { ThemedText } from "./ThemedText";
 import { StatsRow } from "./StatsRow";
+import { StatsGraph } from "./StatsGraph";
 
 interface IProps {
   numberOfGames: number;
@@ -23,6 +24,7 @@ export function SingleGameStats(props: IProps) {
     <View style={styles.container}>
       <ThemedText style={styles.heading}>{title}</ThemedText>
       <StatsRow stats={rest} />
+      <StatsGraph numberOfGames={numberOfGames} finishCounts={finishCounts} />
     </View>
   );
 }
