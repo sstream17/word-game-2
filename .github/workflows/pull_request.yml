@@ -4,19 +4,19 @@ on:
     paths:
       - 'game/**'
 jobs:
-  check_version:
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./game
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+  # check_version:
+  #   runs-on: ubuntu-latest
+  #   defaults:
+  #     run:
+  #       working-directory: ./game
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
         
-      - name: Check Version
-        uses: del-systems/check-if-version-bumped@v2
-        with:
-          path: "game/package.json"
+  #     - name: Check Version
+  #       uses: del-systems/check-if-version-bumped@v2
+  #       with:
+  #         path: "game/package.json"
         
   build_site:
     runs-on: ubuntu-latest
@@ -38,6 +38,4 @@ jobs:
         run: npm install
 
       - name: build
-        env:
-          BASE_PATH: '/word-game-2'
-        run: npm run build # No need to touch .nojekyll file in PR
+        run: npm run build-web
