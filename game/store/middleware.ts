@@ -8,8 +8,11 @@ import {
   submitGuess,
 } from "./gamesSlice";
 import { GameDispatch, RootGameState } from "./gameStore";
-import { updateHydrationStatus } from "./persistenceSlice";
-import { updateStats } from "./statsSlice";
+import {
+  updateGameHydrationStatus,
+  updateStatsHydrationStatus,
+} from "./persistenceSlice";
+import { hydrateStats, updateStats } from "./statsSlice";
 import { updateGameStats } from "@/persistence/updateGameStats";
 
 export const listenerMiddleware = createListenerMiddleware();
@@ -57,7 +60,7 @@ startAppListening({
 
     const data = await getData();
 
-    listenerApi.dispatch(updateHydrationStatus(numberOfGames));
+    listenerApi.dispatch(updateGameHydrationStatus(numberOfGames));
 
     if (!data?.games || !data.games[numberOfGames]) {
       return;
@@ -78,5 +81,12 @@ startAppListening({
     const stats = state.stats.value[numberOfGames];
 
     await updateGameStats(stats, numberOfGames);
+  },
+});
+
+startAppListening({
+  actionCreator: hydrateStats,
+  effect: async (_action, listenerApi) => {
+    listenerApi.dispatch(updateStatsHydrationStatus(true));
   },
 });

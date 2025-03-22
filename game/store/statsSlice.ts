@@ -30,6 +30,13 @@ export const statsSlice = createSlice({
   name: "stats",
   initialState,
   reducers: {
+    hydrate: (state, action: PayloadAction<IStatsState>) => {
+      Object.entries(action.payload.value).forEach(([numberOfGames, value]) => {
+        if (value) {
+          state.value[`${+numberOfGames}`] = value;
+        }
+      });
+    },
     updateStats: (state, action: PayloadAction<IPayload>) => {
       const { numberOfGames, won, winIndexes } = action.payload;
 
@@ -62,7 +69,7 @@ export const statsSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { updateStats } = statsSlice.actions;
+export const { hydrate: hydrateStats, updateStats } = statsSlice.actions;
 
 export const selectGameStats = (state: RootGameState, gameIndex: number) =>
   state.stats.value[gameIndex];

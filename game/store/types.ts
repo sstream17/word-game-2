@@ -53,6 +53,7 @@ export interface IStatsState {
 
 export interface IPersistenceState {
   hydratedGame: number | undefined;
+  isStatsHydrated: boolean;
 }
 
 /**
