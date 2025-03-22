@@ -23,6 +23,16 @@ export interface IGamesState {
   status: GameStatus;
 }
 
+export const initialGamesState: IGamesState = {
+  numberOfGames: 1,
+  currentGuess: "",
+  guessIndex: 0,
+  isGuessInvalid: false,
+  value: {},
+  hints: {},
+  status: "notStarted",
+};
+
 export interface IStats {
   gamesPlayed: number;
   gamesWon: number;
@@ -42,7 +52,7 @@ export interface IStatsState {
 }
 
 export interface IPersistenceState {
-  hydrated: { [numberOfGames: number]: boolean };
+  hydratedGame: number | undefined;
 }
 
 /**

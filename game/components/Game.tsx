@@ -24,6 +24,7 @@ import {
 } from "react-native-gesture-handler";
 import { Controls } from "./Controls";
 import { GameBoard } from "./GameBoard";
+import { clearGameProgress } from "@/persistence/clearGameProgress";
 
 interface IProps {
   numberOfGames: number;
@@ -68,8 +69,9 @@ export function Game(props: IProps) {
   }, [dispatch]);
 
   const restart = useCallback(() => {
+    clearGameProgress(numberOfGames);
     dispatch(startGame());
-  }, [dispatch]);
+  }, [dispatch, numberOfGames]);
 
   const handleUpdateGuess = useCallback(
     (newKey: string) => {

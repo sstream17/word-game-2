@@ -4,21 +4,11 @@ import { words } from "@/constants/words";
 import { IHints } from "@/types/game";
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootGameState } from "./gameStore";
-import { IGamesState } from "./types";
-
-const initialState: IGamesState = {
-  numberOfGames: 1,
-  currentGuess: "",
-  guessIndex: 0,
-  isGuessInvalid: false,
-  value: {},
-  hints: {},
-  status: "notStarted",
-};
+import { IGamesState, initialGamesState } from "./types";
 
 export const gamesSlice = createSlice({
   name: "games",
-  initialState,
+  initialState: initialGamesState,
   reducers: {
     hydrate: (state, action: PayloadAction<IGamesState>) => {
       state.numberOfGames = action.payload.numberOfGames;
