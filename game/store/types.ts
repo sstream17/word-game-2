@@ -40,3 +40,19 @@ export interface IStats {
 export interface IStatsState {
   value: { [numberOfGames: number]: IStats };
 }
+
+export interface IPersistenceState {
+  hydrated: { [numberOfGames: number]: boolean };
+}
+
+/**
+ * The persisted state of the game.
+ *
+ * `games` differs from `RootGameState["games"]` by mapping `numberOfGames` to `IGamesState`.
+ * This allows for tracking the progress of all games, while keeping the transient state a flat structure
+ * of a single game.
+ */
+export interface IPersistedGameState {
+  games: { [numberOfGames: number]: IGamesState };
+  stats: IStatsState;
+}

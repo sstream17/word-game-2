@@ -1,7 +1,16 @@
+import { STORAGE_KEY } from "@/constants/storage";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
-import { submitGuess, selectWinIndexes } from "./gamesSlice";
-import { RootGameState, GameDispatch } from "./gameStore";
+import {
+  hydrate,
+  selectWinIndexes,
+  startGame,
+  submitGuess,
+} from "./gamesSlice";
+import { GameDispatch, RootGameState } from "./gameStore";
+import { trackHydration } from "./persistenceSlice";
 import { updateStats } from "./statsSlice";
+import { IPersistedGameState } from "./types";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -17,6 +26,12 @@ startAppListening({
 
     const { numberOfGames, status } = state.games;
 
+    const persistedData = {
+      games: { [numberOfGames]: state.games },
+    };
+
+    await AsyncStorage.mergeItem(STORAGE_KEY, JSON.stringify(persistedData));
+
     if (status === "inProgress") {
       return;
     }
@@ -30,5 +45,30 @@ startAppListening({
         winIndexes,
       }),
     );
+  },
+});
+
+startAppListening({
+  actionCreator: startGame,
+  effect: async (_action, listenerApi) => {
+    const state = listenerApi.getState();
+
+    const { numberOfGames } = state.games;
+
+    if (state.persistence.hydrated[numberOfGames]) {
+      return;
+    }
+
+    const jsonData = await AsyncStorage.getItem(STORAGE_KEY);
+    const data = (jsonData ? JSON.parse(jsonData) : {}) as IPersistedGameState;
+
+    if (!data.games || !data.games[numberOfGames]) {
+      return;
+    }
+
+    const gameProgress = data.games[numberOfGames];
+
+    listenerApi.dispatch(hydrate(gameProgress));
+    listenerApi.dispatch(trackHydration(numberOfGames));
   },
 });

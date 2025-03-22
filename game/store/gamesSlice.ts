@@ -20,6 +20,15 @@ export const gamesSlice = createSlice({
   name: "games",
   initialState,
   reducers: {
+    hydrate: (state, action: PayloadAction<IGamesState>) => {
+      state.numberOfGames = action.payload.numberOfGames;
+      state.value = action.payload.value;
+      state.hints = action.payload.hints;
+      state.isGuessInvalid = action.payload.isGuessInvalid;
+      state.currentGuess = action.payload.currentGuess;
+      state.guessIndex = action.payload.guessIndex;
+      state.status = action.payload.status;
+    },
     startGame: (state, action: PayloadAction<number | undefined>) => {
       const numberOfGames = action.payload ?? state.numberOfGames;
       const answers = sampleSize(words, numberOfGames);
@@ -164,8 +173,13 @@ export const gamesSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { deleteLetterFromGuess, startGame, submitGuess, updateGuess } =
-  gamesSlice.actions;
+export const {
+  hydrate,
+  deleteLetterFromGuess,
+  startGame,
+  submitGuess,
+  updateGuess,
+} = gamesSlice.actions;
 
 export const selectCurrentGuess = (state: RootGameState) =>
   state.games.currentGuess;
