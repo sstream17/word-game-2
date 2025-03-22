@@ -128,8 +128,10 @@ const styles = StyleSheet.create({
   },
   scrollArea: {
     height: "100%",
+    width: "100%",
   },
   gamesArea: {
+    alignSelf: "center",
     display: "flex",
     flexGrow: 1,
     flexDirection: "row",
