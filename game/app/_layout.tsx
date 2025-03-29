@@ -1,3 +1,5 @@
+import "../assets/global.css";
+
 import { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 
