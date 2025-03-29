@@ -2,7 +2,6 @@ import { useEffect } from "react";
 import { ActivityIndicator } from "react-native";
 
 import Menu from "@/components/Menu";
-import { Colors } from "@/constants/Colors";
 import gameStore, { initialHydrate } from "@/store";
 import {
   Nunito_400Regular,
@@ -32,9 +31,7 @@ export default function RootLayout() {
       <Stack
         screenOptions={{
           headerShadowVisible: false,
-          headerStyle: {
-            backgroundColor: Colors.light.background,
-          },
+          headerTransparent: true,
           headerTitleStyle: {
             fontFamily: "Nunito_700Bold",
           },

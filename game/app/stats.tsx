@@ -3,6 +3,7 @@ import { ScrollView, StyleSheet, useWindowDimensions } from "react-native";
 import GradientBackgroundView from "@/components/GradientBackgroundView";
 import { SingleGameStats } from "@/components/SingleGameStats";
 import { VersionInfo } from "@/components/VersionInfo";
+import { useHeaderHeight } from "@react-navigation/elements";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const gameModes = [
@@ -15,10 +16,14 @@ export default function Stats() {
   const { width: screenWidth } = useWindowDimensions();
   const maxWidth = Math.min(screenWidth, 500);
 
+  const headerHeight = useHeaderHeight();
+
   return (
     <>
       <GradientBackgroundView style={styles.container}>
-        <GestureHandlerRootView style={styles.gameWrapper}>
+        <GestureHandlerRootView
+          style={[styles.gameWrapper, { marginTop: headerHeight }]}
+        >
           <ScrollView
             contentContainerStyle={styles.stats}
             style={styles.scrollArea}

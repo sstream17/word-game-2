@@ -25,6 +25,7 @@ import {
 import { Controls } from "./Controls";
 import { GameBoard } from "./GameBoard";
 import { clearGameProgress } from "@/persistence/clearGameProgress";
+import { useHeaderHeight } from "@react-navigation/elements";
 
 interface IProps {
   numberOfGames: number;
@@ -34,6 +35,8 @@ export function Game(props: IProps) {
   const { numberOfGames } = props;
 
   const { tileWidth, maxWidth } = useTileSizes(numberOfGames === 1 ? 1 : 2);
+
+  const headerHeight = useHeaderHeight();
 
   const currentGuess = useGameSelector(selectCurrentGuess);
   const isGuessInvalid = useGameSelector(selectIsGuessInvalid);
@@ -94,7 +97,9 @@ export function Game(props: IProps) {
   );
 
   return (
-    <GestureHandlerRootView style={styles.gameWrapper}>
+    <GestureHandlerRootView
+      style={[styles.gameWrapper, { marginTop: headerHeight }]}
+    >
       <ScrollView
         contentContainerStyle={[
           styles.gamesArea,
