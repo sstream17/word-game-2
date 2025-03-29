@@ -2,6 +2,7 @@ import { StyleSheet, View } from "react-native";
 
 import Constants from "expo-constants";
 import { ThemedText } from "./ThemedText";
+import { Colors } from "@/constants/Colors";
 
 export function VersionInfo() {
   const version = Constants.expoConfig?.version;
@@ -18,5 +19,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 4,
     right: 4,
+    backgroundColor: Colors.light.background,
   },
 });
