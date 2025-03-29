@@ -1,6 +1,6 @@
 import { ScrollView, StyleSheet, useWindowDimensions } from "react-native";
 
-import GradientBackgroundView from "@/components/GradientBackgroundView";
+import { GradientBackgroundView } from "@/components/GradientBackgroundView";
 import { SingleGameStats } from "@/components/SingleGameStats";
 import { VersionInfo } from "@/components/VersionInfo";
 import { useHeaderHeight } from "@react-navigation/elements";

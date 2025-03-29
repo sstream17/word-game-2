@@ -1,6 +1,6 @@
 import { StyleSheet } from "react-native";
 
-import GradientBackgroundView from "@/components/GradientBackgroundView";
+import { GradientBackgroundView } from "@/components/GradientBackgroundView";
 import { ThemedText } from "@/components/ThemedText";
 import { VersionInfo } from "@/components/VersionInfo";
 
