@@ -32,26 +32,26 @@ export function StatsRow(props: IProps) {
   return (
     <View style={[styles.container, { width: maxWidth }]}>
       <View style={styles.singleStat}>
-        <ThemedText style={styles.text}>Played</ThemedText>
-        <ThemedText style={styles.text}>{gamesPlayed}</ThemedText>
+        <ThemedText className="text-center">Played</ThemedText>
+        <ThemedText className="text-center">{gamesPlayed}</ThemedText>
       </View>
       <View style={styles.singleStat}>
-        <ThemedText style={styles.text}>Won</ThemedText>
-        <ThemedText
-          style={styles.text}
-        >{`${+winPercentage.toFixed(2)}%`}</ThemedText>
+        <ThemedText className="text-center">Won</ThemedText>
+        <ThemedText className="text-center">{`${+winPercentage.toFixed(2)}%`}</ThemedText>
       </View>
       <View style={styles.singleStat}>
-        <ThemedText style={styles.text}>Avg Guess</ThemedText>
-        <ThemedText style={styles.text}>{+averageGuess.toFixed(2)}</ThemedText>
+        <ThemedText className="text-center">Avg Guess</ThemedText>
+        <ThemedText className="text-center">
+          {+averageGuess.toFixed(2)}
+        </ThemedText>
       </View>
       <View style={styles.singleStat}>
-        <ThemedText style={styles.text}>Streak</ThemedText>
-        <ThemedText style={styles.text}>{currentWinStreak}</ThemedText>
+        <ThemedText className="text-center">Streak</ThemedText>
+        <ThemedText className="text-center">{currentWinStreak}</ThemedText>
       </View>
       <View style={styles.singleStat}>
-        <ThemedText style={styles.text}>Max Streak</ThemedText>
-        <ThemedText style={styles.text}>{maxWinStreak}</ThemedText>
+        <ThemedText className="text-center">Max Streak</ThemedText>
+        <ThemedText className="text-center">{maxWinStreak}</ThemedText>
       </View>
     </View>
   );
@@ -72,8 +72,5 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     alignItems: "center",
     flexGrow: 1,
-  },
-  text: {
-    textAlign: "center",
   },
 });

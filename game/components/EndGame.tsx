@@ -23,7 +23,7 @@ export function EndGame(props: IProps) {
               { flexDirection: index % 2 === 0 ? "row" : "row-reverse" },
             ]}
           >
-            <ThemedText key={gameId} style={styles.answerText}>
+            <ThemedText key={gameId} className="!text-2xl">
               {answers[gameId]}
             </ThemedText>
             <View
@@ -36,7 +36,7 @@ export function EndGame(props: IProps) {
                 },
               ]}
             >
-              <ThemedText style={styles.numberOfTriesText}>
+              <ThemedText className="!text-xl">
                 {isWon ? winIndexes[gameId]! + 1 : ""}
               </ThemedText>
             </View>
@@ -63,9 +63,6 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 10,
   },
-  answerText: {
-    fontSize: 24,
-  },
   numberOfTries: {
     backgroundColor: Colors.light.exact,
     display: "flex",
@@ -75,8 +72,5 @@ const styles = StyleSheet.create({
     height: 32,
     padding: 4,
     borderRadius: 4,
-  },
-  numberOfTriesText: {
-    fontSize: 20,
   },
 });
