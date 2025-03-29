@@ -25,6 +25,26 @@ In the output, you'll find options to open the app in a
 
 You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
 
+## Install on Android
+
+1. Change to the Android directory
+
+   ```bash
+   cd android/
+   ```
+
+2. Build the release bundle
+
+   ```bash
+   ./gradlew app:assembleRelease
+   ```
+
+3. Install the app with ADB
+
+   ```bash
+   adb install "./app/build/outputs/apk/release/app-release.apk"
+   ```
+
 ## Get a fresh project
 
 When you're ready, run:
