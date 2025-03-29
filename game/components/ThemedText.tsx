@@ -1,15 +1,9 @@
 import { memo } from "react";
-import { StyleSheet, Text, type TextProps } from "react-native";
+import { Text, type TextProps } from "react-native";
 
 export const ThemedText = memo(function ThemedText(props: TextProps) {
-  const { style, ...rest } = props;
+  const { className, ...rest } = props;
+  const defaultStyle = "font-nunito text-base";
 
-  const combinedStyles = StyleSheet.flatten([styles.text, style]);
-  return <Text style={combinedStyles} {...rest} />;
-});
-
-const styles = StyleSheet.create({
-  text: {
-    fontFamily: "Nunito_400Regular",
-  },
+  return <Text className={`${defaultStyle} ${className}`} {...rest} />;
 });
