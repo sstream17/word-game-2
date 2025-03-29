@@ -1,8 +1,11 @@
+import { getData } from "@/persistence/getData";
 import { configureStore } from "@reduxjs/toolkit";
 import gamesReducer from "./gamesSlice";
 import { listenerMiddleware } from "./middleware";
-import persistenceReducer from "./persistenceSlice";
-import statsReducer from "./statsSlice";
+import persistenceReducer, {
+  updateStatsHydrationStatus,
+} from "./persistenceSlice";
+import statsReducer, { hydrateStats } from "./statsSlice";
 
 const store = configureStore({
   reducer: {
@@ -13,6 +16,20 @@ const store = configureStore({
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware().prepend(listenerMiddleware.middleware),
 });
+
+export async function initialHydrate() {
+  const state = store.getState();
+
+  if (state.persistence.isStatsHydrated) {
+    return;
+  }
+
+  const data = await getData();
+  if (data?.stats) {
+    store.dispatch(hydrateStats(data?.stats));
+    store.dispatch(updateStatsHydrationStatus(true));
+  }
+}
 
 export default store;
 

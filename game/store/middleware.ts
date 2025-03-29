@@ -1,5 +1,6 @@
 import { getData } from "@/persistence/getData";
 import { updateGameProgress } from "@/persistence/updateGameProgress";
+import { updateGameStats } from "@/persistence/updateGameStats";
 import { createListenerMiddleware } from "@reduxjs/toolkit";
 import {
   hydrateGame,
@@ -8,12 +9,8 @@ import {
   submitGuess,
 } from "./gamesSlice";
 import { GameDispatch, RootGameState } from "./gameStore";
-import {
-  updateGameHydrationStatus,
-  updateStatsHydrationStatus,
-} from "./persistenceSlice";
-import { hydrateStats, updateStats } from "./statsSlice";
-import { updateGameStats } from "@/persistence/updateGameStats";
+import { updateGameHydrationStatus } from "./persistenceSlice";
+import { updateStats } from "./statsSlice";
 
 export const listenerMiddleware = createListenerMiddleware();
 
@@ -21,6 +18,30 @@ const startAppListening = listenerMiddleware.startListening.withTypes<
   RootGameState,
   GameDispatch
 >();
+
+startAppListening({
+  actionCreator: startGame,
+  effect: async (_action, listenerApi) => {
+    const state = listenerApi.getState();
+
+    const { numberOfGames } = state.games;
+
+    if (state.persistence.hydratedGame === numberOfGames) {
+      return;
+    }
+
+    const data = await getData();
+
+    listenerApi.dispatch(updateGameHydrationStatus(numberOfGames));
+
+    if (!data?.games || !data.games[numberOfGames]) {
+      return;
+    }
+
+    const gameProgress = data.games[numberOfGames];
+    listenerApi.dispatch(hydrateGame(gameProgress));
+  },
+});
 
 startAppListening({
   actionCreator: submitGuess,
@@ -48,30 +69,6 @@ startAppListening({
 });
 
 startAppListening({
-  actionCreator: startGame,
-  effect: async (_action, listenerApi) => {
-    const state = listenerApi.getState();
-
-    const { numberOfGames } = state.games;
-
-    if (state.persistence.hydratedGame === numberOfGames) {
-      return;
-    }
-
-    const data = await getData();
-
-    listenerApi.dispatch(updateGameHydrationStatus(numberOfGames));
-
-    if (!data?.games || !data.games[numberOfGames]) {
-      return;
-    }
-
-    const gameProgress = data.games[numberOfGames];
-    listenerApi.dispatch(hydrateGame(gameProgress));
-  },
-});
-
-startAppListening({
   actionCreator: updateStats,
   effect: async (_action, listenerApi) => {
     const state = listenerApi.getState();
@@ -81,12 +78,5 @@ startAppListening({
     const stats = state.stats.value[numberOfGames];
 
     await updateGameStats(stats, numberOfGames);
-  },
-});
-
-startAppListening({
-  actionCreator: hydrateStats,
-  effect: async (_action, listenerApi) => {
-    listenerApi.dispatch(updateStatsHydrationStatus(true));
   },
 });

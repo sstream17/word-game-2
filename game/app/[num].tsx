@@ -1,7 +1,7 @@
 import { StyleSheet } from "react-native";
 
 import { Game } from "@/components/Game";
-import GradientBackgroundView from "@/components/GradientBackgroundView";
+import { GradientBackgroundView } from "@/components/GradientBackgroundView";
 import { VALID_GAMES } from "@/constants/game";
 import { Redirect, useLocalSearchParams } from "expo-router";
 

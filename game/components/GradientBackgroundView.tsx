@@ -13,7 +13,7 @@ const viewBoxSize = 100;
 const circleSize = 200;
 const circleRadius = circleSize / 2;
 
-function GradientBackgroundView(props: IProps) {
+export function GradientBackgroundView(props: IProps) {
   const { children, style } = props;
 
   const id = useUniqueElementId();
@@ -67,5 +67,3 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.light.background,
   },
 });
-
-export default GradientBackgroundView;
