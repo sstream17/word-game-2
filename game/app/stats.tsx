@@ -11,6 +11,7 @@ import {
 } from "@/store";
 import { useEffect } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { VersionInfo } from "@/components/VersionInfo";
 
 const gameModes = [
   ["Classic", 1],
@@ -40,23 +41,26 @@ export default function Stats() {
   }, [dispatch, isStatsHydrated]);
 
   return (
-    <GradientBackgroundView style={styles.container}>
-      <GestureHandlerRootView style={styles.gameWrapper}>
-        <ScrollView
-          contentContainerStyle={styles.stats}
-          style={styles.scrollArea}
-        >
-          {gameModes.map(([title, numberOfGames]) => (
-            <SingleGameStats
-              key={numberOfGames}
-              title={title}
-              numberOfGames={numberOfGames}
-              maxWidth={maxWidth}
-            />
-          ))}
-        </ScrollView>
-      </GestureHandlerRootView>
-    </GradientBackgroundView>
+    <>
+      <GradientBackgroundView style={styles.container}>
+        <GestureHandlerRootView style={styles.gameWrapper}>
+          <ScrollView
+            contentContainerStyle={styles.stats}
+            style={styles.scrollArea}
+          >
+            {gameModes.map(([title, numberOfGames]) => (
+              <SingleGameStats
+                key={numberOfGames}
+                title={title}
+                numberOfGames={numberOfGames}
+                maxWidth={maxWidth}
+              />
+            ))}
+          </ScrollView>
+        </GestureHandlerRootView>
+      </GradientBackgroundView>
+      <VersionInfo />
+    </>
   );
 }
 
