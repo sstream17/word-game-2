@@ -2,16 +2,8 @@ import { ScrollView, StyleSheet, useWindowDimensions } from "react-native";
 
 import GradientBackgroundView from "@/components/GradientBackgroundView";
 import { SingleGameStats } from "@/components/SingleGameStats";
-import { getData } from "@/persistence/getData";
-import {
-  hydrateStats,
-  selectIsStatsHydrated,
-  useGameDispatch,
-  useGameSelector,
-} from "@/store";
-import { useEffect } from "react";
-import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { VersionInfo } from "@/components/VersionInfo";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 const gameModes = [
   ["Classic", 1],
@@ -20,25 +12,8 @@ const gameModes = [
 ] as [string, number][];
 
 export default function Stats() {
-  const isStatsHydrated = useGameSelector(selectIsStatsHydrated);
-  const dispatch = useGameDispatch();
-
   const { width: screenWidth } = useWindowDimensions();
   const maxWidth = Math.min(screenWidth, 500);
-
-  useEffect(() => {
-    // Need to explicitly handle stats hydration since there is no starting reducer to listen to
-    const fetchAndHydrateStats = async () => {
-      const data = await getData();
-      if (data?.stats) {
-        dispatch(hydrateStats(data?.stats));
-      }
-    };
-
-    if (!isStatsHydrated) {
-      fetchAndHydrateStats();
-    }
-  }, [dispatch, isStatsHydrated]);
 
   return (
     <>
