@@ -18,7 +18,11 @@ export default function MenuItem(props: IProps) {
     <Link href={href} asChild>
       <Pressable onPress={onClick}>
         <View style={styles.menuItem}>
-          <MaterialIcons name={icon} size={16} />
+          <MaterialIcons
+            className="color-[--color-text]"
+            name={icon}
+            size={16}
+          />
           <ThemedText>{label}</ThemedText>
         </View>
       </Pressable>

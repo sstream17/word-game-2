@@ -1,8 +1,8 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import { useCallback, useState } from "react";
 import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
+
+import { MaterialIcons } from "@expo/vector-icons";
 import MenuItem from "./MenuItem";
-import { Colors } from "@/constants/Colors";
 
 export default function Menu() {
   const [isVisible, setIsVisible] = useState(false);
@@ -20,9 +20,9 @@ export default function Menu() {
       <Pressable onPress={onOpen}>
         <View style={styles.menuButtonContainer}>
           <MaterialIcons
+            className="color-[--color-text]"
             name="more-vert"
             size={24}
-            style={{ color: Colors.light.text }}
           />
         </View>
       </Pressable>

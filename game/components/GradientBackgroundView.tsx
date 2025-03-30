@@ -19,7 +19,7 @@ export function GradientBackgroundView(props: IProps) {
   const id = useUniqueElementId();
 
   return (
-    <View style={styles.background}>
+    <View className="bg-[--color-background]" style={styles.background}>
       <Svg
         height="100%"
         width="100%"
@@ -64,6 +64,5 @@ const styles = StyleSheet.create({
   background: {
     width: "100%",
     height: "100%",
-    backgroundColor: Colors.light.background,
   },
 });

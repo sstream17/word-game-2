@@ -1,6 +1,5 @@
 import { StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
 import { ThemedText } from "./ThemedText";
 
 interface IProps {
@@ -15,6 +14,9 @@ export function EndGame(props: IProps) {
     <View style={styles.wrapper}>
       {Object.keys(answers).map((gameId, index) => {
         const isWon = (winIndexes[gameId] ?? -1) !== -1;
+        const backgroundClassName = isWon
+          ? "bg-[--color-exact]"
+          : "bg-[--color-invalid]";
         return (
           <View
             key={gameId}
@@ -26,16 +28,7 @@ export function EndGame(props: IProps) {
             <ThemedText key={gameId} className="!text-2xl">
               {answers[gameId]}
             </ThemedText>
-            <View
-              style={[
-                styles.numberOfTries,
-                {
-                  backgroundColor: isWon
-                    ? Colors.light.exact
-                    : Colors.light.invalid,
-                },
-              ]}
-            >
+            <View className={backgroundClassName} style={styles.numberOfTries}>
               <ThemedText className="!text-xl">
                 {isWon ? winIndexes[gameId]! + 1 : ""}
               </ThemedText>
@@ -64,7 +57,6 @@ const styles = StyleSheet.create({
     gap: 10,
   },
   numberOfTries: {
-    backgroundColor: Colors.light.exact,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",

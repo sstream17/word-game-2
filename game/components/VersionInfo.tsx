@@ -13,7 +13,10 @@ export function VersionInfo() {
 
   return version ? (
     <View>
-      <ThemedText style={styles.versionInfo}>{`v${version}`}</ThemedText>
+      <ThemedText
+        className="bg-[--color-background]"
+        style={styles.versionInfo}
+      >{`v${version}`}</ThemedText>
     </View>
   ) : null;
 }
@@ -23,6 +26,5 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 4,
     right: 4,
-    backgroundColor: Colors.light.background,
   },
 });
