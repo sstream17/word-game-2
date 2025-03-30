@@ -12,6 +12,14 @@ import {
 } from "@/constants/layout";
 import Svg, { Path } from "react-native-svg";
 import { ThemedText } from "./ThemedText";
+import { cssInterop } from "nativewind";
+
+cssInterop(Path, {
+  className: {
+    target: "style",
+    nativeStyleToProp: { stroke: true },
+  },
+});
 
 const backgroundColorMap = {
   x: "bg-[--color-exact]",
@@ -21,7 +29,7 @@ const backgroundColorMap = {
 
 const borderColorMap = {
   x: "border-[--color-exactBorder]",
-  c: `border-[--color-closeBorder] border-${BORDER_WIDTH}`,
+  c: "border-[--color-closeBorder] border-2",
   _: "border-[--color-missingBorder]",
 };
 
@@ -89,7 +97,11 @@ export function GuessRow(props: IProps) {
               >
                 <Path
                   d="M4 5 L 14 0 L 24 5 L 34 0 L 44 5 L 54 0 L 64 5 L 74 0 L 84 5 L 94 0"
-                  stroke={isInvalid ? Colors.light.invalid : "transparent"}
+                  className={
+                    isInvalid
+                      ? "stroke-[--color-invalid]"
+                      : "stroke-transparent"
+                  }
                   strokeWidth="2"
                   fill="transparent"
                 />

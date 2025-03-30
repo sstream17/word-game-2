@@ -1,7 +1,14 @@
-import { Colors } from "@/constants/Colors";
 import { StyleSheet, View } from "react-native";
 
+import { cssInterop } from "nativewind";
 import Svg, { G, Rect, Text } from "react-native-svg";
+
+cssInterop(Rect, {
+  className: {
+    target: "style",
+    nativeStyleToProp: { fill: true },
+  },
+});
 
 export interface IChartData {
   labels: string[];
@@ -44,12 +51,12 @@ export function BarChart(props: IProps) {
                 {label}
               </Text>
               <Rect
+                className="fill-[--color-exact]"
                 x={x - barWidth / 2}
                 y={height - barHeight - height * 0.1}
                 rx={barWidth / 2}
                 height={barHeight}
                 width={barWidth}
-                fill={Colors.light.exact}
               />
               {barValue === 0 ? null : (
                 <Text

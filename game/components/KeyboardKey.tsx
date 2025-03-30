@@ -63,7 +63,11 @@ export function KeyboardKey(props: IProps) {
           theme={theme}
         />
         {icon ? (
-          <MaterialCommunityIcons style={styles.letter} name={icon} />
+          <MaterialCommunityIcons
+            className="text-[--color-text]"
+            style={styles.letter}
+            name={icon}
+          />
         ) : (
           <ThemedText style={styles.letter} selectable={false}>
             {letter}
@@ -83,6 +87,5 @@ const styles = StyleSheet.create({
     position: "absolute",
     textAlign: "center",
     fontSize: KEY_FONT_SIZE,
-    color: "#000",
   },
 });
