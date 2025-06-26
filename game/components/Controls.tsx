@@ -43,7 +43,11 @@ export function Controls(props: IProps) {
       ) : (
         <View style={styles.endGameWrapper}>
           <EndGame answers={answers} winIndexes={winIndexes} />
-          <Pressable onPress={handleReset} style={styles.resetButton}>
+          <Pressable
+            onPress={handleReset}
+            style={styles.resetButton}
+            className="bg-[--color-unknown]"
+          >
             <ThemedText style={styles.resetButtonText}>Reset</ThemedText>
           </Pressable>
         </View>
@@ -70,7 +74,6 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     padding: 10,
-    backgroundColor: Colors.light.exact,
     borderRadius: 4,
   },
   resetButtonText: {

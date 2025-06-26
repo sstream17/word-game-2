@@ -4,24 +4,23 @@ import { GradientBackgroundView } from "@/components/GradientBackgroundView";
 import { ThemedText } from "@/components/ThemedText";
 import { VersionInfo } from "@/components/VersionInfo";
 import { Link } from "expo-router";
-import { Colors } from "@/constants/Colors";
 
 export default function Index() {
   return (
     <>
       <GradientBackgroundView style={styles.container}>
         <Link href="/1" asChild>
-          <Pressable style={styles.gameMode}>
+          <Pressable style={styles.gameMode} className="bg-[--color-exact]">
             <ThemedText style={styles.gameModeText}>Classic</ThemedText>
           </Pressable>
         </Link>
         <Link href="/2" asChild>
-          <Pressable style={styles.gameMode}>
+          <Pressable style={styles.gameMode} className="bg-[--color-exact]">
             <ThemedText style={styles.gameModeText}>Duo</ThemedText>
           </Pressable>
         </Link>
         <Link href="/4" asChild>
-          <Pressable style={styles.gameMode}>
+          <Pressable style={styles.gameMode} className="bg-[--color-exact]">
             <ThemedText style={styles.gameModeText}>Quad</ThemedText>
           </Pressable>
         </Link>
@@ -40,7 +39,6 @@ const styles = StyleSheet.create({
   },
   gameMode: {
     padding: 10,
-    backgroundColor: Colors.light.exact,
     borderRadius: 8,
     width: 150,
     height: 150,

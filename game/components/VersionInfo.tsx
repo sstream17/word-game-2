@@ -1,6 +1,5 @@
 import { Platform, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
 import { nativeApplicationVersion } from "expo-application";
 import Constants from "expo-constants";
 import { ThemedText } from "./ThemedText";
