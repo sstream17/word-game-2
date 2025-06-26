@@ -1,11 +1,12 @@
 import { useCallback } from "react";
-import { Button, StyleSheet, View } from "react-native";
+import { Pressable, StyleSheet, View } from "react-native";
 
 import { Colors } from "@/constants/Colors";
 import { useKeySizes } from "@/hooks/useKeySizes";
 import { GameStatus, IHints } from "@/types/game";
 import { EndGame } from "./EndGame";
 import { Keyboard } from "./Keyboard";
+import { ThemedText } from "./ThemedText";
 
 interface IProps {
   overallStatus: GameStatus;
@@ -42,7 +43,9 @@ export function Controls(props: IProps) {
       ) : (
         <View style={styles.endGameWrapper}>
           <EndGame answers={answers} winIndexes={winIndexes} />
-          <Button onPress={handleReset} title={"Reset"}></Button>
+          <Pressable onPress={handleReset} style={styles.resetButton}>
+            <ThemedText style={styles.resetButtonText}>Reset</ThemedText>
+          </Pressable>
         </View>
       )}
     </View>
@@ -65,5 +68,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 10,
     height: "100%",
+  },
+  resetButton: {
+    padding: 10,
+    backgroundColor: Colors.light.exact,
+    borderRadius: 4,
+  },
+  resetButtonText: {
+    fontSize: 16,
   },
 });

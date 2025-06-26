@@ -1,7 +1,7 @@
 {
   "name": "game",
   "main": "expo-router/entry",
-  "version": "4.0.1",
+  "version": "4.0.2",
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
@@ -40,7 +40,8 @@
     "react-native-svg": "15.2.0",
     "react-native-web": "~0.19.10",
     "react-redux": "^9.1.2",
-    "@react-native-async-storage/async-storage": "1.23.1"
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "expo-application": "~5.9.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",

@@ -1,11 +1,15 @@
-import { StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 
+import { Colors } from "@/constants/Colors";
+import { nativeApplicationVersion } from "expo-application";
 import Constants from "expo-constants";
 import { ThemedText } from "./ThemedText";
-import { Colors } from "@/constants/Colors";
 
 export function VersionInfo() {
-  const version = Constants.expoConfig?.version;
+  const version =
+    Platform.OS === "web"
+      ? Constants.expoConfig?.version
+      : nativeApplicationVersion;
 
   return version ? (
     <View>
