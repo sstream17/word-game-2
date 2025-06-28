@@ -10,6 +10,13 @@ cssInterop(Rect, {
   },
 });
 
+cssInterop(Text, {
+  className: {
+    target: "style",
+    nativeStyleToProp: { fill: true },
+  },
+});
+
 export interface IChartData {
   labels: string[];
   data: number[];
@@ -43,6 +50,7 @@ export function BarChart(props: IProps) {
           return (
             <G key={label}>
               <Text
+                className="fill-[--color-text]"
                 fontFamily="Nunito_400Regular"
                 x={x}
                 y={height}
@@ -60,6 +68,7 @@ export function BarChart(props: IProps) {
               />
               {barValue === 0 ? null : (
                 <Text
+                  className="fill-[--color-text]"
                   fontFamily="Nunito_400Regular"
                   x={x}
                   y={height - barHeight - height * 0.14}
