@@ -1,15 +1,15 @@
-import { useCallback, useContext, useState } from "react";
+import { useCallback, useState } from "react";
 import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 
 import { themes } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import MenuItem from "./MenuItem";
-import { ThemeContext } from "./ThemeProvider";
+import { useThemeContext } from "./ThemeProvider";
 
 export default function Menu() {
   const [isVisible, setIsVisible] = useState(false);
 
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useThemeContext();
 
   const onOpen = useCallback(() => {
     setIsVisible(true);

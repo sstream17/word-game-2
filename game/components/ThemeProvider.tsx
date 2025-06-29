@@ -1,4 +1,4 @@
-import { createContext } from "react";
+import { createContext, useContext } from "react";
 import { View } from "react-native";
 
 import { themes } from "@/constants/Colors";
@@ -24,4 +24,8 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
       </View>
     </ThemeContext.Provider>
   );
+};
+
+export const useThemeContext = () => {
+  return useContext(ThemeContext);
 };

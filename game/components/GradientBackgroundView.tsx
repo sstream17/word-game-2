@@ -1,10 +1,10 @@
-import { PropsWithChildren, useContext } from "react";
+import { PropsWithChildren } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 
 import { colors } from "@/constants/Colors";
 import { useUniqueElementId } from "@/hooks/useUniqueElementId";
 import Svg, { Circle, Defs, RadialGradient, Stop } from "react-native-svg";
-import { ThemeContext } from "./ThemeProvider";
+import { useThemeContext } from "./ThemeProvider";
 
 interface IProps extends PropsWithChildren {
   style?: ViewStyle;
@@ -21,7 +21,7 @@ export function GradientBackgroundView(props: IProps) {
 
   // Have to retrieve colors from the theme directly
   // to apply to gradient `Stop`
-  const { theme } = useContext(ThemeContext);
+  const { theme } = useThemeContext();
   const themeColors = colors[theme];
 
   return (
