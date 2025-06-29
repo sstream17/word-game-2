@@ -22,6 +22,7 @@ module.exports = {
         background: "var(--color-background)",
         backgroundLighter: "var(--color-backgroundLighter)",
         backgroundLightest: "var(--color-backgroundLightest)",
+        menuBackground: "var(--color-menuBackground)",
       },
     },
   },

@@ -2,7 +2,15 @@ import { Pressable, StyleSheet, View } from "react-native";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { Href, Link } from "expo-router";
+import { cssInterop } from "nativewind";
 import { ThemedText } from "./ThemedText";
+
+cssInterop(MaterialIcons, {
+  className: {
+    target: "style",
+    nativeStyleToProp: { color: true },
+  },
+});
 
 interface IProps {
   label: string;

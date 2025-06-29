@@ -1,6 +1,23 @@
 import { vars } from "nativewind";
 
-export const colors = {
+interface IThemeColors {
+  exact: string;
+  close: string;
+  missing: string;
+  unknown: string;
+  exactBorder: string;
+  closeBorder: string;
+  missingBorder: string;
+  unknownBorder: string;
+  invalid: string;
+  text: string;
+  background: string;
+  backgroundLighter: string;
+  backgroundLightest: string;
+  menuBackground: string;
+}
+
+export const colors: { light: IThemeColors; dark: IThemeColors } = {
   light: {
     exact: "#56b4e9",
     close: "#f0e442",
@@ -15,6 +32,7 @@ export const colors = {
     background: "#cad8e4",
     backgroundLighter: "#cedce8",
     backgroundLightest: "rgba(255, 255, 255, 0.75)",
+    menuBackground: "#ffffff",
   },
   dark: {
     exact: "hsl(202, 40%, 63%)",
@@ -30,6 +48,7 @@ export const colors = {
     background: "hsl(208, 33%, 9%)",
     backgroundLighter: "hsl(208, 36%, 11%)",
     backgroundLightest: "rgba(29, 33, 36, 0.749)",
+    menuBackground: "hsl(208, 20%, 22%)",
   },
 };
 
@@ -48,6 +67,7 @@ export const themes = {
     "--color-background": colors.light.background,
     "--color-backgroundLighter": colors.light.backgroundLighter,
     "--color-backgroundLightest": colors.light.backgroundLightest,
+    "--color-menuBackground": colors.light.menuBackground,
   }),
   dark: vars({
     "--color-exact": colors.dark.exact,
@@ -63,5 +83,6 @@ export const themes = {
     "--color-background": colors.dark.background,
     "--color-backgroundLighter": colors.dark.backgroundLighter,
     "--color-backgroundLightest": colors.dark.backgroundLightest,
+    "--color-menuBackground": colors.dark.menuBackground,
   }),
 };

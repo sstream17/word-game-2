@@ -1,11 +1,15 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 
+import { themes } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import MenuItem from "./MenuItem";
+import { ThemeContext } from "./ThemeProvider";
 
 export default function Menu() {
   const [isVisible, setIsVisible] = useState(false);
+
+  const { theme } = useContext(ThemeContext);
 
   const onOpen = useCallback(() => {
     setIsVisible(true);
@@ -28,7 +32,10 @@ export default function Menu() {
       </Pressable>
       <Modal transparent visible={isVisible}>
         <Pressable style={styles.modalBackdrop} onPress={onClose} />
-        <View style={styles.modalContent}>
+        <View
+          className="bg-[--color-menuBackground]"
+          style={[styles.modalContent, themes[theme]]}
+        >
           <MenuItem
             label="How to play"
             href="/how-to-play"
@@ -63,7 +70,6 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     position: "absolute",
-    backgroundColor: "#fff",
     borderRadius: 8,
     ...Platform.select({
       ios: {
