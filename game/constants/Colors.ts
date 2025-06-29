@@ -17,6 +17,12 @@ interface IThemeColors {
   menuBackground: string;
 }
 
+type CSSVarTheme<T extends Record<keyof IThemeColors, string>> = {
+  [K in keyof T as `--color-${string & K}`]: string;
+};
+
+type ThemeVars = CSSVarTheme<IThemeColors>;
+
 export const colors: { light: IThemeColors; dark: IThemeColors } = {
   light: {
     exact: "#56b4e9",
@@ -53,7 +59,7 @@ export const colors: { light: IThemeColors; dark: IThemeColors } = {
 };
 
 export const themes = {
-  light: vars({
+  light: vars<ThemeVars>({
     "--color-exact": colors.light.exact,
     "--color-close": colors.light.close,
     "--color-missing": colors.light.missing,
@@ -69,7 +75,7 @@ export const themes = {
     "--color-backgroundLightest": colors.light.backgroundLightest,
     "--color-menuBackground": colors.light.menuBackground,
   }),
-  dark: vars({
+  dark: vars<ThemeVars>({
     "--color-exact": colors.dark.exact,
     "--color-close": colors.dark.close,
     "--color-missing": colors.dark.missing,
