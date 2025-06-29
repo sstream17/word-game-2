@@ -49,7 +49,7 @@ export function GradientBackgroundView(props: IProps) {
             <Stop
               offset="100%"
               stopColor={themeColors.backgroundLighter}
-              stopOpacity="0.5"
+              stopOpacity="0.1"
             />
           </RadialGradient>
         </Defs>
