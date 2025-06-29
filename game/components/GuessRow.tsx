@@ -1,18 +1,16 @@
 import { useMemo } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
 import { WORD_LENGTH } from "@/constants/game";
 import {
   BORDER_RADIUS,
-  BORDER_WIDTH,
   TILE_FONT_SIZE,
   TILE_FONT_SIZE_SMALL,
   TILE_GAP,
 } from "@/constants/layout";
+import { cssInterop } from "nativewind";
 import Svg, { Path } from "react-native-svg";
 import { ThemedText } from "./ThemedText";
-import { cssInterop } from "nativewind";
 
 cssInterop(Path, {
   className: {

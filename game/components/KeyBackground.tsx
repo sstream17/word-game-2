@@ -1,4 +1,3 @@
-import { Colors } from "@/constants/Colors";
 import { BORDER_RADIUS, BORDER_WIDTH } from "@/constants/layout";
 import { useUniqueElementId } from "@/hooks/useUniqueElementId";
 import { KeyStatus } from "@/types/game";
@@ -30,14 +29,13 @@ interface IProps {
   width: number;
   height: number;
   colors: KeyStatus[];
-  theme: (typeof Colors)["light"] | (typeof Colors)["dark"];
 }
 
 const radius = BORDER_RADIUS;
 const borderWidth = BORDER_WIDTH * 2;
 
 export function KeyBackground(props: IProps) {
-  const { width, height, colors, theme } = props;
+  const { width, height, colors } = props;
 
   const halfWidth = width / 2;
   const halfHeight = height / 2;

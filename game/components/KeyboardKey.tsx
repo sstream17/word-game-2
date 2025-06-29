@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
 import { KEY_FONT_SIZE } from "@/constants/layout";
 import { IHints, KeyStatus } from "@/types/game";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -50,18 +49,12 @@ export function KeyboardKey(props: IProps) {
     }
   }, [letter, updateGuess]);
 
-  const theme = Colors["light"];
   const colors = getLetterColors(letter, hints);
 
   return (
     <Pressable onPress={onPress}>
       <View style={[styles.keyContainer, { width, height }]}>
-        <KeyBackground
-          width={width}
-          height={height}
-          colors={colors}
-          theme={theme}
-        />
+        <KeyBackground width={width} height={height} colors={colors} />
         {icon ? (
           <MaterialCommunityIcons
             className="text-[--color-text]"
