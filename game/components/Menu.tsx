@@ -3,8 +3,9 @@ import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 
 import { themes } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
-import MenuItem from "./MenuItem";
+import { MenuItem } from "./MenuItem";
 import { useThemeContext } from "./ThemeProvider";
+import { ThemeToggle } from "./ThemeToggle";
 
 export default function Menu() {
   const [isVisible, setIsVisible] = useState(false);
@@ -48,6 +49,7 @@ export default function Menu() {
             icon="bar-chart"
             onClick={onClose}
           />
+          <ThemeToggle />
         </View>
       </Modal>
     </>
@@ -85,5 +87,8 @@ const styles = StyleSheet.create({
     }),
     top: 56,
     right: 16,
+  },
+  themeText: {
+    paddingStart: 8,
   },
 });
