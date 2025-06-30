@@ -3,8 +3,8 @@ import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 
 import StatsIcon from "@/assets/images/chart_icon.svg";
 import InfoIcon from "@/assets/images/info_icon.svg";
+import MenuIcon from "@/assets/images/menu_icon.svg";
 import { themes } from "@/constants/Colors";
-import { MaterialIcons } from "@expo/vector-icons";
 import { MenuItem } from "./MenuItem";
 import { useThemeContext } from "./ThemeProvider";
 import { ThemeToggle } from "./ThemeToggle";
@@ -26,11 +26,7 @@ export default function Menu() {
     <>
       <Pressable onPress={onOpen}>
         <View style={styles.menuButtonContainer}>
-          <MaterialIcons
-            className="color-[--color-text]"
-            name="more-vert"
-            size={24}
-          />
+          <MenuIcon className="fill-[--color-text]" />
         </View>
       </Pressable>
       <Modal transparent visible={isVisible}>
