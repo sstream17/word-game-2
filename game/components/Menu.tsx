@@ -1,6 +1,8 @@
 import { useCallback, useState } from "react";
 import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
 
+import StatsIcon from "@/assets/images/chart_icon.svg";
+import InfoIcon from "@/assets/images/info_icon.svg";
 import { themes } from "@/constants/Colors";
 import { MaterialIcons } from "@expo/vector-icons";
 import { MenuItem } from "./MenuItem";
@@ -40,13 +42,13 @@ export default function Menu() {
           <MenuItem
             label="How to play"
             href="/how-to-play"
-            icon="info-outline"
+            icon={InfoIcon}
             onClick={onClose}
           />
           <MenuItem
             label="Stats"
             href="/stats"
-            icon="bar-chart"
+            icon={StatsIcon}
             onClick={onClose}
           />
           <ThemeToggle />

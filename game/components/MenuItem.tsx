@@ -1,9 +1,10 @@
-import { useMemo } from "react";
+import { FC, useMemo } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
 import { MaterialIcons } from "@expo/vector-icons";
 import { Href, Link } from "expo-router";
 import { cssInterop } from "nativewind";
+import { SvgProps } from "react-native-svg";
 import { ThemedText } from "./ThemedText";
 
 cssInterop(MaterialIcons, {
@@ -15,28 +16,24 @@ cssInterop(MaterialIcons, {
 
 interface IProps {
   label: string;
-  icon: keyof typeof MaterialIcons.glyphMap;
+  icon: FC<SvgProps>;
   href?: Href;
   onClick?: VoidFunction;
 }
 
 export const MenuItem = (props: IProps) => {
-  const { label, icon, href, onClick } = props;
+  const { label, icon: Icon, href, onClick } = props;
 
   const button = useMemo(() => {
     return (
       <Pressable onPress={onClick}>
         <View style={styles.menuItem}>
-          <MaterialIcons
-            className="color-[--color-text]"
-            name={icon}
-            size={16}
-          />
+          <Icon className="fill-[--color-text]" width={24} height={24} />
           <ThemedText>{label}</ThemedText>
         </View>
       </Pressable>
     );
-  }, [icon, label, onClick]);
+  }, [Icon, label, onClick]);
 
   return href ? (
     <>

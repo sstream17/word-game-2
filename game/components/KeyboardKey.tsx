@@ -1,15 +1,15 @@
-import { useCallback } from "react";
+import { FC, useCallback } from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 
 import { KEY_FONT_SIZE } from "@/constants/layout";
 import { IHints, KeyStatus } from "@/types/game";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
 import { cssInterop } from "nativewind";
+import Svg, { SvgProps } from "react-native-svg";
 import { KeyBackground } from "./KeyBackground";
 import { ThemedText } from "./ThemedText";
 
-cssInterop(MaterialCommunityIcons, {
+cssInterop(Svg, {
   className: {
     target: "style",
     nativeStyleToProp: { color: true },
@@ -20,7 +20,7 @@ interface IProps {
   letter: string;
   width: number;
   height: number;
-  icon?: keyof typeof MaterialCommunityIcons.glyphMap;
+  icon?: FC<SvgProps>;
   hints?: { [gameId: string]: IHints };
   onClick: (letter: string) => void;
 }
@@ -48,7 +48,14 @@ function getLetterColors(
 }
 
 export function KeyboardKey(props: IProps) {
-  const { letter, width, height, icon, hints, onClick: updateGuess } = props;
+  const {
+    letter,
+    width,
+    height,
+    icon: Icon,
+    hints,
+    onClick: updateGuess,
+  } = props;
 
   const onPress = useCallback(() => {
     updateGuess(letter);
@@ -63,12 +70,8 @@ export function KeyboardKey(props: IProps) {
     <Pressable onPress={onPress}>
       <View style={[styles.keyContainer, { width, height }]}>
         <KeyBackground width={width} height={height} colors={colors} />
-        {icon ? (
-          <MaterialCommunityIcons
-            className="text-[--color-text]"
-            style={styles.letter}
-            name={icon}
-          />
+        {Icon ? (
+          <Icon className="fill-[--color-text]" style={styles.letter} />
         ) : (
           <ThemedText style={styles.letter} selectable={false}>
             {letter}
