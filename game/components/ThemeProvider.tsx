@@ -1,8 +1,9 @@
-import { createContext, useContext } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { View } from "react-native";
 
 import { themes } from "@/constants/Colors";
-import { useColorScheme } from "nativewind";
+import { getData } from "@/persistence/getData";
+import { colorScheme as colorSchemeNW, useColorScheme } from "nativewind";
 
 interface ThemeProviderProps {
   children: React.ReactNode;
@@ -15,6 +16,16 @@ export const ThemeContext = createContext<{
 });
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
+  useEffect(() => {
+    const getSavedTheme = async () => {
+      const data = await getData();
+      if (data?.theme) {
+        colorSchemeNW.set(data.theme);
+      }
+    };
+    getSavedTheme();
+  }, []);
+
   const { colorScheme = "light" } = useColorScheme();
 
   return (
