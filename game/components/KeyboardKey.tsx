@@ -5,8 +5,16 @@ import { KEY_FONT_SIZE } from "@/constants/layout";
 import { IHints, KeyStatus } from "@/types/game";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+import { cssInterop } from "nativewind";
 import { KeyBackground } from "./KeyBackground";
 import { ThemedText } from "./ThemedText";
+
+cssInterop(MaterialCommunityIcons, {
+  className: {
+    target: "style",
+    nativeStyleToProp: { color: true },
+  },
+});
 
 interface IProps {
   letter: string;
