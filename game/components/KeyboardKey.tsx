@@ -4,17 +4,9 @@ import { Platform, Pressable, StyleSheet, View } from "react-native";
 import { KEY_FONT_SIZE } from "@/constants/layout";
 import { IHints, KeyStatus } from "@/types/game";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
-import { cssInterop } from "nativewind";
-import Svg, { SvgProps } from "react-native-svg";
+import { SvgProps } from "react-native-svg";
 import { KeyBackground } from "./KeyBackground";
 import { ThemedText } from "./ThemedText";
-
-cssInterop(Svg, {
-  className: {
-    target: "style",
-    nativeStyleToProp: { color: true },
-  },
-});
 
 interface IProps {
   letter: string;

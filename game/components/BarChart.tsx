@@ -1,21 +1,6 @@
 import { StyleSheet, View } from "react-native";
 
-import { cssInterop } from "nativewind";
 import Svg, { G, Rect, Text } from "react-native-svg";
-
-cssInterop(Rect, {
-  className: {
-    target: "style",
-    nativeStyleToProp: { fill: true },
-  },
-});
-
-cssInterop(Text, {
-  className: {
-    target: "style",
-    nativeStyleToProp: { fill: true },
-  },
-});
 
 export interface IChartData {
   labels: string[];

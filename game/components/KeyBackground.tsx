@@ -1,15 +1,7 @@
 import { BORDER_RADIUS, BORDER_WIDTH } from "@/constants/layout";
 import { useUniqueElementId } from "@/hooks/useUniqueElementId";
 import { KeyStatus } from "@/types/game";
-import { cssInterop } from "nativewind";
 import Svg, { ClipPath, Defs, G, Path, Rect } from "react-native-svg";
-
-cssInterop(Path, {
-  className: {
-    target: "style",
-    nativeStyleToProp: { fill: true },
-  },
-});
 
 const backgroundColorMap = {
   exact: "fill-[--color-exact]",

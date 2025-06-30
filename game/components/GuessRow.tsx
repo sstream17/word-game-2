@@ -8,16 +8,8 @@ import {
   TILE_FONT_SIZE_SMALL,
   TILE_GAP,
 } from "@/constants/layout";
-import { cssInterop } from "nativewind";
 import Svg, { Path } from "react-native-svg";
 import { ThemedText } from "./ThemedText";
-
-cssInterop(Path, {
-  className: {
-    target: "style",
-    nativeStyleToProp: { stroke: true },
-  },
-});
 
 const backgroundColorMap = {
   x: "bg-[--color-exact]",

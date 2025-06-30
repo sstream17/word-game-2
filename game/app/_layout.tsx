@@ -1,3 +1,4 @@
+import "@/api/cssInterop";
 import "../assets/global.css";
 
 import { useEffect } from "react";
