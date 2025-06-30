@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useRef } from "react";
+import { createContext, useContext, useEffect } from "react";
 import { View } from "react-native";
 
 import { themes } from "@/constants/Colors";
@@ -11,21 +11,16 @@ interface ThemeProviderProps {
 
 export const ThemeContext = createContext<{
   theme: "light" | "dark";
-  isInitialSystemTheme?: boolean;
 }>({
   theme: "light",
-  isInitialSystemTheme: true,
 });
 
 export const ThemeProvider = ({ children }: ThemeProviderProps) => {
-  const isInitialSystemTheme = useRef<boolean | undefined>();
-
   useEffect(() => {
     const getSavedTheme = async () => {
       const data = await getData();
       if (data?.theme) {
         colorSchemeNW.set(data.theme);
-        isInitialSystemTheme.current = data.theme === "system";
       }
     };
     getSavedTheme();
@@ -37,7 +32,6 @@ export const ThemeProvider = ({ children }: ThemeProviderProps) => {
     <ThemeContext.Provider
       value={{
         theme: colorScheme,
-        isInitialSystemTheme: isInitialSystemTheme.current,
       }}
     >
       <View style={themes[colorScheme]} className="flex-1">
