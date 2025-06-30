@@ -1,13 +1,15 @@
 import { useCallback } from "react";
 import { StyleSheet } from "react-native";
 
+import { updateTheme } from "@/persistence/updateTheme";
 import { colorScheme } from "nativewind";
 import { MenuItem } from "./MenuItem";
 import { ThemedText } from "./ThemedText";
 
 export function ThemeToggle() {
-  const onClick = useCallback((itemLabel: "light" | "dark" | "system") => {
-    colorScheme.set(itemLabel);
+  const onClick = useCallback(async (newTheme: "light" | "dark" | "system") => {
+    colorScheme.set(newTheme);
+    await updateTheme(newTheme);
   }, []);
 
   return (
