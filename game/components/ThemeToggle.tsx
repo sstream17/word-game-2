@@ -1,25 +1,46 @@
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { StyleSheet } from "react-native";
 
+import DarkTheme from "@/assets/images/theme_dark_icon.svg";
+import DarkThemeOutline from "@/assets/images/theme_dark_outline_icon.svg";
+import LightTheme from "@/assets/images/theme_light_icon.svg";
+import LightThemeOutline from "@/assets/images/theme_light_outline_icon.svg";
+import SystemTheme from "@/assets/images/theme_system_icon.svg";
+import SystemThemeOutline from "@/assets/images/theme_system_outline_icon.svg";
 import { updateTheme } from "@/persistence/updateTheme";
 import { colorScheme } from "nativewind";
 import { MenuItem } from "./MenuItem";
 import { ThemedText } from "./ThemedText";
+import { useThemeContext } from "./ThemeProvider";
 
 export function ThemeToggle() {
+  const { isInitialSystemTheme } = useThemeContext();
+  const [selectedTheme, setSelectedTheme] = useState<
+    "light" | "dark" | "system" | undefined
+  >(isInitialSystemTheme ? "system" : colorScheme.get());
+
   const onClick = useCallback(async (newTheme: "light" | "dark" | "system") => {
     colorScheme.set(newTheme);
+    setSelectedTheme(newTheme);
     await updateTheme(newTheme);
   }, []);
 
   return (
     <>
       <ThemedText style={styles.headingText}>Theme</ThemedText>
-      <MenuItem label="Light" icon="sunny" onClick={() => onClick("light")} />
-      <MenuItem label="Dark" icon="dark-mode" onClick={() => onClick("dark")} />
+      <MenuItem
+        label="Light"
+        icon={selectedTheme === "light" ? LightTheme : LightThemeOutline}
+        onClick={() => onClick("light")}
+      />
+      <MenuItem
+        label="Dark"
+        icon={selectedTheme === "dark" ? DarkTheme : DarkThemeOutline}
+        onClick={() => onClick("dark")}
+      />
       <MenuItem
         label="System"
-        icon="brightness-auto"
+        icon={selectedTheme === "system" ? SystemTheme : SystemThemeOutline}
         onClick={() => onClick("system")}
       />
     </>
