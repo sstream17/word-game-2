@@ -1,7 +1,6 @@
 import { useCallback } from "react";
 import { Pressable, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
 import { useKeySizes } from "@/hooks/useKeySizes";
 import { GameStatus, IHints } from "@/types/game";
 import { EndGame } from "./EndGame";
@@ -27,6 +26,7 @@ export function Controls(props: IProps) {
 
   return (
     <View
+      className="bg-[--color-background]"
       style={[
         styles.container,
         { height: keyboardHeight, paddingTop: keyGap, gap: keyGap * 2 },
@@ -43,7 +43,11 @@ export function Controls(props: IProps) {
       ) : (
         <View style={styles.endGameWrapper}>
           <EndGame answers={answers} winIndexes={winIndexes} />
-          <Pressable onPress={handleReset} style={styles.resetButton}>
+          <Pressable
+            onPress={handleReset}
+            style={styles.resetButton}
+            className="bg-[--color-unknown]"
+          >
             <ThemedText style={styles.resetButtonText}>Reset</ThemedText>
           </Pressable>
         </View>
@@ -56,7 +60,6 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "column",
-    backgroundColor: Colors.light.background,
     alignItems: "center",
     justifyContent: "flex-start",
     width: "100%",
@@ -71,7 +74,6 @@ const styles = StyleSheet.create({
   },
   resetButton: {
     padding: 10,
-    backgroundColor: Colors.light.exact,
     borderRadius: 4,
   },
   resetButtonText: {

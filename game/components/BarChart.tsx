@@ -1,4 +1,3 @@
-import { Colors } from "@/constants/Colors";
 import { StyleSheet, View } from "react-native";
 
 import Svg, { G, Rect, Text } from "react-native-svg";
@@ -36,6 +35,7 @@ export function BarChart(props: IProps) {
           return (
             <G key={label}>
               <Text
+                className="fill-[--color-text]"
                 fontFamily="Nunito_400Regular"
                 x={x}
                 y={height}
@@ -44,15 +44,16 @@ export function BarChart(props: IProps) {
                 {label}
               </Text>
               <Rect
+                className="fill-[--color-exact]"
                 x={x - barWidth / 2}
                 y={height - barHeight - height * 0.1}
                 rx={barWidth / 2}
                 height={barHeight}
                 width={barWidth}
-                fill={Colors.light.exact}
               />
               {barValue === 0 ? null : (
                 <Text
+                  className="fill-[--color-text]"
                   fontFamily="Nunito_400Regular"
                   x={x}
                   y={height - barHeight - height * 0.14}

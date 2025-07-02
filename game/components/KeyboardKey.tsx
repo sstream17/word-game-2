@@ -1,11 +1,10 @@
-import { useCallback } from "react";
+import { FC, useCallback } from "react";
 import { Platform, Pressable, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
 import { KEY_FONT_SIZE } from "@/constants/layout";
 import { IHints, KeyStatus } from "@/types/game";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { impactAsync, ImpactFeedbackStyle } from "expo-haptics";
+import { SvgProps } from "react-native-svg";
 import { KeyBackground } from "./KeyBackground";
 import { ThemedText } from "./ThemedText";
 
@@ -13,7 +12,7 @@ interface IProps {
   letter: string;
   width: number;
   height: number;
-  icon?: keyof typeof MaterialCommunityIcons.glyphMap;
+  icon?: FC<SvgProps>;
   hints?: { [gameId: string]: IHints };
   onClick: (letter: string) => void;
 }
@@ -41,7 +40,14 @@ function getLetterColors(
 }
 
 export function KeyboardKey(props: IProps) {
-  const { letter, width, height, icon, hints, onClick: updateGuess } = props;
+  const {
+    letter,
+    width,
+    height,
+    icon: Icon,
+    hints,
+    onClick: updateGuess,
+  } = props;
 
   const onPress = useCallback(() => {
     updateGuess(letter);
@@ -50,20 +56,14 @@ export function KeyboardKey(props: IProps) {
     }
   }, [letter, updateGuess]);
 
-  const theme = Colors["light"];
   const colors = getLetterColors(letter, hints);
 
   return (
     <Pressable onPress={onPress}>
       <View style={[styles.keyContainer, { width, height }]}>
-        <KeyBackground
-          width={width}
-          height={height}
-          colors={colors}
-          theme={theme}
-        />
-        {icon ? (
-          <MaterialCommunityIcons style={styles.letter} name={icon} />
+        <KeyBackground width={width} height={height} colors={colors} />
+        {Icon ? (
+          <Icon className="fill-[--color-text]" style={styles.letter} />
         ) : (
           <ThemedText style={styles.letter} selectable={false}>
             {letter}
@@ -83,6 +83,5 @@ const styles = StyleSheet.create({
     position: "absolute",
     textAlign: "center",
     fontSize: KEY_FONT_SIZE,
-    color: "#000",
   },
 });

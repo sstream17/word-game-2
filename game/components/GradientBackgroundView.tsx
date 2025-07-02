@@ -1,9 +1,10 @@
 import { PropsWithChildren } from "react";
 import { StyleSheet, View, ViewStyle } from "react-native";
 
-import { Colors } from "@/constants/Colors";
+import { colors } from "@/constants/Colors";
 import { useUniqueElementId } from "@/hooks/useUniqueElementId";
 import Svg, { Circle, Defs, RadialGradient, Stop } from "react-native-svg";
+import { useThemeContext } from "./ThemeProvider";
 
 interface IProps extends PropsWithChildren {
   style?: ViewStyle;
@@ -18,8 +19,13 @@ export function GradientBackgroundView(props: IProps) {
 
   const id = useUniqueElementId();
 
+  // Have to retrieve colors from the theme directly
+  // to apply to gradient `Stop`
+  const { theme } = useThemeContext();
+  const themeColors = colors[theme];
+
   return (
-    <View style={styles.background}>
+    <View className="bg-[--color-background]" style={styles.background}>
       <Svg
         height="100%"
         width="100%"
@@ -37,12 +43,12 @@ export function GradientBackgroundView(props: IProps) {
           >
             <Stop
               offset="0%"
-              stopColor={Colors.light.backgroundLightest}
+              stopColor={themeColors.backgroundLightest}
               stopOpacity="1"
             />
             <Stop
               offset="100%"
-              stopColor={Colors.light.backgroundLighter}
+              stopColor={themeColors.backgroundLighter}
               stopOpacity="0.1"
             />
           </RadialGradient>
@@ -64,6 +70,5 @@ const styles = StyleSheet.create({
   background: {
     width: "100%",
     height: "100%",
-    backgroundColor: Colors.light.background,
   },
 });

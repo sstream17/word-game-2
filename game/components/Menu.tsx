@@ -1,11 +1,18 @@
-import { MaterialIcons } from "@expo/vector-icons";
 import { useCallback, useState } from "react";
 import { Modal, Platform, Pressable, StyleSheet, View } from "react-native";
-import MenuItem from "./MenuItem";
-import { Colors } from "@/constants/Colors";
+
+import StatsIcon from "@/assets/images/chart_icon.svg";
+import InfoIcon from "@/assets/images/info_icon.svg";
+import MenuIcon from "@/assets/images/menu_icon.svg";
+import { themes } from "@/constants/Colors";
+import { MenuItem } from "./MenuItem";
+import { useThemeContext } from "./ThemeProvider";
+import { ThemeToggle } from "./ThemeToggle";
 
 export default function Menu() {
   const [isVisible, setIsVisible] = useState(false);
+
+  const { theme } = useThemeContext();
 
   const onOpen = useCallback(() => {
     setIsVisible(true);
@@ -19,28 +26,28 @@ export default function Menu() {
     <>
       <Pressable onPress={onOpen}>
         <View style={styles.menuButtonContainer}>
-          <MaterialIcons
-            name="more-vert"
-            size={24}
-            style={{ color: Colors.light.text }}
-          />
+          <MenuIcon className="fill-[--color-text]" />
         </View>
       </Pressable>
       <Modal transparent visible={isVisible}>
         <Pressable style={styles.modalBackdrop} onPress={onClose} />
-        <View style={styles.modalContent}>
+        <View
+          className="bg-[--color-menuBackground]"
+          style={[styles.modalContent, themes[theme]]}
+        >
           <MenuItem
             label="How to play"
             href="/how-to-play"
-            icon="info-outline"
+            icon={InfoIcon}
             onClick={onClose}
           />
           <MenuItem
             label="Stats"
             href="/stats"
-            icon="bar-chart"
+            icon={StatsIcon}
             onClick={onClose}
           />
+          <ThemeToggle />
         </View>
       </Modal>
     </>
@@ -63,7 +70,6 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     position: "absolute",
-    backgroundColor: "#fff",
     borderRadius: 8,
     ...Platform.select({
       ios: {
@@ -79,5 +85,8 @@ const styles = StyleSheet.create({
     }),
     top: 56,
     right: 16,
+  },
+  themeText: {
+    paddingStart: 8,
   },
 });

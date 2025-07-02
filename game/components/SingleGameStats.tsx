@@ -22,7 +22,7 @@ export function SingleGameStats(props: IProps) {
 
   return (
     <View style={styles.container}>
-      <ThemedText style={styles.heading}>{title}</ThemedText>
+      <ThemedText className="!font-nunitoBold !text-2xl">{title}</ThemedText>
       <StatsRow stats={rest} maxWidth={maxWidth} />
       <StatsGraph
         numberOfGames={numberOfGames}
@@ -40,5 +40,4 @@ const styles = StyleSheet.create({
     alignItems: "center",
     width: "100%",
   },
-  heading: { fontSize: 24, fontFamily: "Nunito_700Bold" },
 });

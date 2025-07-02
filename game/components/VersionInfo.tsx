@@ -1,6 +1,5 @@
 import { Platform, StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
 import { nativeApplicationVersion } from "expo-application";
 import Constants from "expo-constants";
 import { ThemedText } from "./ThemedText";
@@ -13,7 +12,10 @@ export function VersionInfo() {
 
   return version ? (
     <View>
-      <ThemedText style={styles.versionInfo}>{`v${version}`}</ThemedText>
+      <ThemedText
+        className="bg-[--color-background]"
+        style={styles.versionInfo}
+      >{`v${version}`}</ThemedText>
     </View>
   ) : null;
 }
@@ -23,6 +25,5 @@ const styles = StyleSheet.create({
     position: "absolute",
     bottom: 4,
     right: 4,
-    backgroundColor: Colors.light.background,
   },
 });

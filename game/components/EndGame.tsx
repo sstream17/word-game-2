@@ -1,6 +1,5 @@
 import { StyleSheet, View } from "react-native";
 
-import { Colors } from "@/constants/Colors";
 import { ThemedText } from "./ThemedText";
 
 interface IProps {
@@ -15,6 +14,9 @@ export function EndGame(props: IProps) {
     <View style={styles.wrapper}>
       {Object.keys(answers).map((gameId, index) => {
         const isWon = (winIndexes[gameId] ?? -1) !== -1;
+        const backgroundClassName = isWon
+          ? "bg-[--color-exact]"
+          : "bg-[--color-invalid]";
         return (
           <View
             key={gameId}
@@ -23,20 +25,11 @@ export function EndGame(props: IProps) {
               { flexDirection: index % 2 === 0 ? "row" : "row-reverse" },
             ]}
           >
-            <ThemedText key={gameId} style={styles.answerText}>
+            <ThemedText key={gameId} className="!text-2xl">
               {answers[gameId]}
             </ThemedText>
-            <View
-              style={[
-                styles.numberOfTries,
-                {
-                  backgroundColor: isWon
-                    ? Colors.light.exact
-                    : Colors.light.invalid,
-                },
-              ]}
-            >
-              <ThemedText style={styles.numberOfTriesText}>
+            <View className={backgroundClassName} style={styles.numberOfTries}>
+              <ThemedText className="!text-xl">
                 {isWon ? winIndexes[gameId]! + 1 : ""}
               </ThemedText>
             </View>
@@ -63,11 +56,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 10,
   },
-  answerText: {
-    fontSize: 24,
-  },
   numberOfTries: {
-    backgroundColor: Colors.light.exact,
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
@@ -75,8 +64,5 @@ const styles = StyleSheet.create({
     height: 32,
     padding: 4,
     borderRadius: 4,
-  },
-  numberOfTriesText: {
-    fontSize: 20,
   },
 });

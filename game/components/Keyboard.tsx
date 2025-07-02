@@ -1,6 +1,8 @@
 import { useCallback, useEffect } from "react";
 import { Platform, StyleSheet, View } from "react-native";
 
+import BackIcon from "@/assets/images/back_icon.svg";
+import SendIcon from "@/assets/images/send_icon.svg";
 import { VALID_GAMES, VALID_KEYS } from "@/constants/game";
 import { IHints } from "@/types/game";
 import { usePathname } from "expo-router";
@@ -94,7 +96,7 @@ export function Keyboard(props: IProps) {
           letter={"backspace"}
           width={keyWidth * 1.5}
           height={keyHeight}
-          icon="backspace-outline"
+          icon={BackIcon}
           onClick={onKeyPress}
         />
         {[..."zxcvbnm"].map((char) => (
@@ -111,7 +113,7 @@ export function Keyboard(props: IProps) {
           letter={"enter"}
           width={keyWidth * 1.5}
           height={keyHeight}
-          icon="send-outline"
+          icon={SendIcon}
           onClick={onKeyPress}
         />
       </View>

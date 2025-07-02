@@ -66,4 +66,5 @@ export interface IPersistenceState {
 export interface IPersistedGameState {
   games: { [numberOfGames: number]: IGamesState };
   stats: IStatsState;
+  theme: "light" | "dark" | "system";
 }
