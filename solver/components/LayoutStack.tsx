@@ -23,9 +23,6 @@ export const LayoutStack = memo(function LayoutStack() {
       }}
     >
       <Stack.Screen name="index" options={{ title: "Word Game Solver" }} />
-      <Stack.Screen name="[num]" options={{ title: "" }} />
-      <Stack.Screen name="how-to-play" options={{ title: "How to play" }} />
-      <Stack.Screen name="stats" options={{ title: "Stats" }} />
     </Stack>
   );
 });
