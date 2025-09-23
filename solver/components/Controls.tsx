@@ -1,11 +1,9 @@
 import { useCallback } from "react";
-import { Pressable, StyleSheet, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 
 import { useKeySizes } from "@/hooks/useKeySizes";
 import { GameStatus, IHints } from "@/types/game";
-import { EndGame } from "./EndGame";
 import { Keyboard } from "./Keyboard";
-import { ThemedText } from "./ThemedText";
 
 interface IProps {
   overallStatus: GameStatus;
@@ -32,26 +30,13 @@ export function Controls(props: IProps) {
         { height: keyboardHeight, paddingTop: keyGap, gap: keyGap * 2 },
       ]}
     >
-      {overallStatus === "inProgress" ? (
-        <Keyboard
-          keyWidth={keyWidth}
-          keyHeight={keyHeight}
-          keyGap={keyGap}
-          hints={hints}
-          onKeyPress={onKeyPress}
-        />
-      ) : (
-        <View style={styles.endGameWrapper}>
-          <EndGame answers={answers} winIndexes={winIndexes} />
-          <Pressable
-            onPress={handleReset}
-            style={styles.resetButton}
-            className="bg-[--color-unknown]"
-          >
-            <ThemedText style={styles.resetButtonText}>Reset</ThemedText>
-          </Pressable>
-        </View>
-      )}
+      <Keyboard
+        keyWidth={keyWidth}
+        keyHeight={keyHeight}
+        keyGap={keyGap}
+        hints={hints}
+        onKeyPress={onKeyPress}
+      />
     </View>
   );
 }
@@ -63,14 +48,6 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
     width: "100%",
-  },
-  endGameWrapper: {
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 10,
-    height: "100%",
   },
   resetButton: {
     padding: 10,

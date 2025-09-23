@@ -1,29 +1,14 @@
-import { Pressable, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { GradientBackgroundView } from "@/components/GradientBackgroundView";
-import { ThemedText } from "@/components/ThemedText";
+import { Solver } from "@/components/Solver";
 import { VersionInfo } from "@/components/VersionInfo";
-import { Link } from "expo-router";
 
 export default function Index() {
   return (
     <>
       <GradientBackgroundView style={styles.container}>
-        <Link href="/1" asChild>
-          <Pressable style={styles.gameMode} className="bg-[--color-exact]">
-            <ThemedText style={styles.gameModeText}>Classic</ThemedText>
-          </Pressable>
-        </Link>
-        <Link href="/2" asChild>
-          <Pressable style={styles.gameMode} className="bg-[--color-exact]">
-            <ThemedText style={styles.gameModeText}>Duo</ThemedText>
-          </Pressable>
-        </Link>
-        <Link href="/4" asChild>
-          <Pressable style={styles.gameMode} className="bg-[--color-exact]">
-            <ThemedText style={styles.gameModeText}>Quad</ThemedText>
-          </Pressable>
-        </Link>
+        <Solver />
       </GradientBackgroundView>
       <VersionInfo />
     </>
