@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "game",
-    "slug": "game",
+    "name": "game-solver",
+    "slug": "game-solver",
     "version": "4.1.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -20,7 +20,7 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.stream_suite.word_game"
+      "package": "com.stream_suite.word_game_solver"
     },
     "web": {
       "bundler": "metro",

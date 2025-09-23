@@ -1,4 +1,8 @@
-# Welcome to your Expo app 👋
+# Word Game Solver
+
+This is a solver app for my word-game clone.
+
+## Welcome to your Expo app 👋
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
@@ -44,16 +48,6 @@ You can start developing by editing the files inside the **app** directory. This
    ```bash
    adb install "./app/build/outputs/apk/release/app-release.apk"
    ```
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
 
 ## Learn more
 
