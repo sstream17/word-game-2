@@ -35,18 +35,6 @@ export default function Menu() {
           className="bg-[--color-menuBackground]"
           style={[styles.modalContent, themes[theme]]}
         >
-          <MenuItem
-            label="How to play"
-            href="/how-to-play"
-            icon={InfoIcon}
-            onClick={onClose}
-          />
-          <MenuItem
-            label="Stats"
-            href="/stats"
-            icon={StatsIcon}
-            onClick={onClose}
-          />
           <ThemeToggle />
         </View>
       </Modal>

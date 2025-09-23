@@ -59,6 +59,6 @@ export function ThemeToggle() {
 }
 const styles = StyleSheet.create({
   headingText: {
-    paddingStart: 8,
+    padding: 8,
   },
 });
