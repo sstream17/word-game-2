@@ -1,6 +1,6 @@
 import { useDispatch, useSelector } from "react-redux";
-import type { GameDispatch, RootGameState } from "./gameStore";
+import { RootSolverState, SolverDispatch } from "./solverStore";
 
 // Typed versions of plain `useDispatch` and `useSelector`
-export const useGameDispatch = useDispatch.withTypes<GameDispatch>();
-export const useGameSelector = useSelector.withTypes<RootGameState>();
+export const useSolverDispatch = useDispatch.withTypes<SolverDispatch>();
+export const useSolverSelector = useSelector.withTypes<RootSolverState>();

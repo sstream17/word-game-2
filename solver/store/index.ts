@@ -1,9 +1,9 @@
-import gameStore from "./gameStore";
+import solverStore from "./solverStore";
 
-export * from "./gamesSlice";
-export { initialHydrate } from "./gameStore";
-export { useGameDispatch, useGameSelector } from "./hooks";
-export * from "./persistenceSlice";
-export * from "./statsSlice";
+export { useSolverDispatch, useSolverSelector } from "./hooks";
 
-export default gameStore;
+export * from "./correctLettersSlice";
+export * from "./closeLettersSlice";
+export * from "./bannedLettersSlice";
+
+export default solverStore;

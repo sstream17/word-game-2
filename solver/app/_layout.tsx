@@ -6,7 +6,7 @@ import { ActivityIndicator } from "react-native";
 
 import { LayoutStack } from "@/components/LayoutStack";
 import { ThemeProvider } from "@/components/ThemeProvider";
-import gameStore, { initialHydrate } from "@/store";
+import solverStore from "@/store";
 import {
   Nunito_400Regular,
   Nunito_700Bold,
@@ -20,17 +20,12 @@ export default function RootLayout() {
     Nunito_700Bold,
   });
 
-  useEffect(() => {
-    // Explicitly handle some hydration since there is no starting reducer to listen to
-    initialHydrate();
-  }, []);
-
   if (!fontsLoaded) {
     return <ActivityIndicator size="large" />;
   }
 
   return (
-    <Provider store={gameStore}>
+    <Provider store={solverStore}>
       <ThemeProvider>
         <LayoutStack />
       </ThemeProvider>

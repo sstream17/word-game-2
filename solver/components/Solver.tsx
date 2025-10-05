@@ -1,84 +1,73 @@
-import { useCallback } from "react";
-import { Pressable, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 
 import { BOARD_GAP, TILE_GAP } from "@/constants/layout";
 import { useTileSizes } from "@/hooks/useTileSizes";
+
 import {
-    deleteLetterFromGuess,
-    selectAnswers,
-    selectCurrentGuess,
-    selectHints,
-    selectIsGuessInvalid,
-    selectNumberOfGames,
-    selectOverallStatus,
-    selectWinIndexes,
-    submitGuess,
-    updateGuess,
-    useGameDispatch,
-    useGameSelector
+  selectBannedLetters,
+  selectCloseLetters,
+  selectCorrectLetters,
+  useSolverDispatch,
+  useSolverSelector,
 } from "@/store";
 import { useHeaderHeight } from "@react-navigation/elements";
 import {
-    GestureHandlerRootView,
-    ScrollView,
+  GestureHandlerRootView,
+  ScrollView,
 } from "react-native-gesture-handler";
 import { Controls } from "./Controls";
+import { GuessRow } from "./GuessRow";
 import { ThemedText } from "./ThemedText";
 
 export function Solver() {
-
   const { tileWidth, maxWidth } = useTileSizes(1);
 
   const headerHeight = useHeaderHeight();
 
-  const currentGuess = useGameSelector(selectCurrentGuess);
-  const isGuessInvalid = useGameSelector(selectIsGuessInvalid);
-  const overallStatus = useGameSelector(selectOverallStatus);
-  const storedNumberOfGames = useGameSelector(selectNumberOfGames);
-  const answers = useGameSelector(selectAnswers);
-  const winIndexes = useGameSelector(selectWinIndexes);
-  const hints = useGameSelector(selectHints);
+  const correctLetters = useSolverSelector(selectCorrectLetters);
+  const closeLetters = useSolverSelector(selectCloseLetters);
+  const bannedLetters = useSolverSelector(selectBannedLetters);
 
-  const dispatch = useGameDispatch();
+  const dispatch = useSolverDispatch();
 
-  const submit = useCallback(() => {
-    // Check bad guess
+  // const submit = useCallback(() => {
+  //   // Check bad guess
 
-    // Update storage
+  //   // Update storage
 
-    // If not bad guess
-    // - submit
-    dispatch(submitGuess());
-    // - animate
-    // - handle win
+  //   // If not bad guess
+  //   // - submit
+  //   dispatch(submitGuess());
+  //   // - animate
+  //   // - handle win
 
-    // else, tried bad guess
-  }, [dispatch]);
+  //   // else, tried bad guess
+  // }, [dispatch]);
 
-  const restart = useCallback(() => {
-    // clearGameProgress(numberOfGames);
-    // dispatch(startGame());
-  }, [dispatch,]);
+  // const restart = useCallback(() => {
+  //   // clearGameProgress(numberOfGames);
+  //   // dispatch(startGame());
+  // }, [dispatch,]);
 
-  const handleUpdateGuess = useCallback(
-    (newKey: string) => {
-      switch (newKey) {
-        case "enter":
-          submit();
-          break;
-        case "restart":
-          restart();
-          break;
-        case "backspace":
-          dispatch(deleteLetterFromGuess());
-          break;
-        default:
-          dispatch(updateGuess(newKey));
-          break;
-      }
-    },
-    [dispatch, restart, submit],
-  );
+  // const handleUpdateGuess = useCallback(
+  //   (newKey: string) => {
+  //     switch (newKey) {
+  //       case "enter":
+  //         submit();
+  //         break;
+  //       case "restart":
+  //         restart();
+  //         break;
+  //       case "backspace":
+  //         dispatch(deleteLetterFromGuess());
+  //         break;
+  //       default:
+  //         dispatch(updateGuess(newKey));
+  //         break;
+  //     }
+  //   },
+  //   [dispatch, restart, submit],
+  // );
 
   return (
     <GestureHandlerRootView
@@ -93,25 +82,43 @@ export function Solver() {
         ]}
         style={styles.scrollArea}
       >
-        <ThemedText className="!font-nunitoBold !text-2xl">Correct Letters</ThemedText>
-        <Pressable style={styles.gameMode} className="bg-[--color-exact]">
-          <ThemedText style={styles.gameModeText}>Add correct letter</ThemedText>
-        </Pressable>
-        <ThemedText className="!font-nunitoBold !text-2xl">Close Letters</ThemedText>
-        <Pressable style={styles.gameMode} className="bg-[--color-exact]">
-          <ThemedText style={styles.gameModeText}>Add close letter</ThemedText>
-        </Pressable>
-        <ThemedText className="!font-nunitoBold !text-2xl">Banned Letters</ThemedText>
-        <Pressable style={styles.gameMode} className="bg-[--color-exact]">
-          <ThemedText style={styles.gameModeText}>Add banned letter</ThemedText>
-        </Pressable>
+        <ThemedText className="!font-nunitoBold !text-2xl">
+          Correct Letters
+        </ThemedText>
+        <GuessRow
+          guess={correctLetters}
+          result="xxxxx"
+          width={tileWidth}
+          isCurrentRow
+          isInvalid={false}
+        />
+        <ThemedText className="!font-nunitoBold !text-2xl">
+          Close Letters
+        </ThemedText>
+        <GuessRow
+          guess={closeLetters}
+          result="ccccc"
+          width={tileWidth}
+          isCurrentRow
+          isInvalid={false}
+        />
+        <ThemedText className="!font-nunitoBold !text-2xl">
+          Banned Letters
+        </ThemedText>
+        <GuessRow
+          guess={bannedLetters}
+          result="_____"
+          width={tileWidth}
+          isCurrentRow
+          isInvalid={false}
+        />
       </ScrollView>
       <Controls
-        overallStatus={overallStatus}
-        hints={hints}
-        answers={answers}
-        winIndexes={winIndexes}
-        onKeyPress={handleUpdateGuess}
+        overallStatus={"inProgress"}
+        hints={{}}
+        answers={{}}
+        winIndexes={{}}
+        onKeyPress={() => {}}
       />
     </GestureHandlerRootView>
   );
