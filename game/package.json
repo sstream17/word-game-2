@@ -1,6 +1,6 @@
 {
 	"name": "wordgame",
-	"version": "2.7.1",
+	"version": "5.0.0",
 	"scripts": {
 		"dev": "vite dev",
 		"build": "vite build",
