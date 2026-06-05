@@ -9,10 +9,7 @@
 
 :root {
 	--font-body: 'Nunito', system-ui, sans-serif;
-	--keyboard-height: min(18vh, 160px);
-	--keyboard-padding-bottom: 8vw;
 	--letter-size: 1.4rem;
-	--key-size: 20px;
 	font-family: var(--font-body);
 	color: var(--color-text);
 }

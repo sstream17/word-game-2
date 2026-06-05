@@ -4,6 +4,10 @@
 	import { createEventDispatcher } from 'svelte';
 	import Answers from './Answers.svelte';
 
+	const keyWidthRatio = 99;
+	const keyHeightRatio = 135;
+	const defaultGap = 9;
+
 	interface IProps {
 		hints: { [index: string]: HintString[] };
 		guesses: string[];
@@ -23,6 +27,16 @@
 
 	let { hints, guesses, answers, won, gameOver, submittable, invalid, winIndexes }: IProps =
 		$props();
+
+	let screenWidth: number | null | undefined = $state();
+	let maxWidth = $derived(Math.min(screenWidth ? screenWidth : Infinity, 500));
+	let scaleFactor = $derived(maxWidth / (11 * keyWidthRatio)); // 10 keys + 0.5 gap on each side
+
+	let keyWidth = $derived(keyWidthRatio * scaleFactor);
+	let keyHeight = $derived(keyHeightRatio * scaleFactor);
+	let keyGap = $derived(defaultGap * scaleFactor);
+
+	let keyboardHeight = $derived(keyHeight * 3 + keyGap * 2 + 36);
 
 	const colorMap = {
 		_: 'var(--color-missing)',
@@ -79,10 +93,13 @@
 	);
 
 	function getBackgroundForLetter(colors: Record<string, HintValues[]>, letter: string) {
+		const letterSize = `width: ${keyWidth}px; height: ${keyHeight}px;`;
+
 		const letterColors = colors[letter];
+		let backgroundColors = '';
 
 		if (letterColors?.length === 1) {
-			return `--quadrant1-color: ${colorMap[letterColors[0]]};
+			backgroundColors = `--quadrant1-color: ${colorMap[letterColors[0]]};
 				--quadrant2-color: ${colorMap[letterColors[0]]};
 				--quadrant3-color: ${colorMap[letterColors[0]]};
 				--quadrant4-color: ${colorMap[letterColors[0]]};
@@ -91,7 +108,7 @@
 				--quadrant3-color-border: ${colorMap[`${letterColors[0]}Border`]};
 				--quadrant4-color-border: ${colorMap[`${letterColors[0]}Border`]};`;
 		} else if (letterColors?.length === 2) {
-			return `--quadrant1-color: ${colorMap[letterColors[1]]};
+			backgroundColors = `--quadrant1-color: ${colorMap[letterColors[1]]};
 				--quadrant2-color: ${colorMap[letterColors[0]]};
 				--quadrant3-color: ${colorMap[letterColors[0]]};
 				--quadrant4-color: ${colorMap[letterColors[1]]};
@@ -100,7 +117,7 @@
 				--quadrant3-color-border: ${colorMap[`${letterColors[0]}Border`]};
 				--quadrant4-color-border: ${colorMap[`${letterColors[1]}Border`]};`;
 		} else if (letterColors?.length == 4) {
-			return `--quadrant1-color: ${colorMap[letterColors[1]]};
+			backgroundColors = `--quadrant1-color: ${colorMap[letterColors[1]]};
 				--quadrant2-color: ${colorMap[letterColors[0]]};
 				--quadrant3-color: ${colorMap[letterColors[2]]};
 				--quadrant4-color: ${colorMap[letterColors[3]]};
@@ -109,6 +126,8 @@
 				--quadrant3-color-border: ${colorMap[`${letterColors[2]}Border`]};
 				--quadrant4-color-border: ${colorMap[`${letterColors[3]}Border`]};`;
 		}
+
+		return `${letterSize} ${backgroundColors}`;
 	}
 
 	/**
@@ -142,6 +161,7 @@
 	 * desktop users can use the keyboard to play the game
 	 */
 	function keydown(event: KeyboardEvent) {
+		console.log(maxWidth);
 		if (event.metaKey) return;
 
 		const key = event.key;
@@ -164,16 +184,16 @@
 	}
 </script>
 
-<svelte:window onkeydown={keydown} />
+<svelte:window onkeydown={keydown} bind:innerWidth={screenWidth} />
 
-<div class="controls">
+<div class="controls" style={`height: ${keyboardHeight}px; padding-top: ${keyGap}px;`}>
 	{#if won || gameOver}
 		<Answers gameFinished={won || gameOver} {answers} {winIndexes} />
 		<button on:click={restart} data-key="enter" class="restart selected">
 			{won ? 'you won :)' : `game over :(`} play again?
 		</button>
 	{:else}
-		<div class="keyboard">
+		<div class="keyboard" style={`gap: ${keyGap * 2}px;`}>
 			{#snippet letter(key: string)}
 				<button
 					on:click|preventDefault={update}
@@ -189,13 +209,13 @@
 				</button>
 			{/snippet}
 
-			<div class="row">
+			<div class="row" style={`gap: ${keyGap}px;`}>
 				{#each 'qwertyuiop' as key}
 					{@render letter(key)}
 				{/each}
 			</div>
 
-			<div class="row">
+			<div class="row" style={`gap: ${keyGap}px;`}>
 				<div class="spacer" />
 				{#each 'asdfghjkl' as key}
 					{@render letter(key)}
@@ -203,13 +223,14 @@
 				<div class="spacer" />
 			</div>
 
-			<div class="row">
+			<div class="row" style={`gap: ${keyGap}px;`}>
 				<button
 					class="key backspace-key"
 					on:click|preventDefault={update}
 					data-key="backspace"
 					name="key"
 					value="backspace"
+					style={`width: ${keyWidth * 1.5}px; height: ${keyHeight}px;`}
 				>
 					<span class="visually-hidden">backspace</span>
 					<Icon path="back_icon.svg#icon_path" />
@@ -223,6 +244,7 @@
 					data-key="enter"
 					name="key"
 					aria-disabled={!submittable || invalid}
+					style={`width: ${keyWidth * 1.5}px; height: ${keyHeight}px;`}
 				>
 					<span class="visually-hidden">enter</span>
 					<Icon path="send_icon.svg#icon_path" />
@@ -238,26 +260,20 @@
 	}
 
 	.controls {
-		align-self: flex-end;
 		text-align: center;
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: flex-start;
 		align-items: center;
-		height: var(--keyboard-height);
-		padding-top: 16px;
-		padding-bottom: var(--keyboard-padding-bottom);
 		width: 100%;
 		background-color: var(--color-bg-0);
 		flex-shrink: 0;
 	}
 
 	.keyboard {
-		--gap: 4px;
 		position: relative;
 		display: flex;
 		flex-direction: column;
-		gap: var(--gap);
 		height: 100%;
 		width: calc(100% - 16px);
 	}
@@ -265,9 +281,7 @@
 	.row {
 		display: flex;
 		justify-content: center;
-		gap: var(--gap);
 		width: 100%;
-		flex: 1;
 	}
 
 	.key {
@@ -316,8 +330,6 @@
 				)
 				border-box;
 		border: 2px solid transparent;
-
-		flex: 1;
 	}
 
 	.spacer {
@@ -331,7 +343,6 @@
 	.enter-key,
 	.backspace-key {
 		text-transform: uppercase;
-		flex: 1.6;
 	}
 
 	.enter-key[aria-disabled='true'] {

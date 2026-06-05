@@ -223,7 +223,6 @@
 		width: 100%;
 		/* 100% of view height - 24px for menu button - 32px for menu padding */
 		max-height: calc(100svh - 24px - 32px);
-		max-width: 768px;
 		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
