@@ -5,7 +5,7 @@
 <h1>Sverdle</h1>
 
 <div class="container">
-	{#snippet card({ title, number })}
+	{#snippet card({ title, number }: { title: string; number: number })}
 		<div class="card">
 			<div class="game-rep">
 				{#each { length: number } as _}

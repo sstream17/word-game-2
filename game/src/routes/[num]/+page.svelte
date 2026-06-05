@@ -24,7 +24,7 @@
 	let invalid = $state(false);
 	let currentGuessIndex = $state(Object.values(storedGame.game.hints)['0'].length || 0);
 
-	let keyboardHints: { [index: string]: HintString[] } = $state.frozen({
+	let keyboardHints: { [index: string]: HintString[] } = $state.raw({
 		...storedGame.game.hints
 	});
 	let winIndexes: { [gameIndex: string]: number } = $state({});

@@ -174,7 +174,7 @@
 		</button>
 	{:else}
 		<div class="keyboard">
-			{#snippet letter(key)}
+			{#snippet letter(key: string)}
 				<button
 					on:click|preventDefault={update}
 					class="letter key"

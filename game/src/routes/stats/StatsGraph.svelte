@@ -39,7 +39,7 @@
 <div class="stats-container">
 	<h2>{title}</h2>
 	<div class="stats-group">
-		{#snippet stat({ title, value })}
+		{#snippet stat({ title, value }: { title: string; value: string | number })}
 			{@const labelId = `stat-${title}`}
 			<div class="single-stat">
 				<span id={labelId}>{title}</span>
