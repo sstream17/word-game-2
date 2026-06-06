@@ -181,12 +181,10 @@
 
 <style>
 	.container {
-		--button-size: 24px;
-		--container-padding: 16px;
 		display: flex;
 		flex-direction: row;
 		justify-content: end;
-		padding: var(--container-padding);
+		padding: var(--menu-container-padding);
 	}
 
 	:global(.menu-list) {
@@ -196,8 +194,8 @@
 	}
 
 	.menu-button {
-		height: var(--button-size);
-		width: var(--button-size);
+		height: var(--menu-button-size);
+		width: var(--menu-button-size);
 		fill: var(--color-text);
 		border-radius: 4px;
 		/* reset button styles */
@@ -217,8 +215,8 @@
 	#menu-popover {
 		position: absolute;
 		inset: unset;
-		top: calc(8px + var(--button-size) + var(--container-padding));
-		right: var(--container-padding);
+		top: calc(8px + var(--menu-button-size) + var(--menu-container-padding));
+		right: var(--menu-container-padding);
 	}
 
 	:popover-open {

@@ -14,6 +14,8 @@
 	--letter-size: 1.4rem;
 	font-family: var(--font-body);
 	color: var(--color-text);
+	--menu-button-size: 24px;
+	--menu-container-padding: 16px;
 }
 
 *,

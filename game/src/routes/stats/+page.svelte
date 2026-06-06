@@ -29,5 +29,7 @@
 		flex-direction: column;
 		gap: 2rem;
         padding: 16px;
+		overflow-y: auto;
+		height: calc(100vh - var(--menu-button-size) - var(--menu-container-padding) * 2);
 	}
 </style>
