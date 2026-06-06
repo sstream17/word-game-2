@@ -27,12 +27,13 @@
 		flex-wrap: wrap;
 		justify-content: center;
         align-items: center;
-		gap: 4vw;
-        margin: 20svh auto;
+		gap: 32px;
+		margin: 32px;
 	}
 
 	.card {
-		width: 40vw;
+		width: 200px;
+		height: 160px;
         padding: 24px 0;
 		background-color: var(--color-menu-bg);
 		filter: drop-shadow(4px 4px 8px var(--color-shadow));
@@ -48,7 +49,7 @@
 		flex-direction: row;
 		flex-wrap: wrap;
         justify-content: center;
-		gap: 1vw;
+		gap: 8px;
         width: 50%;
 	}
 
