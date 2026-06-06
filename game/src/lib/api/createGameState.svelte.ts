@@ -1,7 +1,7 @@
 import type { IGameData } from "$lib/types";
 
-export function createGameState(initial: IGameData) {
-    let game = $state(initial);
+export function createGameState(getInitialData: () => IGameData) {
+    let game = $state(getInitialData());
     return {
         get game() {
             return game;

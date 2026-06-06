@@ -13,7 +13,7 @@
 
 	let { data }: IProps = $props();
 
-	const storedGame = createGameState(data);
+	const storedGame = createGameState(() => data);
 
 	const numberOfGames = storedGame.game.numberOfGames;
 	const storageKey = `word-game-${numberOfGames}`;
