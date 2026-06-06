@@ -1,5 +1,5 @@
 import adapter from '@sveltejs/adapter-static';
-import { vitePreprocess } from '@sveltejs/kit/vite';
+import { vitePreprocess } from '@sveltejs/vite-plugin-svelte';
 
 const isDevEnvironment = process.argv.includes('dev');
 
@@ -25,7 +25,7 @@ const config = {
 			entries: ['/', '/1', '/2', '/4', '/how-to-play', '/stats']
 		},
 		paths: {
-			base: isDevEnvironment ? '' : process.env.BASE_PATH,
+			base: isDevEnvironment ? '' : process.env.BASE_PATH
 		}
 	}
 };
