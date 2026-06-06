@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { NUMBER_TRIES, WORD_LENGTH } from '$lib/types';
+	import { NUMBER_TRIES, TILE_GAP, WORD_LENGTH } from '$lib/types';
 
 	interface IProps {
 		numberOfGames: number;
@@ -29,6 +29,16 @@
 
 	let previousGuessLength = $state(0);
 
+	let screenWidth: number | null | undefined = $state();
+	let numberOfColumns = $derived(numberOfGames === 1 ? 1 : 2);
+	let availableWidth = $derived(
+		numberOfColumns === 1 ? (screenWidth ? screenWidth * 0.8 : screenWidth) : null
+	);
+	let maxWidth = $derived(Math.min(availableWidth ?? Infinity, 450));
+	let tileWidth = $derived(
+		(maxWidth - (WORD_LENGTH + 1) * numberOfColumns * TILE_GAP) / (WORD_LENGTH * numberOfColumns)
+	);
+
 	const animateLetterClassName = 'animate-letter';
 
 	// Manually add letter animation so it doesn't trigger when opening a game
@@ -53,11 +63,20 @@
 	});
 </script>
 
-<div class="game" class:playing={!won} class:won={allWon} class:bad-guess={badGuess} class:invalid>
+<svelte:window bind:innerWidth={screenWidth} />
+
+<div
+	class="game"
+	class:playing={!won}
+	class:won={allWon}
+	class:bad-guess={badGuess}
+	class:invalid
+	style={`width: ${maxWidth}px;`}
+>
 	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
-		<div class="row" class:current-row={current}>
+		<div class="row" class:current-row={current} style={`--letter-width: ${tileWidth}px;`}>
 			{#if !won || (won && row <= winIndex)}
 				{#each { length: WORD_LENGTH } as _, column (column)}
 					{@const guess = !won && current ? currentGuess : guesses[row]}
@@ -102,9 +121,8 @@
 
 <style>
 	.game {
-		--_current-row-scale: 1.5;
+		--_current-row-scale: 1.2;
 		--_animation-grow-scale: 1.08;
-		width: 45%;
 		display: flex;
 		flex-direction: column;
 		font-size: var(--letter-size);
@@ -145,7 +163,7 @@
 		background-color: #00000000;
 		transform: scaleY(var(--_current-row-scale)) translateY(8px);
 		width: 100%;
-		height: 4vh;
+		height: var(--letter-width);
 		position: fixed;
 		filter: blur(6px);
 	}
@@ -176,7 +194,8 @@
 	}
 
 	.letter {
-		height: 4vh;
+		width: var(--letter-width);
+		height: var(--letter-width);
 		position: relative;
 		display: flex;
 		align-items: center;
