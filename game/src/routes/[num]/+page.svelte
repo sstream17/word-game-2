@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { createGameState, isGameOver, storeWinStats } from '$lib/api';
-	import { WORD_LENGTH, type HintString } from '$lib/types';
+	import { BOARD_GAP, TILE_GAP, WORD_LENGTH, type HintString } from '$lib/types';
 	import { Game } from '../game';
 	import type { PageData } from './$types';
 	import Controls from './Controls.svelte';
@@ -18,6 +18,16 @@
 	const numberOfGames = storedGame.game.numberOfGames;
 	const storageKey = `word-game-${numberOfGames}`;
 	const statsStorageKey = `stats-${numberOfGames}`;
+
+	let screenWidth: number | null | undefined = $state();
+	let numberOfColumns = $derived(numberOfGames === 1 ? 1 : 2);
+	let availableWidth = $derived(
+		numberOfColumns === 1 ? (screenWidth ? screenWidth * 0.8 : screenWidth) : null
+	);
+	let maxWidth = $derived(Math.min(availableWidth ?? Infinity, 450));
+	let tileWidth = $derived(
+		(maxWidth - (WORD_LENGTH + 1) * numberOfColumns * TILE_GAP) / (WORD_LENGTH * numberOfColumns)
+	);
 
 	let canAcceptInput = $state(true);
 	let badGuess = $state(false);
@@ -180,28 +190,36 @@
 	<meta name="description" content="A Wordle clone written in SvelteKit" />
 </svelte:head>
 
+<svelte:window bind:innerWidth={screenWidth} />
+
 <div class="wrapper">
 	<h1 class="visually-hidden">Word Game</h1>
 
 	<div class="form">
-		<div class="boards-container">
-			{#each { length: numberOfGames } as _, board (board)}
-				{@const hints = storedGame.game.hints[board]}
-				{@const winIndex = hints.findIndex((hint) => hint === 'xxxxx')}
-				{@const thisBoardWon = winIndex !== -1}
-				<GameBoard
-					rowIndex={currentGuessIndex}
-					{numberOfGames}
-					won={thisBoardWon}
-					allWon={won}
-					{winIndex}
-					guesses={storedGame.game.guesses}
-					{currentGuess}
-					{hints}
-					{badGuess}
-					{invalid}
-				/>
-			{/each}
+		<div class="scroll-area">
+			<div
+				class="boards-container"
+				style={`--_vertical-scroll-padding: ${BOARD_GAP}px; --_flex-gap: ${TILE_GAP * 3}px; max-width: ${maxWidth}px;`}
+			>
+				{#each { length: numberOfGames } as _, board (board)}
+					{@const hints = storedGame.game.hints[board]}
+					{@const winIndex = hints.findIndex((hint) => hint === 'xxxxx')}
+					{@const thisBoardWon = winIndex !== -1}
+					<GameBoard
+						rowIndex={currentGuessIndex}
+						{numberOfGames}
+						won={thisBoardWon}
+						allWon={won}
+						{winIndex}
+						guesses={storedGame.game.guesses}
+						{currentGuess}
+						{hints}
+						{badGuess}
+						{invalid}
+						{tileWidth}
+					/>
+				{/each}
+			</div>
 		</div>
 
 		<Controls
@@ -220,28 +238,34 @@
 
 <style>
 	.form {
-		width: 100%;
-		/* 100% of view height - 24px for menu button - 32px for menu padding */
-		max-height: calc(100svh - 24px - 32px);
-		margin: 0 auto;
 		display: flex;
 		flex-direction: column;
+		flex: 1;
 		align-items: center;
 		justify-content: center;
+		width: 100%;
+	}
+
+	.scroll-area {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		flex-shrink: 1;
+		
+		width: 100%;
+		height: 100%;
+		overflow-y: auto;
+		overflow-x: hidden;
 	}
 
 	.boards-container {
-		--_vertical-scroll-padding: 8px;
-		--_flex-gap: 16px;
+		align-self: center;
 		display: flex;
-		flex-wrap: wrap;
+		flex-grow: 1;
 		flex-direction: row;
 		justify-content: center;
 		align-items: center;
-		overflow-y: auto;
-		width: 100%;
-		gap: calc(2vh + var(--_flex-gap)) var(--_flex-gap);
-		flex-basis: 100svh;
-		padding: var(--_vertical-scroll-padding) 0 calc(2vh + var(--_vertical-scroll-padding)) 0;
+		gap: var(--_flex-gap);
+		padding-block: var(--_vertical-scroll-padding);
 	}
 </style>

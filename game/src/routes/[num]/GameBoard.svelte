@@ -12,6 +12,7 @@
 		currentGuess: string;
 		hints: string[];
 		rowIndex: number;
+		tileWidth: number;
 	}
 
 	let {
@@ -24,20 +25,11 @@
 		guesses,
 		currentGuess,
 		hints,
-		rowIndex
+		rowIndex,
+		tileWidth
 	}: IProps = $props();
 
 	let previousGuessLength = $state(0);
-
-	let screenWidth: number | null | undefined = $state();
-	let numberOfColumns = $derived(numberOfGames === 1 ? 1 : 2);
-	let availableWidth = $derived(
-		numberOfColumns === 1 ? (screenWidth ? screenWidth * 0.8 : screenWidth) : null
-	);
-	let maxWidth = $derived(Math.min(availableWidth ?? Infinity, 450));
-	let tileWidth = $derived(
-		(maxWidth - (WORD_LENGTH + 1) * numberOfColumns * TILE_GAP) / (WORD_LENGTH * numberOfColumns)
-	);
 
 	const animateLetterClassName = 'animate-letter';
 
@@ -63,16 +55,7 @@
 	});
 </script>
 
-<svelte:window bind:innerWidth={screenWidth} />
-
-<div
-	class="game"
-	class:playing={!won}
-	class:won={allWon}
-	class:bad-guess={badGuess}
-	class:invalid
-	style={`width: ${maxWidth}px;`}
->
+<div class="game" class:playing={!won} class:won={allWon} class:bad-guess={badGuess} class:invalid>
 	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
