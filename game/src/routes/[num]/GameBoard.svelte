@@ -189,6 +189,7 @@
 		background-color: var(--color-unguessed);
 		margin: 0;
 		color: var(--color-text);
+		box-shadow: 0 0 2px var(--color-box-shadow);
 	}
 
 	.letter.missing {
