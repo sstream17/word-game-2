@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
+	import { updateTheme } from '$lib/storage';
 	import type { Theme } from '$lib/types';
 	import { getContext } from 'svelte';
 	import MenuItem from './MenuItem.svelte';
@@ -44,7 +45,7 @@
 
 		notifyInterface(newTheme);
 
-		localStorage.setItem('theme', newTheme);
+		updateTheme(newTheme);
 		document.documentElement.classList.add(newTheme);
 	}
 </script>

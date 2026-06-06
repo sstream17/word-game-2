@@ -6,13 +6,11 @@
 	import { page } from '$app/stores';
 	import { createThemeState } from '$lib/api';
 	import Version from '$lib/components/Version.svelte';
-	import type { Theme } from '$lib/types';
+	import { getData } from '$lib/storage';
 	import { setContext } from 'svelte';
 	import Menu from './Menu.svelte';
 
-	const initialTheme = browser
-		? (localStorage.getItem('theme') as Theme) ?? 'system-theme'
-		: 'system-theme';
+	const initialTheme = browser ? (getData()?.theme ?? 'system-theme') : 'system-theme';
 	const theme = createThemeState(initialTheme);
 	setContext('theme', theme);
 
@@ -24,7 +22,14 @@
 		// Required to set the theme before the rest of the page loads.
 		// Prevents flashing one theme then switching to another.
 		if (document) {
-			const theme = localStorage.getItem('theme');
+			let theme = 'system-theme';
+			try {
+				const raw = localStorage.getItem('word-game');  // Have to direct read localStorage in this inline script
+				const parsed = raw ? JSON.parse(raw) : null;
+				theme = parsed?.theme ?? 'system-theme';
+			} catch (error) {
+				console.error('Error getting initial theme from localStorage', error);
+			}
 			document.documentElement.classList.add(theme);
 		}
 	</script>
