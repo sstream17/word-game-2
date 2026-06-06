@@ -6,7 +6,8 @@
 	--color-bg-1: #cedce8;
 	--color-menu-bg: #ffffff;
 	--color-menu-hover: hsla(0, 0%, 90%, 0.40);
-	--color-shadow: #00000080;
+	--color-shadow: #00000040;
+	--color-box-shadow: #00000088;
 	--color-theme-1: #ff3e00;
 	--color-theme-2: #4075a6;
 	--color-unguessed: #ffffff;
@@ -75,7 +76,7 @@
 		--color-bg-1: #cedce8;
 		--color-menu-bg: #ffffff;
 		--color-menu-hover: hsla(0, 0%, 90%, 0.40);
-		--color-shadow: #00000080;
+		--color-shadow: #00000040;
 		--color-theme-1: #ff3e00;
 		--color-theme-2: #4075a6;
 		--color-unguessed: #ffffff;
