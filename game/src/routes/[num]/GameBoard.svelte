@@ -159,25 +159,20 @@
 		color: var(--color-text-invalid);
 	}
 
-	.playing.invalid .current-row .letter::after,
-	.playing.invalid .current-row .letter::before {
-		height: inherit;
-		width: 50%;
-		background-size: 4px 130%;
+	.playing.invalid .current-row .letter-text::after {
 		content: '';
 		position: absolute;
-	}
-
-	.playing.invalid .current-row .letter::before {
-		top: -2px;
-		background-image: linear-gradient(45deg, var(--color-text-invalid) 35%, transparent 0),
-			linear-gradient(-45deg, var(--color-text-invalid) 35%, transparent 0);
-	}
-
-	.playing.invalid .current-row .letter::after {
-		top: 0px;
-		background-image: linear-gradient(45deg, var(--color-unguessed) 35%, transparent 0),
-			linear-gradient(-45deg, var(--color-unguessed) 35%, transparent 0);
+		left: -6px;
+		right: -6px;
+		bottom: -4px;
+		height: 4px;
+		background-image:
+			linear-gradient(45deg, var(--color-text-invalid) 50%, transparent 50%),
+			linear-gradient(-45deg, var(--color-text-invalid) 45%, transparent 45%);
+		background-size: 6px 4px;
+		background-position:
+			1px 0px,
+			2px -1px;
 	}
 
 	.letter {
