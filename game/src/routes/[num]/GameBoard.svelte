@@ -55,11 +55,18 @@
 	});
 </script>
 
-<div class="game" class:playing={!won} class:won={allWon} class:bad-guess={badGuess} class:invalid>
+<div
+	class="game"
+	class:playing={!won}
+	class:won={allWon}
+	class:bad-guess={badGuess}
+	class:invalid
+	style={`--tile-gap: ${TILE_GAP}px;`}
+>
 	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
-		<div class="row" class:current-row={current} style={`--letter-width: ${tileWidth}px;`}>
+		<div class="row" class:current-row={current} style={`--_tile-base-size: ${tileWidth}px;`}>
 			{#if !won || (won && row <= winIndex)}
 				{#each { length: WORD_LENGTH } as _, column (column)}
 					{@const guess = !won && current ? currentGuess : guesses[row]}
@@ -109,25 +116,22 @@
 		display: flex;
 		flex-direction: column;
 		font-size: var(--letter-size);
+		gap: var(--tile-gap);
 	}
 
 	.row {
-		display: grid;
-		grid-template-columns: repeat(5, 1fr);
-		grid-gap: 4px;
-		margin: 0 0 4px 0;
+		height: var(--_tile-base-size);
+		display: flex;
+		gap: var(--tile-gap);
 	}
 
 	.current-row {
-		transform: translateY(1vh);
-	}
-
-	.current-row ~ .row {
-		transform: translateY(2vh);
+		height: calc(var(--_tile-base-size) * var(--_current-row-scale));
 	}
 
 	.current-row .letter {
 		transform: scaleY(var(--_current-row-scale));
+		transform-origin: top center;
 		font-size: 1.15em;
 	}
 
@@ -136,24 +140,8 @@
 	}
 
 	.playing .current-row {
-		flex-basis: 4vh;
 		z-index: 1;
-	}
-
-	.row::before {
-		content: '';
-		pointer-events: none;
-		background-color: #00000000;
-		transform: scaleY(var(--_current-row-scale)) translateY(8px);
-		width: 100%;
-		height: var(--letter-width);
-		position: fixed;
-		filter: blur(6px);
-	}
-
-	.playing .current-row::before {
-		content: '';
-		background-color: var(--color-shadow);
+		filter: drop-shadow(4px 4px 8px var(--color-shadow));
 	}
 
 	.playing.invalid .current-row .letter {
@@ -177,15 +165,14 @@
 	}
 
 	.letter {
-		width: var(--letter-width);
-		height: var(--letter-width);
+		width: var(--_tile-base-size);
+		height: var(--_tile-base-size);
 		position: relative;
 		display: flex;
 		align-items: center;
 		justify-content: center;
 		text-align: center;
 		text-transform: lowercase;
-		box-sizing: border-box;
 		border: none;
 		border-radius: 2px;
 		background-color: var(--color-unguessed);
@@ -235,25 +222,25 @@
 
 	@keyframes wiggle {
 		0% {
-			transform: translate(0, 1vh);
+			transform: translateX(0);
 		}
 		10% {
-			transform: translate(-2px, 1vh);
+			transform: translateX(-2px);
 		}
 		30% {
-			transform: translate(4px, 1vh);
+			transform: translateX(4px);
 		}
 		50% {
-			transform: translate(-6px, 1vh);
+			transform: translateX(-6px);
 		}
 		70% {
-			transform: translate(+4px, 1vh);
+			transform: translateX(+4px);
 		}
 		90% {
-			transform: translate(-2px, 1vh);
+			transform: translateX(-2px);
 		}
 		100% {
-			transform: translate(0, 1vh);
+			transform: translateX(0);
 		}
 	}
 

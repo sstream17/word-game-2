@@ -237,6 +237,15 @@
 </div>
 
 <style>
+	.wrapper {
+		display: flex;
+		position: absolute;
+		bottom: 0;
+		top: 0;
+		left: 0;
+		right: 0;
+	}
+
 	.form {
 		display: flex;
 		flex-direction: column;
@@ -251,7 +260,7 @@
 		flex-direction: column;
 		flex-grow: 1;
 		flex-shrink: 1;
-		
+
 		width: 100%;
 		height: 100%;
 		overflow-y: auto;
@@ -261,6 +270,7 @@
 	.boards-container {
 		align-self: center;
 		display: flex;
+		flex-wrap: wrap;
 		flex-grow: 1;
 		flex-direction: row;
 		justify-content: center;
