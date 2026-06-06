@@ -62,7 +62,7 @@
 					class:selected
 					aria-checked={selected}
 					data-theme={dataId}
-					on:click={update}
+					onclick={update}
 					tabindex="-1"
 				>
 					<Icon path={selected ? `${iconPath}_enabled` : `${iconPath}_disabled`} />

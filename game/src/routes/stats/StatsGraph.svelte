@@ -19,8 +19,10 @@
 		return sum + guessScore * gamesWon;
 	}, 0);
 
-	const winPercentage = stats['played'] !== 0 ? (stats['wins'] / stats['played']) * 100 : 0;
-	const averageGuesses = stats['played'] !== 0 ? guessSum / stats['played'] : 0;
+	const winPercentage = $derived(
+		stats['played'] !== 0 ? (stats['wins'] / stats['played']) * 100 : 0
+	);
+	const averageGuesses = $derived(stats['played'] !== 0 ? guessSum / stats['played'] : 0);
 	const maxHeight = 240;
 	const lineHeight = 2;
 	const maxBarHeight = `calc(${maxHeight}px - ${2 * lineHeight}em)`;
@@ -66,7 +68,7 @@
 				aria-valuenow={getAriaValueForBar(gamesWon)}
 			>
 				<span>{gamesWon}</span>
-				<div class="graph-bar" style={getHeightForBar(gamesWon)} />
+				<div class="graph-bar" style={getHeightForBar(gamesWon)}></div>
 				<div>{winIndex === -1 ? 'L' : winIndex + numberOfGames}</div>
 			</div>
 		{/each}

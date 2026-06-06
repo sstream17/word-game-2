@@ -15,6 +15,8 @@
 		: 'system-theme';
 	const theme = createThemeState(initialTheme);
 	setContext('theme', theme);
+
+	let { children } = $props();
 </script>
 
 <svelte:head>
@@ -31,7 +33,7 @@
 <div class="app">
 	<main>
 		<Menu />
-		<slot />
+		{@render children?.()}
 		{#if $page.route.id !== '/[num]'}
 			<Version />
 		{/if}

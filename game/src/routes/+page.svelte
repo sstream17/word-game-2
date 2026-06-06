@@ -9,7 +9,7 @@
 		<div class="card">
 			<div class="game-rep">
 				{#each { length: number } as _}
-					<div class="fake-game" />
+					<div class="fake-game"></div>
 				{/each}
 			</div>
 			<span class="card-text">{title}</span>
@@ -26,7 +26,7 @@
 		flex-direction: row;
 		flex-wrap: wrap;
 		justify-content: center;
-        align-items: center;
+		align-items: center;
 		gap: 32px;
 		margin: 32px;
 	}
@@ -34,7 +34,7 @@
 	.card {
 		width: 200px;
 		height: 160px;
-        padding: 24px 0;
+		padding: 24px 0;
 		background-color: var(--color-menu-bg);
 		filter: drop-shadow(4px 4px 8px var(--color-shadow));
 		border-radius: 8px;
@@ -48,9 +48,9 @@
 		display: flex;
 		flex-direction: row;
 		flex-wrap: wrap;
-        justify-content: center;
+		justify-content: center;
 		gap: 8px;
-        width: 50%;
+		width: 50%;
 	}
 
 	.fake-game {

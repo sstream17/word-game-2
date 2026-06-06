@@ -143,6 +143,7 @@
 	 * if client-side JavaScript is enabled
 	 */
 	function update(event: MouseEvent) {
+		event.preventDefault();
 		const key = (event.target as HTMLButtonElement).getAttribute('data-key');
 
 		dispatch('key', { key });
@@ -188,14 +189,14 @@
 <div class="controls" style={`height: ${keyboardHeight}px; padding-top: ${keyGap}px;`}>
 	{#if won || gameOver}
 		<Answers gameFinished={won || gameOver} {answers} {winIndexes} />
-		<button on:click={restart} data-key="enter" class="restart selected">
+		<button onclick={restart} data-key="enter" class="restart selected">
 			{won ? 'you won :)' : `game over :(`} play again?
 		</button>
 	{:else}
 		<div class="keyboard" style={`gap: ${keyGap * 2}px;`}>
 			{#snippet letter(key: string)}
 				<button
-					on:click|preventDefault={update}
+					onclick={update}
 					class="letter key"
 					data-key={key}
 					style={getBackgroundForLetter(classnames, key)}
@@ -215,17 +216,17 @@
 			</div>
 
 			<div class="row" style={`gap: ${keyGap}px;`}>
-				<div class="spacer" />
+				<div class="spacer"></div>
 				{#each 'asdfghjkl' as key}
 					{@render letter(key)}
 				{/each}
-				<div class="spacer" />
+				<div class="spacer"></div>
 			</div>
 
 			<div class="row" style={`gap: ${keyGap}px;`}>
 				<button
 					class="key backspace-key"
-					on:click|preventDefault={update}
+					onclick={update}
 					data-key="backspace"
 					name="key"
 					value="backspace"
@@ -239,7 +240,7 @@
 				{/each}
 				<button
 					class="key enter-key"
-					on:click|preventDefault={update}
+					onclick={update}
 					data-key="enter"
 					name="key"
 					aria-disabled={!submittable || invalid}
