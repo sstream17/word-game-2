@@ -2,7 +2,7 @@
 	import { base } from '$app/paths';
 </script>
 
-<h1>Sverdle</h1>
+<h1>Word Game</h1>
 
 <div class="container">
 	{#snippet card({ title, number }: { title: string; number: number })}

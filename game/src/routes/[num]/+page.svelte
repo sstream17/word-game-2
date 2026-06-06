@@ -176,12 +176,12 @@
 </script>
 
 <svelte:head>
-	<title>Sverdle</title>
+	<title>Word Game</title>
 	<meta name="description" content="A Wordle clone written in SvelteKit" />
 </svelte:head>
 
 <div class="wrapper">
-	<h1 class="visually-hidden">Sverdle</h1>
+	<h1 class="visually-hidden">Word Game</h1>
 
 	<div class="form">
 		<div class="boards-container">
