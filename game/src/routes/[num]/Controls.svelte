@@ -161,7 +161,6 @@
 	 * desktop users can use the keyboard to play the game
 	 */
 	function keydown(event: KeyboardEvent) {
-		console.log(maxWidth);
 		if (event.metaKey) return;
 
 		const key = event.key;
