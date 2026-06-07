@@ -31,6 +31,7 @@ export class Game implements IGamesState {
 		if (game) {
 			Object.assign(this, game);
 		} else {
+			// TODO: Move to startGame function and make sure to call when loading page
 			this.numberOfGames = numberOfGames;
 
 			const answers = sampleSize(words, numberOfGames);
