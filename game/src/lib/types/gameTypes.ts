@@ -1,15 +1,6 @@
 export const WORD_LENGTH = 5;
 export const NUMBER_TRIES = 5;
 
-/**
- * Legacy type for a hint value.
- */
-export type HintValues = 'x' | 'c' | '_';
-/**
- * Legacy type for hint strings.
- */
-export type HintString = `${HintValues}${HintValues}${HintValues}${HintValues}${HintValues}`;
-
 export type GameStatus = 'notStarted' | 'inProgress' | 'won' | 'lost';
 export type KeyStatus = 'unknown' | 'missing' | 'close' | 'exact';
 
@@ -74,6 +65,15 @@ export interface IStats {
 export interface IStatsState {
 	value: { [numberOfGames: number]: IStats };
 }
+
+/**
+ * Legacy type for a hint value.
+ */
+export type HintValues = 'x' | 'c' | '_';
+/**
+ * Legacy type for hint strings.
+ */
+export type HintString = `${HintValues}${HintValues}${HintValues}${HintValues}${HintValues}`;
 
 /**
  * Legacy shape of game data.
