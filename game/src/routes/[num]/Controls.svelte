@@ -1,6 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
-	import { WORD_LENGTH, type HintString, type HintValues } from '$lib/types';
+	import { type GameStatus, type IHints, type KeyStatus } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
 	import Answers from './Answers.svelte';
 
@@ -9,11 +9,9 @@
 	const defaultGap = 9;
 
 	interface IProps {
-		hints: { [index: string]: HintString[] };
-		guesses: string[];
+		hints: { [gameId: string]: IHints };
 		answers: { [index: string]: string | null };
-		won: boolean;
-		gameOver: boolean;
+		gameStatus: GameStatus;
 		/**
 		 * The current guess is long enough to be submitted
 		 */
@@ -22,11 +20,10 @@
 		 * The current guess is invalid
 		 */
 		invalid: boolean;
-		winIndexes: { [gameIndex: string]: number };
+		winIndexes: { [gameId: string]: number | undefined };
 	}
 
-	let { hints, guesses, answers, won, gameOver, submittable, invalid, winIndexes }: IProps =
-		$props();
+	let { hints, answers, gameStatus, submittable, invalid, winIndexes }: IProps = $props();
 
 	let screenWidth: number | null | undefined = $state();
 	let maxWidth = $derived(Math.min(screenWidth ? screenWidth : Infinity, 500));
@@ -39,63 +36,39 @@
 	let keyboardHeight = $derived(keyHeight * 3 + keyGap * 2 + 36);
 
 	const colorMap = {
-		_: 'var(--color-missing)',
-		c: 'var(--color-close)',
-		x: 'var(--color-exact)',
-		_Border: 'var(--color-missing)',
-		cBorder: 'var(--color-close-border)',
-		xBorder: 'var(--color-exact)'
+		unknown: 'var(--color-unknown)',
+		missing: 'var(--color-missing)',
+		close: 'var(--color-close)',
+		exact: 'var(--color-exact)',
+		unknownBorder: 'var(--color-unknown)',
+		missingBorder: 'var(--color-missing)',
+		closeBorder: 'var(--color-close-border)',
+		exactBorder: 'var(--color-exact)'
 	};
 
-	/**
-	 * A map of classnames for all letters that have been guessed,
-	 * used for styling the keyboard
-	 */
-	let classnames: Record<string, HintValues[]> = $derived(
-		Object.values(hints).reduce((output, currentHints, gameIndex) => {
-			if (currentHints.length < 1) {
-				return output;
-			}
+	function getLetterColors(letter: string, hints?: { [gameId: string]: IHints }): KeyStatus[] {
+		if (!hints) {
+			return ['unknown', 'unknown', 'unknown', 'unknown'];
+		}
 
-			return guesses.reduce((guessOut: Record<string, HintValues[]>, guess, guessIndex) => {
-				if (guess.length !== WORD_LENGTH || !currentHints[guessIndex]) {
-					return output;
-				}
+		const colors = Object.keys(hints).map((gameId) => hints[gameId][letter]);
 
-				guess.split('').forEach((letter, letterIndex) => {
-					if (!guessOut[letter]) {
-						guessOut[letter] = [];
-					}
+		switch (colors.length) {
+			case 1:
+				return [colors[0], colors[0], colors[0], colors[0]];
+			case 2:
+				return [colors[0], colors[1], colors[0], colors[1]];
+			case 4:
+				return colors;
+			default:
+				return ['unknown', 'unknown', 'unknown', 'unknown'];
+		}
+	}
 
-					// If this board has been won, show the letter as missing so it doesn't clutter the
-					// other games. Otherwise update the color if the letter isn't already in the correct spot.
-					if (currentHints.includes('xxxxx')) {
-						guessOut[letter].splice(gameIndex, 1, '_');
-					} else if (guessOut[letter][gameIndex] !== 'x') {
-						if (
-							guessOut[letter][gameIndex] === 'c' &&
-							currentHints[guessIndex][letterIndex] === '_'
-						) {
-							return;
-						}
-
-						guessOut[letter].splice(
-							gameIndex,
-							1,
-							currentHints[guessIndex][letterIndex] as HintValues
-						);
-					}
-				});
-
-				return guessOut;
-			}, output);
-		}, {})
-	);
-
-	function getBackgroundForLetter(colors: Record<string, HintValues[]>, letter: string) {
+	function getBackgroundForLetter(letter: string) {
 		const letterSize = `width: ${keyWidth}px; height: ${keyHeight}px;`;
 
-		const letterColors = colors[letter];
+		const letterColors = getLetterColors(letter, hints);
 		let backgroundColors = '';
 
 		if (letterColors?.length === 1) {
@@ -166,7 +139,7 @@
 
 		const key = event.key;
 
-		if (key === 'Enter' && won) {
+		if (key === 'Enter' && gameStatus === 'won') {
 			restart();
 			return;
 		}
@@ -187,10 +160,10 @@
 <svelte:window onkeydown={keydown} bind:innerWidth={screenWidth} />
 
 <div class="controls" style={`height: ${keyboardHeight}px; padding-top: ${keyGap}px;`}>
-	{#if won || gameOver}
-		<Answers gameFinished={won || gameOver} {answers} {winIndexes} />
+	{#if gameStatus === 'won' || gameStatus === 'lost'}
+		<Answers gameFinished={gameStatus === 'won' || gameStatus === 'lost'} {answers} {winIndexes} />
 		<button onclick={restart} data-key="enter" class="restart selected">
-			{won ? 'you won :)' : `game over :(`} play again?
+			{gameStatus === 'won' ? 'you won :)' : `game over :(`} play again?
 		</button>
 	{:else}
 		<div class="keyboard" style={`gap: ${keyGap * 2}px;`}>
@@ -199,7 +172,7 @@
 					onclick={update}
 					class="letter key"
 					data-key={key}
-					style={getBackgroundForLetter(classnames, key)}
+					style={getBackgroundForLetter(key)}
 					aria-disabled={submittable}
 					name="key"
 					value={key}
@@ -285,7 +258,7 @@
 	}
 
 	.key {
-		background-color: var(--color-unguessed);
+		background-color: var(--color-unknown);
 		color: var(--color-text);
 		border-radius: 4px;
 		margin: 0;
@@ -298,14 +271,14 @@
 	}
 
 	.letter {
-		--_quadrant1-color: var(--quadrant1-color, var(--color-unguessed));
-		--_quadrant2-color: var(--quadrant2-color, var(--color-unguessed));
-		--_quadrant3-color: var(--quadrant3-color, var(--color-unguessed));
-		--_quadrant4-color: var(--quadrant4-color, var(--color-unguessed));
-		--_quadrant1-color-border: var(--quadrant1-color-border, var(--color-unguessed));
-		--_quadrant2-color-border: var(--quadrant2-color-border, var(--color-unguessed));
-		--_quadrant3-color-border: var(--quadrant3-color-border, var(--color-unguessed));
-		--_quadrant4-color-border: var(--quadrant4-color-border, var(--color-unguessed));
+		--_quadrant1-color: var(--quadrant1-color, var(--color-unknown));
+		--_quadrant2-color: var(--quadrant2-color, var(--color-unknown));
+		--_quadrant3-color: var(--quadrant3-color, var(--color-unknown));
+		--_quadrant4-color: var(--quadrant4-color, var(--color-unknown));
+		--_quadrant1-color-border: var(--quadrant1-color-border, var(--color-unknown));
+		--_quadrant2-color-border: var(--quadrant2-color-border, var(--color-unknown));
+		--_quadrant3-color-border: var(--quadrant3-color-border, var(--color-unknown));
+		--_quadrant4-color-border: var(--quadrant4-color-border, var(--color-unknown));
 		background:
 			conic-gradient(
 					var(--_quadrant1-color) 0deg,
@@ -352,7 +325,7 @@
 	.restart {
 		width: 75%;
 		padding: 8px 16px;
-		background-color: var(--color-unguessed);
+		background-color: var(--color-unknown);
 		border-radius: 4px;
 		border: none;
 	}

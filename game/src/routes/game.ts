@@ -1,57 +1,74 @@
-import { NUMBER_TRIES, WORD_LENGTH, type HintString, type HintValues, type IGameData } from '$lib/types';
+import { getResult } from '$lib/api';
+import { sampleSize } from '$lib/api/lodash';
+import {
+	NUMBER_TRIES,
+	VALID_KEYS,
+	WORD_LENGTH,
+	type GameStatus,
+	type IGame,
+	type IGamesState,
+	type IHints
+} from '$lib/types';
 import { allowed, words } from './words';
 
-export class Game implements IGameData {
-	numberOfGames: number;
-	wordIndices: { [gameIndex: string]: number };
-	guesses: string[];
-	hints: { [gameIndex: string]: HintString[] };
-	answers: { [gameIndex: string]: string };
+export class Game implements IGamesState {
+	numberOfGames!: number;
+	currentGuess!: string;
+	guessIndex!: number;
+	isGuessInvalid!: boolean;
+	value!: { [gameId: string]: IGame };
+	hints!: { [gameId: string]: IHints };
+	status!: GameStatus;
 
 	/**
-	 * Create a game object from the player's cookie, or initialise a new game
+	 * Create a game object from storage, or initialize a new game
 	 */
-	constructor(serialized: string | undefined = undefined, numberOfGames = 1) {
-		if (serialized) {
-			const [gameIndicesPacked, wordIndicesPacked, guesses, hintsPacked] = serialized.split('-');
-
-			const gameIndices = gameIndicesPacked.split(',');
-			const wordIndices = wordIndicesPacked.split(',');
-			const hints = hintsPacked.split(' ');
-
-			this.numberOfGames = numberOfGames;
-			this.wordIndices = gameIndices.reduce<{ [gameIndex: string]: number }>((acc, currentIndex, i) => {
-				acc[currentIndex] = +wordIndices[i];
-				return acc;
-			}, {});
-			this.guesses = guesses ? guesses.split(' ') : [];
-			this.hints = gameIndices.reduce<{ [gameIndex: string]: HintString[] }>((acc, currentIndex, i) => {
-				acc[currentIndex] = hints[i] ? hints[i].split(',') as HintString[] : [];
-				return acc;
-			}, {});
+	constructor(
+		games: { [numberOfGames: number]: IGamesState } | undefined = undefined,
+		numberOfGames = 1
+	) {
+		const game = games ? games[numberOfGames] : undefined;
+		if (game) {
+			Object.assign(this, game);
 		} else {
 			this.numberOfGames = numberOfGames;
 
-			const usedRandomNumbers = new Set();
-			this.wordIndices = Array.from({ length: numberOfGames }, (_, i) => {
-				let nextRandom = -1;
-				do {
-					nextRandom = Math.floor(Math.random() * words.length)
-				} while (usedRandomNumbers.has(nextRandom));
-				usedRandomNumbers.add(nextRandom);
-				return [`${i}`, nextRandom];
-			}).reduce((acc, [key, value]) => ({ ...acc, [key]: value }), {});
-			this.guesses = Array(numberOfGames + NUMBER_TRIES).fill('');
-			this.hints = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: HintString[] }>((acc, currentIndex) => {
-				acc[currentIndex] = []
-				return acc;
-			}, {});
-		}
+			const answers = sampleSize(words, numberOfGames);
 
-		this.answers = Object.keys(this.wordIndices).reduce<{ [gameIndex: string]: string }>((acc, currentIndex) => {
-			acc[currentIndex] = words[this.wordIndices[currentIndex]]
-			return acc;
-		}, {});
+			this.numberOfGames = numberOfGames;
+			this.value = {};
+			this.hints = {};
+			this.isGuessInvalid = false;
+
+			const initialHints = Object.keys(VALID_KEYS).reduce((acc, key) => {
+				acc[key] = 'unknown';
+				return acc;
+			}, {} as IHints);
+
+			for (let i = 0; i < numberOfGames; i++) {
+				this.value[`${i}`] = {
+					answer: answers[i],
+					guesses: [],
+					activeIndex: 0,
+					winIndex: undefined,
+					status: 'inProgress'
+				};
+
+				this.hints[`${i}`] = {
+					...initialHints
+				};
+			}
+
+			this.currentGuess = '';
+			this.guessIndex = 0;
+			this.status = 'inProgress';
+		}
+	}
+
+	static fromGamesState(gamesState: IGamesState) {
+		const game = new Game();
+		Object.assign(game, gamesState);
+		return game;
 	}
 
 	/**
@@ -63,53 +80,145 @@ export class Game implements IGameData {
 	}
 
 	/**
-	 * Update game state based on a guess of a five-letter word
-	 * @returns True if the guess was valid, false otherwise
+	 * Update game state based on a new letter being added to the current guess
+	 * @param nextLetter The next letter to be added to the current guess
 	 */
-	enter(letters: string[]) {
-		const word = letters.join('');
+	updateGuess(nextLetter: string) {
+		const previousValue = this.currentGuess;
+		if (previousValue.length === WORD_LENGTH) {
+			return;
+		}
 
-		if (!this.validate(word)) {
+		if (this.isGuessInvalid) {
+			this.isGuessInvalid = false;
+		}
+
+		this.currentGuess = `${previousValue}${nextLetter}`;
+
+		if (this.currentGuess.length === WORD_LENGTH) {
+			this.isGuessInvalid = !this.validate(this.currentGuess);
+		}
+	}
+
+	/**
+	 * Update game state by removing the last letter from the current guess
+	 */
+	deleteLetterFromGuess() {
+		const previousValue = this.currentGuess;
+		if (previousValue.length < 1) {
+			return;
+		}
+
+		if (this.isGuessInvalid) {
+			this.isGuessInvalid = false;
+		}
+
+		this.currentGuess = `${previousValue.slice(0, -1)}`;
+	}
+
+	/**
+	 * Update game state based on a guess of a five-letter word
+	 * @return True if the guess was valid and processed, false otherwise
+	 */
+	submitGuess(): boolean {
+		const submittedGuess = this.currentGuess;
+
+		if (submittedGuess.length !== WORD_LENGTH || this.isGuessInvalid) {
 			return false;
 		}
 
-		this.guesses[Object.values(this.hints)[0].length] = word;
+		let winCount = 0;
 
-		Object.entries(this.answers).forEach(([answerIndex, currentAnswer]) => {
-			const available = Array.from(currentAnswer);
-			const hint = Array(WORD_LENGTH).fill('_') as HintValues[];
+		const gameFinishedHints = Object.keys(VALID_KEYS).reduce((acc, key) => {
+			acc[key] = 'missing';
+			return acc;
+		}, {} as IHints);
 
-			// first, find exact matches
-			for (let i = 0; i < WORD_LENGTH; i += 1) {
-				if (letters[i] === available[i]) {
-					hint[i] = 'x';
-					available[i] = ' ';
-				}
+		Object.keys(this.value).forEach((gameIndex) => {
+			if (this.value[gameIndex].status === 'won') {
+				winCount = winCount + 1;
+				return;
 			}
 
-			// then find close matches (this has to happen
-			// in a second step, otherwise an early close
-			// match can prevent a later exact match)
-			for (let i = 0; i < WORD_LENGTH; i += 1) {
-				if (hint[i] === '_') {
-					const index = available.indexOf(letters[i]);
-					if (index !== -1) {
-						hint[i] = 'c';
-						available[index] = ' ';
-					}
+			const answer = this.value[gameIndex].answer;
+			const [result, newHints] = getResult(answer, submittedGuess, this.hints[gameIndex]);
+
+			this.value[gameIndex].guesses.push({
+				guess: submittedGuess,
+				result
+			});
+
+			if (result === 'xxxxx') {
+				this.value[gameIndex].status = 'won';
+				this.value[gameIndex].winIndex = this.value[gameIndex].activeIndex;
+				winCount = winCount + 1;
+
+				const previousGuesses = this.value[gameIndex].guesses;
+				this.value[gameIndex].guesses = [
+					...previousGuesses,
+					...Array.from(
+						{
+							length: this.numberOfGames + NUMBER_TRIES - previousGuesses.length
+						},
+						() => ({ guess: '', result: '_____' })
+					)
+				];
+
+				// If the game is won, clear out all hints so they can be ignored.
+				// It isn't valuable to know the status of a letter if the board can't be played.
+				this.hints[gameIndex] = {
+					...gameFinishedHints
+				};
+			} else {
+				this.hints[gameIndex] = newHints;
+				const activeIndex = this.value[gameIndex].activeIndex + 1;
+				this.value[gameIndex].activeIndex = activeIndex;
+
+				if (activeIndex >= this.numberOfGames + NUMBER_TRIES) {
+					this.value[gameIndex].winIndex = -1;
 				}
 			}
-
-			this.hints[answerIndex].push(hint.join('') as HintString);
 		});
+
+		this.currentGuess = '';
+		this.guessIndex += 1;
+
+		const allWon = winCount === this.numberOfGames;
+
+		if (allWon) {
+			this.status = 'won';
+		} else if (this.guessIndex >= this.numberOfGames + NUMBER_TRIES) {
+			this.status = 'lost';
+		}
 
 		return true;
 	}
 
 	/**
-	 * Serialize game state so it can be set as a cookie
+	 * Get the win indexes for all games
+	 * @returns An object containing the win index for each game, keyed by the game number (0 to n)
 	 */
-	toString() {
-		return `${Object.keys(this.wordIndices)}-${Object.values(this.wordIndices)}-${this.guesses.join(' ')}-${Object.values(this.hints).join(' ')}`;
+	getWinIndexes(): { [gameId: string]: number | undefined } {
+		return Object.keys(this.value).reduce(
+			(acc, gameIndex) => {
+				acc[gameIndex] = this.value[gameIndex].winIndex;
+				return acc;
+			},
+			{} as { [gameId: string]: number | undefined }
+		);
+	}
+
+	/**
+	 * Get the answers for all games
+	 * @returns An object containing the answers for each game, keyed by the game number (0 to n)
+	 */
+	getAnswers(): { [gameId: string]: string } {
+		return Object.keys(this.value).reduce(
+			(acc, gameIndex) => {
+				acc[gameIndex] = this.value[gameIndex].answer;
+				return acc;
+			},
+			{} as { [gameId: string]: string }
+		);
 	}
 }

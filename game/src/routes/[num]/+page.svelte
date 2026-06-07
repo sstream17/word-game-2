@@ -1,7 +1,8 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { createGameState, isGameOver, storeWinStats } from '$lib/api';
-	import { BOARD_GAP, TILE_GAP, WORD_LENGTH, type HintString } from '$lib/types';
+	import { createGameState, storeWinStats } from '$lib/api';
+	import { clearGameProgress, updateGameProgress } from '$lib/storage';
+	import { BOARD_GAP, TILE_GAP, WORD_LENGTH } from '$lib/types';
 	import { Game } from '../game';
 	import type { PageData } from './$types';
 	import Controls from './Controls.svelte';
@@ -14,10 +15,11 @@
 	let { data }: IProps = $props();
 
 	const storedGame = createGameState(() => data);
+	const gameInstance = Game.fromGamesState(storedGame.game);
+	const instanceWinIndexes = gameInstance.getWinIndexes();
+	const instanceAnswers = gameInstance.getAnswers();
 
 	const numberOfGames = storedGame.game.numberOfGames;
-	const storageKey = `word-game-${numberOfGames}`;
-	const statsStorageKey = `stats-${numberOfGames}`;
 
 	let screenWidth: number | null | undefined = $state();
 	let numberOfColumns = $derived(numberOfGames === 1 ? 1 : 2);
@@ -31,65 +33,24 @@
 
 	let canAcceptInput = $state(true);
 	let badGuess = $state(false);
-	let invalid = $state(false);
-	let currentGuessIndex = $state(Object.values(storedGame.game.hints)['0'].length || 0);
-
-	let keyboardHints: { [index: string]: HintString[] } = $state.raw({
-		...storedGame.game.hints
-	});
-	let winIndexes: { [gameIndex: string]: number } = $state({});
-
-	/** Whether or not the user has won */
-	let won = $derived(
-		Object.values(storedGame.game.hints).every((value) => value.includes('xxxxx'))
-	);
-
-	let gameOver = $derived(isGameOver(storedGame.game.hints, storedGame.game.numberOfGames));
-
-	/** The current guess */
-	let currentGuess = $derived(storedGame.game.guesses[currentGuessIndex] || '');
 
 	/** Whether the current guess can be submitted */
-	let submittable = $derived(currentGuess.length === WORD_LENGTH);
-
-	/**
-	 * For each board, store the index of a correctly guessed word, or -1 if no correct guess.
-	 * @returns The greatest correctly guessed index
-	 */
-	function updateWinIndexes(hints: { [gameIndex: number]: HintString[] }) {
-		let maxIndex = -1;
-		Object.entries(hints).forEach(([gameIndex, gameHints]) => {
-			const gameWinIndex = gameHints.findLastIndex((guess) => guess === 'xxxxx');
-			winIndexes[gameIndex] = gameWinIndex;
-
-			if (gameWinIndex > maxIndex) {
-				maxIndex = gameWinIndex;
-			}
-		});
-
-		return maxIndex;
-	}
+	let submittable = $derived(storedGame.game.currentGuess.length === WORD_LENGTH);
 
 	function update(key: string) {
 		if (badGuess) badGuess = false;
-		if (invalid) invalid = false;
+
+		const updatedGame = Game.fromGamesState(storedGame.game);
 
 		if (key === 'backspace') {
-			storedGame.game.guesses[currentGuessIndex] = storedGame.game.guesses[currentGuessIndex].slice(
-				0,
-				-1
-			);
-		} else if (currentGuess.length < WORD_LENGTH) {
-			storedGame.game.guesses[currentGuessIndex] += key;
+			updatedGame.deleteLetterFromGuess();
+			storedGame.game = updatedGame;
+		} else if (storedGame.game.currentGuess.length < WORD_LENGTH) {
+			updatedGame.updateGuess(key);
+			storedGame.game = updatedGame;
 		} else {
 			// The guess is already long enough
 			triedBadGuess();
-		}
-
-		// After adding the letter check if the word is long enough and valid
-		if (currentGuess.length === WORD_LENGTH) {
-			const updatedGame = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
-			invalid = !updatedGame.validate(currentGuess);
 		}
 	}
 
@@ -98,42 +59,34 @@
 	 */
 	const delay = () => new Promise((resolve) => setTimeout(resolve, 300));
 
-	async function animateGuess(guesses: string[], hints: { [gameIndex: string]: HintString[] }) {
-		canAcceptInput = false;
-		const lastHintIndex = hints['0'].findLastIndex((value) => !!value);
-
-		for (let i = 0; i < WORD_LENGTH; i++) {
-			for (const gameIndex of Object.keys(hints)) {
-				const chars = hints[gameIndex][lastHintIndex].split('');
-				if (storedGame.game.hints[gameIndex][lastHintIndex] === undefined) {
-					storedGame.game.hints[gameIndex][lastHintIndex] = '' as HintString;
-				}
-				storedGame.game.hints[gameIndex][lastHintIndex] += chars[i] as HintString;
-			}
-			await delay();
-		}
-		storedGame.game.guesses = guesses;
-		canAcceptInput = true;
+	async function animateGuess() {
+		// canAcceptInput = false;
+		await delay();
+		// canAcceptInput = true;
 	}
 
 	async function submit() {
-		const updatedGame = new Game(localStorage.getItem(storageKey) ?? '', numberOfGames);
+		const updatedGame = Game.fromGamesState(storedGame.game);
 
-		const isBadGuess = !updatedGame.enter([...currentGuess]);
-
-		localStorage.setItem(storageKey, updatedGame.toString());
+		const isBadGuess = !updatedGame.submitGuess();
+		
+		storedGame.game = updatedGame;
+		updateGameProgress(updatedGame, numberOfGames);
 
 		if (!isBadGuess) {
-			await animateGuess(updatedGame.guesses, updatedGame.hints);
-			keyboardHints = updatedGame.hints;
-			currentGuessIndex = currentGuessIndex + 1;
+			await animateGuess();
 
-			const gameWonIndex = updateWinIndexes(updatedGame.hints);
-			if (won || gameOver) {
-				storeWinStats(statsStorageKey, numberOfGames, won ? gameWonIndex : -1);
-				storedGame.game.answers = updatedGame.answers;
-				currentGuessIndex = -1;
+			if (updatedGame.status === 'inProgress') {
+				return;
 			}
+
+			const winIndexes = updatedGame.getWinIndexes();
+
+			storeWinStats({
+				numberOfGames: numberOfGames,
+				won: updatedGame.status === 'won',
+				winIndexes
+			});
 			return;
 		}
 
@@ -141,10 +94,9 @@
 	}
 
 	async function restart() {
-		localStorage.removeItem(storageKey);
+		clearGameProgress(numberOfGames);
 		await invalidateAll();
 		storedGame.game = data;
-		currentGuessIndex = 0;
 	}
 
 	function triedBadGuess() {
@@ -202,20 +154,19 @@
 				style={`--_vertical-scroll-padding: ${BOARD_GAP}px; --_flex-gap: ${TILE_GAP * 3}px; max-width: ${maxWidth}px;`}
 			>
 				{#each { length: numberOfGames } as _, board (board)}
-					{@const hints = storedGame.game.hints[board]}
-					{@const winIndex = hints.findIndex((hint) => hint === 'xxxxx')}
-					{@const thisBoardWon = winIndex !== -1}
+					{@const winIndex = storedGame.game.value[board]?.winIndex}
+					{@const thisBoardWon = storedGame.game.value[board]?.status === 'won'}
+					{@const guesses = storedGame.game.value[board]?.guesses ?? []}
 					<GameBoard
-						rowIndex={currentGuessIndex}
+						rowIndex={storedGame.game.guessIndex}
 						{numberOfGames}
 						won={thisBoardWon}
-						allWon={won}
-						{winIndex}
-						guesses={storedGame.game.guesses}
-						{currentGuess}
-						{hints}
+						allWon={storedGame.game.status === 'won'}
+						winIndex={winIndex ?? -1}
+						currentGuess={storedGame.game.currentGuess}
+						invalid={storedGame.game.isGuessInvalid}
+						{guesses}
 						{badGuess}
-						{invalid}
 						{tileWidth}
 					/>
 				{/each}
@@ -224,14 +175,12 @@
 
 		<Controls
 			on:key={handleKey}
-			hints={keyboardHints}
-			guesses={storedGame.game.guesses}
-			answers={storedGame.game.answers}
-			{won}
-			{gameOver}
+			hints={storedGame.game.hints}
+			answers={instanceAnswers}
+			gameStatus={storedGame.game.status}
 			{submittable}
-			{invalid}
-			{winIndexes}
+			invalid={storedGame.game.isGuessInvalid}
+			winIndexes={instanceWinIndexes}
 		/>
 	</div>
 </div>

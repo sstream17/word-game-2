@@ -2,7 +2,7 @@
 	interface IProps {
 		gameFinished: boolean;
 		answers: { [gameIndex: string]: string | null };
-		winIndexes: { [gameIndex: string]: number };
+		winIndexes: { [gameId: string]: number | undefined };
 	}
 
 	let { gameFinished, answers, winIndexes }: IProps = $props();
@@ -11,7 +11,7 @@
 {#if gameFinished && answers['0'] && winIndexes['0']}
 	<div class="container">
 		{#each Object.entries(answers) as [gameIndex, answer]}
-			{@const numberOfGuesses = winIndexes[gameIndex] + 1}
+			{@const numberOfGuesses = winIndexes[gameIndex] ?? -1 + 1}
 			{@const missed = numberOfGuesses === 0}
 			<div class="answer">
 				<span>{answer}</span>
@@ -59,7 +59,7 @@
 		color: var(--color-text-exact);
 		padding: 4px;
 		border-radius: 2px;
-        width: 2ch;
+		width: 2ch;
 	}
 
 	.guesses.missed {

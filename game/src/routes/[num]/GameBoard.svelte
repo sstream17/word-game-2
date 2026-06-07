@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { NUMBER_TRIES, TILE_GAP, WORD_LENGTH } from '$lib/types';
+	import { NUMBER_TRIES, TILE_GAP, WORD_LENGTH, type IGuess } from '$lib/types';
 
 	interface IProps {
 		numberOfGames: number;
@@ -8,9 +8,8 @@
 		winIndex: number;
 		badGuess: boolean;
 		invalid: boolean;
-		guesses: string[];
+		guesses: IGuess[];
 		currentGuess: string;
-		hints: string[];
 		rowIndex: number;
 		tileWidth: number;
 	}
@@ -24,7 +23,6 @@
 		invalid,
 		guesses,
 		currentGuess,
-		hints,
 		rowIndex,
 		tileWidth
 	}: IProps = $props();
@@ -69,8 +67,8 @@
 		<div class="row" class:current-row={current} style={`--_tile-base-size: ${tileWidth}px;`}>
 			{#if !won || (won && row <= winIndex)}
 				{#each { length: WORD_LENGTH } as _, column (column)}
-					{@const guess = !won && current ? currentGuess : guesses[row]}
-					{@const answer = hints[row]?.[column]}
+					{@const guess = !won && current ? currentGuess : guesses[row]?.guess}
+					{@const answer = guesses[row]?.result[column]}
 					{@const value = guess?.[column] ?? ''}
 					{@const selected = current && column === guess.length}
 					{@const exact = answer === 'x'}
@@ -175,7 +173,7 @@
 		text-transform: lowercase;
 		border: none;
 		border-radius: 2px;
-		background-color: var(--color-unguessed);
+		background-color: var(--color-unknown);
 		margin: 0;
 		color: var(--color-text);
 		box-shadow: 0 0 2px var(--color-box-shadow);

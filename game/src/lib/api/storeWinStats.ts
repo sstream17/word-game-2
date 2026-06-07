@@ -1,45 +1,44 @@
-import { browser } from "$app/environment";
-import type { GameStats } from "$lib/types";
+import { browser } from '$app/environment';
+import { getData, updateGameStats } from '$lib/storage';
+import type { GameStats, IStats, IStatsState } from '$lib/types';
+import { getFinishIndex } from './getFinishIndex';
+
+interface IPayload {
+	numberOfGames: number;
+	won: boolean;
+	winIndexes: { [gameId: string]: number | undefined };
+}
 
 /**
  * Increment the count of games won at the current index and update the store
- * @param storageKey They key to retrieve this item in the store
- * @param numberOfGames The number of games
- * @param winIndex The index of the last correctly guessed word
+ * @param payload The payload to update the stats with
  */
-export function storeWinStats(storageKey: string, numberOfGames: number, winIndex: number): void {
-    if (!browser) {
-        return;
-    }
+export function storeWinStats(payload: IPayload): void {
+	if (!browser) {
+		return;
+	}
 
-    const storedStatsUnparsed = localStorage.getItem(storageKey);
-    const storedStats: GameStats = storedStatsUnparsed ? JSON.parse(storedStatsUnparsed) : {};
+	const { numberOfGames, won, winIndexes } = payload;
 
-    const guessIndex = winIndex > -1 ? winIndex - numberOfGames + 1 : -1;
-    const previousTotalNumberOfWins = storedStats['wins'] ?? 0;
-    const previousNumberOfWinsAtGuess = storedStats[guessIndex] ?? 0;
-    const previousMaxWins = storedStats['maxWins'] ?? 0;
-    const previousTotalNumberPlayed = storedStats['played'] ?? 0;
-    const previousStreak = storedStats['streak'] ?? 0;
-    const previousMaxStreak = storedStats['maxStreak'] ?? 0;
+	const storedStats = getData()?.stats;
 
-    const won = guessIndex !== -1
+	const newStats = storedStats?.value[numberOfGames] ?? ({} as IStats);
 
-    const newNumberOfWins = previousNumberOfWinsAtGuess + 1;
-    const newNumberOfTotalWins = won ? previousTotalNumberOfWins + 1 : previousTotalNumberOfWins;
-    const newMaxWins = newNumberOfWins > previousMaxWins ? newNumberOfWins : previousMaxWins;
-    const newStreak = won ? previousStreak + 1 : 0;
-    const newMaxStreak = newStreak > previousMaxStreak ? newStreak : previousMaxStreak;
+	newStats.gamesPlayed = newStats.gamesPlayed + 1;
 
-    const newStats: GameStats = {
-        ...storedStats,
-        [guessIndex]: newNumberOfWins,
-        'wins': newNumberOfTotalWins,
-        'maxWins': newMaxWins,
-        'played': previousTotalNumberPlayed + 1,
-        'streak': newStreak,
-        'maxStreak': newMaxStreak,
-    };
+	if (won) {
+		newStats.gamesWon = newStats.gamesWon + 1;
+		newStats.currentWinStreak = newStats.currentWinStreak + 1;
+		newStats.maxWinStreak = Math.max(newStats.maxWinStreak, newStats.currentWinStreak);
+	} else {
+		newStats.currentWinStreak = 0;
+	}
 
-    localStorage.setItem(storageKey, JSON.stringify(newStats));
+	const finishIndex = getFinishIndex(numberOfGames, winIndexes, won);
+
+	newStats.sumOfFinishes = newStats.sumOfFinishes + numberOfGames + finishIndex;
+
+	newStats.finishCounts[finishIndex] = (newStats.finishCounts?.[finishIndex] ?? 0) + 1;
+
+	updateGameStats(newStats, numberOfGames);
 }
