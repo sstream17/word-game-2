@@ -1,7 +1,13 @@
 export const WORD_LENGTH = 5;
 export const NUMBER_TRIES = 5;
 
+/**
+ * Legacy type for a hint value.
+ */
 export type HintValues = 'x' | 'c' | '_';
+/**
+ * Legacy type for hint strings.
+ */
 export type HintString = `${HintValues}${HintValues}${HintValues}${HintValues}${HintValues}`;
 
 export type GameStatus = 'notStarted' | 'inProgress' | 'won' | 'lost';
@@ -56,10 +62,10 @@ export interface IStats {
 	/**
 	 * Tracks games finished between indices 0-6.
 	 *
-     * @remarks
-     * 
+	 * @remarks
+	 *
 	 * Index 0 counts the number of games won in the fewest possible guesses.
-     * Index 5 counts the number of games won in the most possible guesses.
+	 * Index 5 counts the number of games won in the most possible guesses.
 	 * Index 6 counts the number of games lost.
 	 */
 	finishCounts: Record<number, number>;
