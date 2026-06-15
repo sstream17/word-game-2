@@ -28,41 +28,10 @@ export class Game implements IGamesState {
 		numberOfGames = 1
 	) {
 		const game = games ? games[numberOfGames] : undefined;
-		if (game) {
+		if (game && game.status !== 'notStarted') {
 			Object.assign(this, game);
 		} else {
-			// TODO: Move to startGame function and make sure to call when loading page
-			this.numberOfGames = numberOfGames;
-
-			const answers = sampleSize(words, numberOfGames);
-
-			this.numberOfGames = numberOfGames;
-			this.value = {};
-			this.hints = {};
-			this.isGuessInvalid = false;
-
-			const initialHints = Object.keys(VALID_KEYS).reduce((acc, key) => {
-				acc[key] = 'unknown';
-				return acc;
-			}, {} as IHints);
-
-			for (let i = 0; i < numberOfGames; i++) {
-				this.value[`${i}`] = {
-					answer: answers[i],
-					guesses: [],
-					activeIndex: 0,
-					winIndex: undefined,
-					status: 'inProgress'
-				};
-
-				this.hints[`${i}`] = {
-					...initialHints
-				};
-			}
-
-			this.currentGuess = '';
-			this.guessIndex = 0;
-			this.status = 'inProgress';
+			this.startGame(numberOfGames);
 		}
 	}
 
@@ -70,6 +39,40 @@ export class Game implements IGamesState {
 		const game = new Game();
 		Object.assign(game, gamesState);
 		return game;
+	}
+
+	startGame(numberOfGames: number) {
+		this.numberOfGames = numberOfGames;
+
+		const answers = sampleSize(words, numberOfGames);
+
+		this.numberOfGames = numberOfGames;
+		this.value = {};
+		this.hints = {};
+		this.isGuessInvalid = false;
+
+		const initialHints = Object.keys(VALID_KEYS).reduce((acc, key) => {
+			acc[key] = 'unknown';
+			return acc;
+		}, {} as IHints);
+
+		for (let i = 0; i < numberOfGames; i++) {
+			this.value[`${i}`] = {
+				answer: answers[i],
+				guesses: [],
+				activeIndex: 0,
+				winIndex: undefined,
+				status: 'inProgress'
+			};
+
+			this.hints[`${i}`] = {
+				...initialHints
+			};
+		}
+
+		this.currentGuess = '';
+		this.guessIndex = 0;
+		this.status = 'inProgress';
 	}
 
 	/**

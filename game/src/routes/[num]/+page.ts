@@ -9,5 +9,5 @@ export const load = (({ params }) => {
 	const initialState = browser ? getData()?.games : undefined;
 
 	const game = new Game(initialState, numberOfGames);
-	return {...game};
+	return { ...game };
 }) satisfies PageLoad;
