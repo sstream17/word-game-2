@@ -6,6 +6,12 @@
 	}
 
 	let { gameFinished, answers, winIndexes }: IProps = $props();
+
+	$effect(() => {
+		console.log('finished?', gameFinished);
+		console.log('answers', answers);
+		console.log('winIdx', winIndexes);
+	});
 </script>
 
 {#if gameFinished && answers['0'] && winIndexes['0']}

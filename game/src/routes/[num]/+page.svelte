@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { createGameState, storeWinStats } from '$lib/api';
+	import { storeWinStats } from '$lib/api';
 	import { clearGameProgress, updateGameProgress } from '$lib/storage';
 	import { BOARD_GAP, TILE_GAP, WORD_LENGTH } from '$lib/types';
-	import { Game } from '../game';
+	import { GamesState } from '../gamesState.svelte';
 	import type { PageData } from './$types';
 	import Controls from './Controls.svelte';
 	import GameBoard from './GameBoard.svelte';
@@ -14,12 +14,9 @@
 
 	let { data }: IProps = $props();
 
-	const storedGame = createGameState(() => data);
-	const gameInstance = Game.fromGamesState(storedGame.game);
-	const instanceWinIndexes = gameInstance.getWinIndexes();
-	const instanceAnswers = gameInstance.getAnswers();
+	const storedGame = new GamesState(() => data);
 
-	const numberOfGames = storedGame.game.numberOfGames;
+	const numberOfGames = storedGame.numberOfGames;
 
 	let screenWidth: number | null | undefined = $state();
 	let numberOfColumns = $derived(numberOfGames === 1 ? 1 : 2);
@@ -35,19 +32,15 @@
 	let badGuess = $state(false);
 
 	/** Whether the current guess can be submitted */
-	let submittable = $derived(storedGame.game.currentGuess.length === WORD_LENGTH);
+	let submittable = $derived(storedGame.currentGuess.length === WORD_LENGTH);
 
 	function update(key: string) {
 		if (badGuess) badGuess = false;
 
-		const updatedGame = Game.fromGamesState(storedGame.game);
-
 		if (key === 'backspace') {
-			updatedGame.deleteLetterFromGuess();
-			storedGame.game = updatedGame;
-		} else if (storedGame.game.currentGuess.length < WORD_LENGTH) {
-			updatedGame.updateGuess(key);
-			storedGame.game = updatedGame;
+			storedGame.deleteLetterFromGuess();
+		} else if (storedGame.currentGuess.length < WORD_LENGTH) {
+			storedGame.updateGuess(key);
 		} else {
 			// The guess is already long enough
 			triedBadGuess();
@@ -66,25 +59,22 @@
 	}
 
 	async function submit() {
-		const updatedGame = Game.fromGamesState(storedGame.game);
+		const isBadGuess = !storedGame.submitGuess();
 
-		const isBadGuess = !updatedGame.submitGuess();
-		
-		storedGame.game = updatedGame;
-		updateGameProgress(updatedGame, numberOfGames);
+		updateGameProgress(storedGame.toStorage(), numberOfGames);
 
 		if (!isBadGuess) {
 			await animateGuess();
 
-			if (updatedGame.status === 'inProgress') {
+			if (storedGame.status === 'inProgress') {
 				return;
 			}
 
-			const winIndexes = updatedGame.getWinIndexes();
+			const winIndexes = storedGame.getWinIndexes();
 
 			storeWinStats({
 				numberOfGames: numberOfGames,
-				won: updatedGame.status === 'won',
+				won: storedGame.status === 'won',
 				winIndexes
 			});
 			return;
@@ -96,7 +86,7 @@
 	async function restart() {
 		clearGameProgress(numberOfGames);
 		await invalidateAll();
-		storedGame.game = data;
+		storedGame.startGame(numberOfGames);
 	}
 
 	function triedBadGuess() {
@@ -154,17 +144,17 @@
 				style={`--_vertical-scroll-padding: ${BOARD_GAP}px; --_flex-gap: ${TILE_GAP * 3}px; max-width: ${maxWidth}px;`}
 			>
 				{#each { length: numberOfGames } as _, board (board)}
-					{@const winIndex = storedGame.game.value[board]?.winIndex}
-					{@const thisBoardWon = storedGame.game.value[board]?.status === 'won'}
-					{@const guesses = storedGame.game.value[board]?.guesses ?? []}
+					{@const winIndex = storedGame.value[board]?.winIndex}
+					{@const thisBoardWon = storedGame.value[board]?.status === 'won'}
+					{@const guesses = storedGame.value[board]?.guesses ?? []}
 					<GameBoard
-						rowIndex={storedGame.game.guessIndex}
+						rowIndex={storedGame.guessIndex}
 						{numberOfGames}
 						won={thisBoardWon}
-						allWon={storedGame.game.status === 'won'}
+						allWon={storedGame.status === 'won'}
 						winIndex={winIndex ?? -1}
-						currentGuess={storedGame.game.currentGuess}
-						invalid={storedGame.game.isGuessInvalid}
+						currentGuess={storedGame.currentGuess}
+						invalid={storedGame.isGuessInvalid}
 						{guesses}
 						{badGuess}
 						{tileWidth}
@@ -175,12 +165,12 @@
 
 		<Controls
 			on:key={handleKey}
-			hints={storedGame.game.hints}
-			answers={instanceAnswers}
-			gameStatus={storedGame.game.status}
+			hints={storedGame.hints}
+			answers={storedGame.getAnswers()}
+			gameStatus={storedGame.status}
 			{submittable}
-			invalid={storedGame.game.isGuessInvalid}
-			winIndexes={instanceWinIndexes}
+			invalid={storedGame.isGuessInvalid}
+			winIndexes={storedGame.getWinIndexes()}
 		/>
 	</div>
 </div>
