@@ -11,6 +11,16 @@ import {
 } from '$lib/types';
 import { allowed, words } from './words';
 
+const STORAGE_KEYS: (keyof IGamesState)[] = [
+    'numberOfGames',
+    'currentGuess',
+    'guessIndex',
+    'isGuessInvalid',
+    'value',
+    'hints',
+    'status',
+];
+
 export class GamesState implements IGamesState {
     numberOfGames = $state(-1) as number;
     currentGuess = $state('');
@@ -35,16 +45,14 @@ export class GamesState implements IGamesState {
         }
     }
 
-    toStorage() {
-        return {
-            numberOfGames: this.numberOfGames,
-            currentGuess: this.currentGuess,
-            guessIndex: this.guessIndex,
-            isGuessInvalid: this.isGuessInvalid,
-            value: this.value,
-            hints: this.hints,
-            status: this.status,
-        }
+    /**
+     * Serialize the class as a shape that can be stored
+     * @returns The `IGamesState` representation of the class
+     */
+    toStorage(): IGamesState {
+        return Object.fromEntries(
+            STORAGE_KEYS.map(key => [key, this[key]])
+        ) as unknown as IGamesState;
     }
 
     startGame(numberOfGames: number) {
