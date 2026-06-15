@@ -1,6 +1,6 @@
 import { browser } from '$app/environment';
 import { getData, updateGameStats } from '$lib/storage';
-import type { GameStats, IStats, IStatsState } from '$lib/types';
+import { initialStats, type IStatsState } from '$lib/types';
 import { getFinishIndex } from './getFinishIndex';
 
 interface IPayload {
@@ -20,9 +20,14 @@ export function storeWinStats(payload: IPayload): void {
 
 	const { numberOfGames, won, winIndexes } = payload;
 
-	const storedStats = getData()?.stats;
+	const storedStats = getData()?.stats ?? { value: {} } as IStatsState;
 
-	const newStats = storedStats?.value[numberOfGames] ?? ({} as IStats);
+	const existingStats = storedStats.value[numberOfGames];
+
+	const newStats = {
+		...initialStats,
+		...existingStats,
+	}
 
 	newStats.gamesPlayed = newStats.gamesPlayed + 1;
 
