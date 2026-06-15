@@ -24,17 +24,22 @@ export function storeWinStats(payload: IPayload): void {
 
 	const existingStats = storedStats.value[numberOfGames];
 
+
 	const newStats = {
 		...initialStats,
 		...existingStats,
 	}
 
+	const previousMaxFinishCount = newStats.maxFinishCount;
+
 	newStats.gamesPlayed = newStats.gamesPlayed + 1;
 
 	if (won) {
-		newStats.gamesWon = newStats.gamesWon + 1;
+		const newNumberOfWins = newStats.gamesWon + 1;
+		newStats.gamesWon = newNumberOfWins;
 		newStats.currentWinStreak = newStats.currentWinStreak + 1;
 		newStats.maxWinStreak = Math.max(newStats.maxWinStreak, newStats.currentWinStreak);
+		newStats.maxFinishCount = newNumberOfWins > previousMaxFinishCount ? newNumberOfWins : previousMaxFinishCount;
 	} else {
 		newStats.currentWinStreak = 0;
 	}
