@@ -91,20 +91,33 @@ export interface IStats {
 	 * Index 6 counts the number of games lost.
 	 */
 	finishCounts: Record<number, number>;
+	/**
+	 * The max of the `finishCounts` dictionary, used to calculate heights of the bars in the graph.
+	 */
+	maxFinishCount: number;
 }
 
 export const initialStats: IStats = {
-  gamesPlayed: 0,
-  gamesWon: 0,
-  sumOfFinishes: 0,
-  currentWinStreak: 0,
-  maxWinStreak: 0,
-  finishCounts: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
+	gamesPlayed: 0,
+	gamesWon: 0,
+	sumOfFinishes: 0,
+	currentWinStreak: 0,
+	maxWinStreak: 0,
+	finishCounts: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 0, 6: 0 },
+	maxFinishCount: 0,
 };
 
 export interface IStatsState {
 	value: { [numberOfGames: number]: IStats };
 }
+
+export const initialStatsState: IStatsState = {
+	value: {
+		1: { ...initialStats },
+		2: { ...initialStats },
+		4: { ...initialStats },
+	},
+};
 
 /**
  * Legacy type for a hint value.

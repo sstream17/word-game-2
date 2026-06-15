@@ -1,40 +1,53 @@
 <script lang="ts">
-	import { NUMBER_TRIES, type GameStats } from '$lib/types';
+	import { type IStats } from '$lib/types';
 
 	interface IProps {
 		title: string;
 		numberOfGames: number;
-		stats: GameStats;
+		stats: IStats;
 	}
 
 	const { title, numberOfGames, stats }: IProps = $props();
 
-	const numberOfGuesses = [...Array(NUMBER_TRIES + 1).keys(), -1];
+	const {
+		gamesPlayed,
+		gamesWon,
+		sumOfFinishes,
+		currentWinStreak,
+		maxWinStreak,
+		finishCounts,
+		maxFinishCount
+	} = $derived(stats);
 
-	// Sum of games won per number of guesses.
-	// Losses count as +1 over the allowed max number of guesses.
-	const guessSum = numberOfGuesses.reduce((sum, winIndex) => {
-		const gamesWon = stats[winIndex] ?? 0;
-		const guessScore = (winIndex === -1 ? NUMBER_TRIES + 1 : winIndex) + numberOfGames;
-		return sum + guessScore * gamesWon;
-	}, 0);
-
-	const winPercentage = $derived(
-		stats['played'] !== 0 ? (stats['wins'] / stats['played']) * 100 : 0
+	const data = $derived.by(() =>
+		Object.keys(finishCounts).reduce(
+			(acc, key) => {
+				if (key === '6') {
+					acc.labels.push('L');
+				} else {
+					acc.labels.push(`${+key + numberOfGames}`);
+				}
+				acc.data.push(finishCounts[`${+key}`]);
+				return acc;
+			},
+			{ labels: [], data: [] } as { labels: string[]; data: number[] }
+		)
 	);
-	const averageGuesses = $derived(stats['played'] !== 0 ? guessSum / stats['played'] : 0);
+
+	const winPercentage = $derived(gamesPlayed !== 0 ? (gamesWon / gamesPlayed) * 100 : 0);
+	const averageGuess = $derived(gamesPlayed !== 0 ? sumOfFinishes / gamesPlayed : 0);
+
 	const maxHeight = 240;
 	const lineHeight = 2;
 	const maxBarHeight = `calc(${maxHeight}px - ${2 * lineHeight}em)`;
 
 	function getAriaValueForBar(gamesWon: number): number {
-		const gamesPlayed = stats['played'];
 		const percent = gamesWon > -1 && gamesPlayed !== 0 ? (gamesWon / gamesPlayed) * 100 : 0;
 		return +percent.toFixed(2);
 	}
 
 	function getHeightForBar(gamesWon: number): string {
-		return `--_bar-height: calc(${gamesWon / stats['maxWins']} * ${maxBarHeight});`;
+		return `--_bar-height: calc(${gamesWon / maxFinishCount} * ${maxBarHeight});`;
 	}
 </script>
 
@@ -48,18 +61,17 @@
 				<span aria-labelledby={labelId}>{value}</span>
 			</div>
 		{/snippet}
-		{@render stat({ title: 'Played', value: stats['played'] })}
+		{@render stat({ title: 'Played', value: gamesPlayed })}
 		{@render stat({ title: 'Won', value: `${+winPercentage.toFixed(2)}%` })}
-		{@render stat({ title: 'Avg Guess', value: +averageGuesses.toFixed(2) })}
-		{@render stat({ title: 'Streak', value: stats['streak'] })}
-		{@render stat({ title: 'Max Streak', value: stats['maxStreak'] })}
+		{@render stat({ title: 'Avg Guess', value: +averageGuess.toFixed(2) })}
+		{@render stat({ title: 'Streak', value: currentWinStreak })}
+		{@render stat({ title: 'Max Streak', value: maxWinStreak })}
 	</div>
 	<div
 		class="stats-graph"
 		style={`--_max-height: ${maxHeight}px; --_line-height: ${lineHeight}em;`}
 	>
-		{#each numberOfGuesses as winIndex}
-			{@const gamesWon = stats[winIndex]}
+		{#each data.data as gamesWon, iterIndex}
 			<div
 				class="graph-column"
 				role="meter"
@@ -69,7 +81,7 @@
 			>
 				<span>{gamesWon}</span>
 				<div class="graph-bar" style={getHeightForBar(gamesWon)}></div>
-				<div>{winIndex === -1 ? 'L' : winIndex + numberOfGames}</div>
+				<div>{data.labels[iterIndex]}</div>
 			</div>
 		{/each}
 	</div>
