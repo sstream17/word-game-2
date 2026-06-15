@@ -6,22 +6,16 @@
 	}
 
 	let { gameFinished, answers, winIndexes }: IProps = $props();
-
-	$effect(() => {
-		console.log('finished?', gameFinished);
-		console.log('answers', answers);
-		console.log('winIdx', winIndexes);
-	});
 </script>
 
 {#if gameFinished && answers['0'] && winIndexes['0']}
 	<div class="container">
 		{#each Object.entries(answers) as [gameIndex, answer]}
-			{@const numberOfGuesses = winIndexes[gameIndex] ?? -1 + 1}
+			{@const numberOfGuesses = (winIndexes[gameIndex] ?? -1) + 1}
 			{@const missed = numberOfGuesses === 0}
 			<div class="answer">
 				<span>{answer}</span>
-				<span class="guesses" class:missed>{!missed ? numberOfGuesses : ''}</span>
+				<span class="guesses" class:missed>{!missed ? numberOfGuesses: ''}</span>
 			</div>
 		{/each}
 	</div>

@@ -33,15 +33,12 @@ export class GamesState implements IGamesState {
     /**
      * Create a game object from storage, or initialize a new game
      */
-    constructor(
-        games: () => IGamesState,
-        numberOfGames = 1
-    ) {
+    constructor(games: () => IGamesState) {
         const game = games ? games() : undefined;
         if (game && game.status !== 'notStarted') {
             Object.assign(this, game);
         } else {
-            this.startGame(numberOfGames);
+            this.startGame(game?.numberOfGames ?? 1);
         }
     }
 

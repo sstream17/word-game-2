@@ -198,6 +198,8 @@
 		width: var(--menu-button-size);
 		fill: var(--color-text);
 		border-radius: 4px;
+		position: absolute;
+		z-index: 999;
 		/* reset button styles */
 		background: none;
 		color: inherit;
