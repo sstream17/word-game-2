@@ -1,0 +1,20 @@
+{
+  "short_name": "Word Game",
+  "name": "Word Game",
+  "lang": "en-US",
+  "description": "A simple SvelteKit word game.",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "any",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": "/",
+  "scope": "/",
+  "display": "standalone",
+  "orientation": "portrait",
+  "theme_color": "#56b4e9",
+  "background_color": "#cad8e4"
+}
