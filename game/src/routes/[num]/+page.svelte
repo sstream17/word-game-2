@@ -19,12 +19,12 @@
 	const numberOfGames = storedGame.numberOfGames;
 
 	let screenWidth: number | null | undefined = $state();
-	let numberOfColumns = $derived(numberOfGames === 1 ? 1 : 2);
-	let availableWidth = $derived(
-		numberOfColumns === 1 ? (screenWidth ? screenWidth * 0.8 : screenWidth) : null
+	const numberOfColumns = $derived(numberOfGames === 1 ? 1 : 2);
+	const availableWidth = $derived(
+		screenWidth == null ? screenWidth : numberOfColumns === 1 ? screenWidth * 0.8 : screenWidth
 	);
-	let maxWidth = $derived(Math.min(availableWidth ?? Infinity, 450));
-	let tileWidth = $derived(
+	const maxWidth = $derived(Math.min(availableWidth ?? Infinity, 450));
+	const tileWidth = $derived(
 		(maxWidth - (WORD_LENGTH + 1) * numberOfColumns * TILE_GAP) / (WORD_LENGTH * numberOfColumns)
 	);
 
