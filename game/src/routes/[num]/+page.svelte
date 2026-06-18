@@ -216,5 +216,6 @@
 		align-items: center;
 		gap: var(--_flex-gap);
 		padding-block: var(--_vertical-scroll-padding);
+		padding-block-start: calc(var(--_vertical-scroll-padding) * 4);
 	}
 </style>
