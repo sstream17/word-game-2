@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import StatsGraph from './StatsGraph.svelte';
+	import SingleGameStats from './SingleGameStats.svelte';
 
 	interface IProps {
 		data: PageData;
@@ -13,13 +13,23 @@
 		['Duo', 2],
 		['Quad', 4]
 	] as [string, number][];
+
+	let screenWidth: number | null | undefined = $state();
+	const maxWidth = $derived(Math.min(screenWidth ?? Infinity, 500));
 </script>
+
+<svelte:window bind:innerWidth={screenWidth} />
 
 <div class="container">
 	{#each gameModes as game}
 		{@const title = game[0]}
 		{@const numberOfGames = game[1]}
-		<StatsGraph {title} {numberOfGames} stats={data[numberOfGames]} />
+		<SingleGameStats
+			{title}
+			{numberOfGames}
+			maxWidth={maxWidth}
+			stats={data[numberOfGames]}
+		/>
 	{/each}
 </div>
 
@@ -27,9 +37,12 @@
 	.container {
 		display: flex;
 		flex-direction: column;
-		gap: 2rem;
-        padding: 16px;
+		gap: 64px;
+		padding: 32px;
+		align-items: center;
+		justify-content: center;
 		overflow-y: auto;
+		text-align: center;
 		height: calc(100vh - var(--menu-button-size) - var(--menu-container-padding) * 2);
 	}
 </style>
