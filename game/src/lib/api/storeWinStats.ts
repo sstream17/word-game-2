@@ -30,8 +30,6 @@ export function storeWinStats(payload: IPayload): void {
 		...existingStats,
 	}
 
-	const previousMaxFinishCount = newStats.maxFinishCount;
-
 	newStats.gamesPlayed = newStats.gamesPlayed + 1;
 
 	if (won) {
@@ -39,7 +37,6 @@ export function storeWinStats(payload: IPayload): void {
 		newStats.gamesWon = newNumberOfWins;
 		newStats.currentWinStreak = newStats.currentWinStreak + 1;
 		newStats.maxWinStreak = Math.max(newStats.maxWinStreak, newStats.currentWinStreak);
-		newStats.maxFinishCount = newNumberOfWins > previousMaxFinishCount ? newNumberOfWins : previousMaxFinishCount;
 	} else {
 		newStats.currentWinStreak = 0;
 	}
