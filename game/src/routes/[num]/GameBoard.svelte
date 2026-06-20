@@ -1,31 +1,34 @@
 <script lang="ts">
+	import { getGameContext } from '$lib/state';
 	import { NUMBER_TRIES, TILE_GAP, WORD_LENGTH, type IGuess } from '$lib/types';
 
 	interface IProps {
+		gameIndex: number;
+		rowIndex: number; 
 		numberOfGames: number;
-		won: boolean;
-		allWon: boolean;
-		winIndex: number;
-		badGuess: boolean;
-		invalid: boolean;
-		guesses: IGuess[];
 		currentGuess: string;
-		rowIndex: number;
+		invalid: boolean;
+		badGuess: boolean;
 		tileWidth: number;
+		allWon: boolean;
 	}
 
 	let {
-		numberOfGames,
-		won,
-		allWon,
-		winIndex,
-		badGuess,
-		invalid,
-		guesses,
-		currentGuess,
+		gameIndex,
 		rowIndex,
-		tileWidth
+		numberOfGames,
+		currentGuess,
+		invalid,
+		badGuess,
+		tileWidth,
+		allWon,
 	}: IProps = $props();
+
+	const game = getGameContext();
+
+	const won = $derived(game.value[gameIndex]?.status === 'won');
+	const winIndex = $derived(game.value[gameIndex]?.winIndex ?? -1);
+	const guesses = $derived(game.value[gameIndex]?.guesses ?? []);
 
 	let previousGuessLength = $state(0);
 

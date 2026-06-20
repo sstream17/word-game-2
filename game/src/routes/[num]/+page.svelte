@@ -144,20 +144,15 @@
 				style={`--_vertical-scroll-padding: ${BOARD_GAP}px; --_flex-gap: ${TILE_GAP * 3}px; max-width: ${maxWidth}px;`}
 			>
 				{#each { length: numberOfGames } as _, board (board)}
-					{@const winIndex = storedGame.value[board]?.winIndex}
-					{@const thisBoardWon = storedGame.value[board]?.status === 'won'}
-					{@const guesses = storedGame.value[board]?.guesses ?? []}
 					<GameBoard
+						gameIndex={board}
 						rowIndex={storedGame.guessIndex}
 						{numberOfGames}
-						won={thisBoardWon}
-						allWon={storedGame.status === 'won'}
-						winIndex={winIndex ?? -1}
 						currentGuess={storedGame.currentGuess}
 						invalid={storedGame.isGuessInvalid}
-						{guesses}
 						{badGuess}
 						{tileWidth}
+						allWon={storedGame.status === 'won'}
 					/>
 				{/each}
 			</div>
