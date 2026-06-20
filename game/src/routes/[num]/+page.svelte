@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { storeWinStats } from '$lib/api';
+	import { GamesState, setGameContext } from '$lib/state';
 	import { clearGameProgress, updateGameProgress } from '$lib/storage';
 	import { BOARD_GAP, TILE_GAP, WORD_LENGTH } from '$lib/types';
-	import { GamesState } from '../gamesState.svelte';
 	import type { PageData } from './$types';
 	import Controls from './Controls.svelte';
 	import GameBoard from './GameBoard.svelte';
@@ -14,7 +14,7 @@
 
 	let { data }: IProps = $props();
 
-	const storedGame = new GamesState(() => data);
+	const storedGame = setGameContext(new GamesState(() => data));
 
 	const numberOfGames = storedGame.numberOfGames;
 
