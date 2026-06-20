@@ -79,12 +79,10 @@
 		});
 	}
 
-	function handleKey(event: any) {
+	function handleKey(key: string | null) {
 		if (window.MobileGame) {
 			window.MobileGame.onKeyPress();
 		}
-
-		const key = event.detail.key;
 
 		switch (key) {
 			case 'enter':
@@ -95,6 +93,8 @@
 				break;
 			case 'badGuess':
 				triedBadGuess();
+				break;
+			case null:
 				break;
 			default:
 				update(key);
@@ -135,7 +135,7 @@
 		</div>
 
 		<Controls
-			on:key={handleKey}
+			onKey={handleKey}
 			hints={storedGame.hints}
 			answers={storedGame.getAnswers()}
 			gameStatus={storedGame.status}

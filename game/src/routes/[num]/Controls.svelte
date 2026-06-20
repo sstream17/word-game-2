@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { getKeySizes } from '$lib/api';
 	import { type GameStatus, type IHints } from '$lib/types';
-	import { createEventDispatcher } from 'svelte';
 	import Answers from './Answers.svelte';
 	import Keyboard from './Keyboard.svelte';
 
@@ -18,9 +17,10 @@
 		 */
 		invalid: boolean;
 		winIndexes: { [gameId: string]: number | undefined };
+		onKey: (key: string | null) => void;
 	}
 
-	let { hints, answers, gameStatus, submittable, invalid, winIndexes }: IProps = $props();
+	let { hints, answers, gameStatus, submittable, invalid, winIndexes, onKey }: IProps = $props();
 
 	let screenWidth: number | null | undefined = $state();
 
@@ -34,8 +34,6 @@
 	 */
 	// TODO
 
-	const dispatch = createEventDispatcher();
-
 	/**
 	 * Modify the game state without making a trip to the server,
 	 * if client-side JavaScript is enabled
@@ -43,16 +41,15 @@
 	function update(event: MouseEvent) {
 		event.preventDefault();
 		const key = (event.target as HTMLButtonElement).getAttribute('data-key');
-
-		dispatch('key', { key });
+		onKey(key);
 	}
 
 	function restart() {
-		dispatch('key', { key: 'restart' });
+		onKey('restart');
 	}
 
 	function badGuess() {
-		dispatch('key', { key: 'badGuess' });
+		onKey('badGuess');
 	}
 
 	/**
@@ -77,7 +74,7 @@
 		const dataKey = document.querySelector(`[data-key="${key}" i]`)?.getAttribute('data-key');
 
 		if (dataKey) {
-			dispatch('key', { key: dataKey });
+			onKey(dataKey);
 		}
 	}
 </script>
