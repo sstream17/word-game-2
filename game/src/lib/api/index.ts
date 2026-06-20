@@ -1,4 +1,3 @@
-export { createGameState } from './createGameState.svelte';
 export { createThemeState } from './createThemeState.svelte';
 export { getFinishIndex } from './getFinishIndex';
 export { getKeySizes } from './getKeySizes';
