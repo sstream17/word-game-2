@@ -117,7 +117,11 @@
 		<div class="scroll-area">
 			<div
 				class="boards-container"
-				style={`--_vertical-scroll-padding: ${BOARD_GAP}px; --_flex-gap: ${TILE_GAP * 3}px; max-width: ${maxWidth}px;`}
+				style:--_vertical-scroll-padding={`${BOARD_GAP}px`}
+				style:--_flex-gap={`${TILE_GAP * 3}px`}
+				style:max-width={`${maxWidth}px`}
+				style:--_tile-gap={`${TILE_GAP}px`}
+				style:--_tile-base-size={`${tileWidth}px`}
 			>
 				{#each { length: numberOfGames } as _, board (board)}
 					<GameBoard

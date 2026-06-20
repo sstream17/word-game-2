@@ -37,7 +37,6 @@
 	class:won={allWon}
 	class:bad-guess={badGuess}
 	class:invalid
-	style={`--tile-gap: ${TILE_GAP}px; --_tile-base-size: ${tileWidth}px;`}
 >
 	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
@@ -92,13 +91,13 @@
 		display: flex;
 		flex-direction: column;
 		font-size: var(--letter-size);
-		gap: var(--tile-gap);
+		gap: var(--_tile-gap);
 	}
 
 	.row {
 		height: var(--_tile-base-size);
 		display: flex;
-		gap: var(--tile-gap);
+		gap: var(--_tile-gap);
 	}
 
 	.current-row {
