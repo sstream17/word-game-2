@@ -136,12 +136,9 @@
 
 		<Controls
 			onKey={handleKey}
-			hints={storedGame.hints}
-			answers={storedGame.getAnswers()}
 			gameStatus={storedGame.status}
 			{submittable}
 			invalid={storedGame.isGuessInvalid}
-			winIndexes={storedGame.getWinIndexes()}
 		/>
 	</div>
 </div>

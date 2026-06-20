@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Icon from '$lib/components/Icon.svelte';
+	import { getGameContext } from '$lib/state';
 	import type { IHints, KeyStatus } from '$lib/types';
 
 	interface IProps {
@@ -8,11 +9,14 @@
 		keyWidth: number;
 		keyHeight: number;
 		keyGap: number;
-		hints: { [gameId: string]: IHints };
 		onKeyClick: (event: MouseEvent) => void;
 	}
 
-	const { submittable, invalid, keyWidth, keyHeight, keyGap, hints, onKeyClick }: IProps = $props();
+	const { submittable, invalid, keyWidth, keyHeight, keyGap, onKeyClick }: IProps = $props();
+
+	const game = getGameContext();
+
+	const { hints } = $derived(game);
 
 	const colorMap = {
 		unknown: 'var(--color-unknown)',

@@ -5,8 +5,6 @@
 	import Keyboard from './Keyboard.svelte';
 
 	interface IProps {
-		hints: { [gameId: string]: IHints };
-		answers: { [index: string]: string | null };
 		gameStatus: GameStatus;
 		/**
 		 * The current guess is long enough to be submitted
@@ -16,11 +14,10 @@
 		 * The current guess is invalid
 		 */
 		invalid: boolean;
-		winIndexes: { [gameId: string]: number | undefined };
 		onKey: (key: string | null) => void;
 	}
 
-	let { hints, answers, gameStatus, submittable, invalid, winIndexes, onKey }: IProps = $props();
+	let { gameStatus, submittable, invalid, onKey }: IProps = $props();
 
 	let screenWidth: number | null | undefined = $state();
 
@@ -83,12 +80,12 @@
 
 <div class="controls" style={`height: ${keyboardHeight}px; padding-top: ${keyGap}px;`}>
 	{#if gameStatus === 'won' || gameStatus === 'lost'}
-		<Answers gameFinished={gameStatus === 'won' || gameStatus === 'lost'} {answers} {winIndexes} />
+		<Answers gameFinished={gameStatus === 'won' || gameStatus === 'lost'} />
 		<button onclick={restart} data-key="enter" class="restart selected">
 			{gameStatus === 'won' ? 'you won :)' : `game over :(`} play again?
 		</button>
 	{:else}
-		<Keyboard {submittable} {invalid} {keyGap} {keyHeight} {keyWidth} {hints} onKeyClick={update} />
+		<Keyboard {submittable} {invalid} {keyGap} {keyHeight} {keyWidth} onKeyClick={update} />
 	{/if}
 </div>
 
