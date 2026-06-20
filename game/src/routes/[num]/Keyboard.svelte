@@ -48,13 +48,10 @@
 		}
 	}
 	function getBackgroundForLetter(letter: string) {
-		const letterSize = `width: ${keyWidth}px; height: ${keyHeight}px;`;
-
 		const letterColors = getLetterColors(letter, hints);
-		let backgroundColors = '';
 
 		if (letterColors?.length === 1) {
-			backgroundColors = `--quadrant1-color: ${colorMap[letterColors[0]]};
+			return `--quadrant1-color: ${colorMap[letterColors[0]]};
 				--quadrant2-color: ${colorMap[letterColors[0]]};
 				--quadrant3-color: ${colorMap[letterColors[0]]};
 				--quadrant4-color: ${colorMap[letterColors[0]]};
@@ -63,7 +60,7 @@
 				--quadrant3-color-border: ${colorMap[`${letterColors[0]}Border`]};
 				--quadrant4-color-border: ${colorMap[`${letterColors[0]}Border`]};`;
 		} else if (letterColors?.length === 2) {
-			backgroundColors = `--quadrant1-color: ${colorMap[letterColors[1]]};
+			return `--quadrant1-color: ${colorMap[letterColors[1]]};
 				--quadrant2-color: ${colorMap[letterColors[0]]};
 				--quadrant3-color: ${colorMap[letterColors[0]]};
 				--quadrant4-color: ${colorMap[letterColors[1]]};
@@ -72,7 +69,7 @@
 				--quadrant3-color-border: ${colorMap[`${letterColors[0]}Border`]};
 				--quadrant4-color-border: ${colorMap[`${letterColors[1]}Border`]};`;
 		} else if (letterColors?.length == 4) {
-			backgroundColors = `--quadrant1-color: ${colorMap[letterColors[1]]};
+			return `--quadrant1-color: ${colorMap[letterColors[1]]};
 				--quadrant2-color: ${colorMap[letterColors[0]]};
 				--quadrant3-color: ${colorMap[letterColors[2]]};
 				--quadrant4-color: ${colorMap[letterColors[3]]};
@@ -81,12 +78,15 @@
 				--quadrant3-color-border: ${colorMap[`${letterColors[2]}Border`]};
 				--quadrant4-color-border: ${colorMap[`${letterColors[3]}Border`]};`;
 		}
-
-		return `${letterSize} ${backgroundColors}`;
 	}
 </script>
 
-<div class="keyboard" style:--_key-gap={`${keyGap}px`}>
+<div
+	class="keyboard"
+	style:--_key-gap={`${keyGap}px`}
+	style:--_key-width={`${keyWidth}px`}
+	style:--_key-height={`${keyHeight}px`}
+>
 	{#snippet letter(key: string)}
 		<button
 			onclick={onKeyClick}
@@ -123,8 +123,6 @@
 			data-key="backspace"
 			name="key"
 			value="backspace"
-			style:width={`${keyWidth * 1.5}px`}
-			style:height={`${keyHeight}px`}
 		>
 			<span class="visually-hidden">backspace</span>
 			<Icon path="back_icon.svg#icon_path" />
@@ -138,8 +136,6 @@
 			data-key="enter"
 			name="key"
 			aria-disabled={!submittable || invalid}
-			style:width={`${keyWidth * 1.5}px`}
-			style:height={`${keyHeight}px`}
 		>
 			<span class="visually-hidden">enter</span>
 			<Icon path="send_icon.svg#icon_path" />
@@ -165,6 +161,8 @@
 	}
 
 	.key {
+		width: var(--_key-width);
+		height: var(--_key-height);
 		background-color: var(--color-unknown);
 		color: var(--color-text);
 		border-radius: 4px;
@@ -223,6 +221,7 @@
 	.enter-key,
 	.backspace-key {
 		text-transform: uppercase;
+		width: calc(var(--_key-width) * 1.5);
 	}
 
 	.enter-key[aria-disabled='true'] {
