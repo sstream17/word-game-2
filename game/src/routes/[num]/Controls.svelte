@@ -1,12 +1,9 @@
 <script lang="ts">
+	import { getKeySizes } from '$lib/api';
 	import { type GameStatus, type IHints } from '$lib/types';
 	import { createEventDispatcher } from 'svelte';
 	import Answers from './Answers.svelte';
 	import Keyboard from './Keyboard.svelte';
-
-	const keyWidthRatio = 99;
-	const keyHeightRatio = 135;
-	const defaultGap = 9;
 
 	interface IProps {
 		hints: { [gameId: string]: IHints };
@@ -26,14 +23,10 @@
 	let { hints, answers, gameStatus, submittable, invalid, winIndexes }: IProps = $props();
 
 	let screenWidth: number | null | undefined = $state();
-	let maxWidth = $derived(Math.min(screenWidth ? screenWidth : Infinity, 500));
-	let scaleFactor = $derived(maxWidth / (11 * keyWidthRatio)); // 10 keys + 0.5 gap on each side
 
-	let keyWidth = $derived(keyWidthRatio * scaleFactor);
-	let keyHeight = $derived(keyHeightRatio * scaleFactor);
-	let keyGap = $derived(defaultGap * scaleFactor);
-
-	let keyboardHeight = $derived(keyHeight * 3 + keyGap * 2 + 36);
+	const { keyWidth, keyHeight, keyGap, keyboardHeight } = $derived.by(() =>
+		getKeySizes(screenWidth)
+	);
 
 	/**
 	 * A map of descriptions for all letters that have been guessed,
