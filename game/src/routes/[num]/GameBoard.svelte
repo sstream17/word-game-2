@@ -37,12 +37,12 @@
 	class:won={allWon}
 	class:bad-guess={badGuess}
 	class:invalid
-	style={`--tile-gap: ${TILE_GAP}px;`}
+	style={`--tile-gap: ${TILE_GAP}px; --_tile-base-size: ${tileWidth}px;`}
 >
 	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
-		<div class="row" class:current-row={current} style={`--_tile-base-size: ${tileWidth}px;`}>
+		<div class="row" class:current-row={current}>
 			{#if !won || (won && row <= winIndex)}
 				{#each { length: WORD_LENGTH } as _, column (column)}
 					{@const guess = !won && current ? currentGuess : guesses[row]?.guess}
