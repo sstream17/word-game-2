@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { storeWinStats } from '$lib/api';
+	import { getTileSizes } from '$lib/api/getTileSizes.svelte';
 	import { GamesState, setGameContext } from '$lib/state';
 	import { clearGameProgress, updateGameProgress } from '$lib/storage';
 	import { BOARD_GAP, TILE_GAP, WORD_LENGTH } from '$lib/types';
@@ -19,14 +20,8 @@
 	const numberOfGames = storedGame.numberOfGames;
 
 	let screenWidth: number | null | undefined = $state();
-	const numberOfColumns = $derived(numberOfGames === 1 ? 1 : 2);
-	const availableWidth = $derived(
-		screenWidth == null ? screenWidth : numberOfColumns === 1 ? screenWidth * 0.8 : screenWidth
-	);
-	const maxWidth = $derived(Math.min(availableWidth ?? Infinity, 450));
-	const tileWidth = $derived(
-		(maxWidth - (WORD_LENGTH + 1) * numberOfColumns * TILE_GAP) / (WORD_LENGTH * numberOfColumns)
-	);
+
+	const { maxWidth, tileWidth } = $derived.by(() => getTileSizes(numberOfGames, screenWidth));
 
 	let badGuess = $state(false);
 
