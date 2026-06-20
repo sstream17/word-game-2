@@ -29,31 +29,6 @@
 	const won = $derived(game.value[gameIndex]?.status === 'won');
 	const winIndex = $derived(game.value[gameIndex]?.winIndex ?? -1);
 	const guesses = $derived(game.value[gameIndex]?.guesses ?? []);
-
-	let previousGuessLength = $state(0);
-
-	const animateLetterClassName = 'animate-letter';
-
-	// Manually add letter animation so it doesn't trigger when opening a game
-	$effect(() => {
-		const currentGuessLength = currentGuess.length;
-		if (currentGuessLength === 0 && previousGuessLength === 0) {
-			return;
-		}
-
-		const currentRows = document.querySelectorAll('.playing .current-row');
-		currentRows.forEach((currentRow) => {
-			if (previousGuessLength > currentGuessLength) {
-				const letter = currentRow.children[previousGuessLength - 1];
-				letter.classList.remove(animateLetterClassName);
-			} else {
-				const letter = currentRow.children[currentGuessLength - 1];
-				letter.classList.add(animateLetterClassName);
-			}
-		});
-
-		previousGuessLength = currentGuessLength;
-	});
 </script>
 
 <div

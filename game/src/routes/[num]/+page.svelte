@@ -28,7 +28,6 @@
 		(maxWidth - (WORD_LENGTH + 1) * numberOfColumns * TILE_GAP) / (WORD_LENGTH * numberOfColumns)
 	);
 
-	let canAcceptInput = $state(true);
 	let badGuess = $state(false);
 
 	/** Whether the current guess can be submitted */
@@ -47,25 +46,12 @@
 		}
 	}
 
-	/**
-	 * A 300 ms delay to be used when revealing a guess
-	 */
-	const delay = () => new Promise((resolve) => setTimeout(resolve, 300));
-
-	async function animateGuess() {
-		// canAcceptInput = false;
-		await delay();
-		// canAcceptInput = true;
-	}
-
-	async function submit() {
+	function submit() {
 		const isBadGuess = !storedGame.submitGuess();
 
 		updateGameProgress(storedGame.toStorage(), numberOfGames);
 
 		if (!isBadGuess) {
-			await animateGuess();
-
 			if (storedGame.status === 'inProgress') {
 				return;
 			}
@@ -100,10 +86,6 @@
 	}
 
 	function handleKey(event: any) {
-		if (!canAcceptInput) {
-			return;
-		}
-
 		if (window.MobileGame) {
 			window.MobileGame.onKeyPress();
 		}
