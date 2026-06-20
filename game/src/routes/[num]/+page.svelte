@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { storeWinStats } from '$lib/api';
-	import { getTileSizes } from '$lib/api/getTileSizes.svelte';
+	import { getTileSizes, storeWinStats } from '$lib/api';
 	import { GamesState, setGameContext } from '$lib/state';
 	import { clearGameProgress, updateGameProgress } from '$lib/storage';
 	import { BOARD_GAP, TILE_GAP, WORD_LENGTH } from '$lib/types';
