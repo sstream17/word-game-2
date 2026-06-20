@@ -52,7 +52,7 @@
 					{@const close = answer === 'c'}
 					{@const missing = answer === '_'}
 					<div
-						style={`--_letter-anim-delay: ${column};`}
+						style:--_letter-anim-delay={`${column}`}
 						class="letter"
 						class:exact
 						class:close

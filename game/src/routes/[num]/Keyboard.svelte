@@ -86,7 +86,7 @@
 	}
 </script>
 
-<div class="keyboard" style={`gap: ${keyGap * 2}px;`}>
+<div class="keyboard" style:--_key-gap={`${keyGap}px`}>
 	{#snippet letter(key: string)}
 		<button
 			onclick={onKeyClick}
@@ -102,13 +102,13 @@
 		</button>
 	{/snippet}
 
-	<div class="row" style={`gap: ${keyGap}px;`}>
+	<div class="row">
 		{#each 'qwertyuiop' as key}
 			{@render letter(key)}
 		{/each}
 	</div>
 
-	<div class="row" style={`gap: ${keyGap}px;`}>
+	<div class="row">
 		<div class="spacer"></div>
 		{#each 'asdfghjkl' as key}
 			{@render letter(key)}
@@ -116,14 +116,15 @@
 		<div class="spacer"></div>
 	</div>
 
-	<div class="row" style={`gap: ${keyGap}px;`}>
+	<div class="row">
 		<button
 			class="key backspace-key"
 			onclick={onKeyClick}
 			data-key="backspace"
 			name="key"
 			value="backspace"
-			style={`width: ${keyWidth * 1.5}px; height: ${keyHeight}px;`}
+			style:width={`${keyWidth * 1.5}px`}
+			style:height={`${keyHeight}px`}
 		>
 			<span class="visually-hidden">backspace</span>
 			<Icon path="back_icon.svg#icon_path" />
@@ -137,7 +138,8 @@
 			data-key="enter"
 			name="key"
 			aria-disabled={!submittable || invalid}
-			style={`width: ${keyWidth * 1.5}px; height: ${keyHeight}px;`}
+			style:width={`${keyWidth * 1.5}px`}
+			style:height={`${keyHeight}px`}
 		>
 			<span class="visually-hidden">enter</span>
 			<Icon path="send_icon.svg#icon_path" />
@@ -152,12 +154,14 @@
 		flex-direction: column;
 		height: 100%;
 		width: calc(100% - 16px);
+		gap: calc(var(--_key-gap) * 2);
 	}
 
 	.row {
 		display: flex;
 		justify-content: center;
 		width: 100%;
+		gap: var(--_key-gap);
 	}
 
 	.key {

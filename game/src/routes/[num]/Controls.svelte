@@ -78,7 +78,7 @@
 
 <svelte:window onkeydown={keydown} bind:innerWidth={screenWidth} />
 
-<div class="controls" style={`height: ${keyboardHeight}px; padding-top: ${keyGap}px;`}>
+<div class="controls" style:height={`${keyboardHeight}px`} style:padding-top={`${keyGap}px`}>
 	{#if gameStatus === 'won' || gameStatus === 'lost'}
 		<Answers gameFinished={gameStatus === 'won' || gameStatus === 'lost'} />
 		<button onclick={restart} data-key="enter" class="restart selected">
