@@ -43,6 +43,6 @@
 		justify-content: center;
 		overflow-y: auto;
 		text-align: center;
-		height: calc(100vh - var(--menu-button-size) - var(--menu-container-padding) * 2);
+		height: 100%;
 	}
 </style>

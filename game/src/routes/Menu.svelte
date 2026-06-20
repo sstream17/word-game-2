@@ -185,6 +185,9 @@
 		flex-direction: row;
 		justify-content: end;
 		padding: var(--menu-container-padding);
+		position: absolute;
+		top: 0;
+		width: 100%;
 	}
 
 	:global(.menu-list) {
@@ -199,6 +202,7 @@
 		fill: var(--color-text);
 		border-radius: 4px;
 		position: absolute;
+		right: var(--menu-container-padding);
 		z-index: 999;
 		/* reset button styles */
 		background: none;
