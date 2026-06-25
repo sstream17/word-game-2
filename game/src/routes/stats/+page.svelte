@@ -40,7 +40,7 @@
 		gap: 64px;
 		padding: 32px;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 		overflow-y: auto;
 		text-align: center;
 		height: 100%;
