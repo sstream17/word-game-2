@@ -14,7 +14,7 @@
 	const averageGuess = $derived(gamesPlayed !== 0 ? sumOfFinishes / gamesPlayed : 0);
 </script>
 
-<div class="stats-row" style={`width: ${maxWidth}px;`}>
+<div class="stats-row" style:width={`${maxWidth}px`}>
 	<div class="single-stat">
 		<span class="text-center">Played</span>
 		<span class="text-center">{gamesPlayed}</span>

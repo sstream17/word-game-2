@@ -53,7 +53,7 @@
 <li role="presentation">
 	<span id="theme-submenu">Theme</span>
 	<ul role="group" class="menu-list" aria-labelledby="theme-submenu">
-		{#each themes as [dataId, label, iconPath]}
+		{#each themes as [dataId, label, iconPath] (dataId)}
 			{@const selected = currentTheme.theme === dataId}
 			<MenuItem id={dataId} {activeDescendant}>
 				<button

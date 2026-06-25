@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
-	import { storeWinStats } from '$lib/api';
+	import { getTileSizes, storeWinStats } from '$lib/api';
+	import { GamesState, setGameContext } from '$lib/state';
 	import { clearGameProgress, updateGameProgress } from '$lib/storage';
 	import { BOARD_GAP, TILE_GAP, WORD_LENGTH } from '$lib/types';
-	import { GamesState } from '../gamesState.svelte';
 	import type { PageData } from './$types';
 	import Controls from './Controls.svelte';
 	import GameBoard from './GameBoard.svelte';
@@ -14,21 +14,14 @@
 
 	let { data }: IProps = $props();
 
-	const storedGame = new GamesState(() => data);
+	const storedGame = setGameContext(new GamesState(() => data));
 
 	const numberOfGames = storedGame.numberOfGames;
 
 	let screenWidth: number | null | undefined = $state();
-	const numberOfColumns = $derived(numberOfGames === 1 ? 1 : 2);
-	const availableWidth = $derived(
-		screenWidth == null ? screenWidth : numberOfColumns === 1 ? screenWidth * 0.8 : screenWidth
-	);
-	const maxWidth = $derived(Math.min(availableWidth ?? Infinity, 450));
-	const tileWidth = $derived(
-		(maxWidth - (WORD_LENGTH + 1) * numberOfColumns * TILE_GAP) / (WORD_LENGTH * numberOfColumns)
-	);
 
-	let canAcceptInput = $state(true);
+	const { maxWidth, tileWidth } = $derived.by(() => getTileSizes(numberOfGames, screenWidth));
+
 	let badGuess = $state(false);
 
 	/** Whether the current guess can be submitted */
@@ -47,25 +40,12 @@
 		}
 	}
 
-	/**
-	 * A 300 ms delay to be used when revealing a guess
-	 */
-	const delay = () => new Promise((resolve) => setTimeout(resolve, 300));
-
-	async function animateGuess() {
-		// canAcceptInput = false;
-		await delay();
-		// canAcceptInput = true;
-	}
-
-	async function submit() {
+	function submit() {
 		const isBadGuess = !storedGame.submitGuess();
 
 		updateGameProgress(storedGame.toStorage(), numberOfGames);
 
 		if (!isBadGuess) {
-			await animateGuess();
-
 			if (storedGame.status === 'inProgress') {
 				return;
 			}
@@ -99,16 +79,10 @@
 		});
 	}
 
-	function handleKey(event: any) {
-		if (!canAcceptInput) {
-			return;
-		}
-
+	function handleKey(key: string | null) {
 		if (window.MobileGame) {
 			window.MobileGame.onKeyPress();
 		}
-
-		const key = event.detail.key;
 
 		switch (key) {
 			case 'enter':
@@ -119,6 +93,8 @@
 				break;
 			case 'badGuess':
 				triedBadGuess();
+				break;
+			case null:
 				break;
 			default:
 				update(key);
@@ -141,36 +117,32 @@
 		<div class="scroll-area">
 			<div
 				class="boards-container"
-				style={`--_vertical-scroll-padding: ${BOARD_GAP}px; --_flex-gap: ${TILE_GAP * 3}px; max-width: ${maxWidth}px;`}
+				style:--_vertical-scroll-padding={`${BOARD_GAP}px`}
+				style:--_flex-gap={`${TILE_GAP * 3}px`}
+				style:max-width={`${maxWidth}px`}
+				style:--_tile-gap={`${TILE_GAP}px`}
+				style:--_tile-base-size={`${tileWidth}px`}
 			>
 				{#each { length: numberOfGames } as _, board (board)}
-					{@const winIndex = storedGame.value[board]?.winIndex}
-					{@const thisBoardWon = storedGame.value[board]?.status === 'won'}
-					{@const guesses = storedGame.value[board]?.guesses ?? []}
 					<GameBoard
+						gameIndex={board}
 						rowIndex={storedGame.guessIndex}
 						{numberOfGames}
-						won={thisBoardWon}
-						allWon={storedGame.status === 'won'}
-						winIndex={winIndex ?? -1}
 						currentGuess={storedGame.currentGuess}
 						invalid={storedGame.isGuessInvalid}
-						{guesses}
 						{badGuess}
 						{tileWidth}
+						allWon={storedGame.status === 'won'}
 					/>
 				{/each}
 			</div>
 		</div>
 
 		<Controls
-			on:key={handleKey}
-			hints={storedGame.hints}
-			answers={storedGame.getAnswers()}
+			onKey={handleKey}
 			gameStatus={storedGame.status}
 			{submittable}
 			invalid={storedGame.isGuessInvalid}
-			winIndexes={storedGame.getWinIndexes()}
 		/>
 	</div>
 </div>
@@ -188,6 +160,7 @@
 		align-items: center;
 		justify-content: center;
 		width: 100%;
+		height: 100%;
 	}
 
 	.scroll-area {

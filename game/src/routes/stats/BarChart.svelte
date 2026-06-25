@@ -16,7 +16,7 @@
 
 <div class="chart-container">
 	<svg {width} {height}>
-		{#each data.labels as label, index}
+		{#each data.labels as label, index (label)}
 			{@const x = (width / data.labels.length) * index + width / (2 * data.labels.length)}
 			{@const barValue = data.data[index]}
 			{@const barHeight = maxValue === 0 ? 0 : (barValue / maxValue) * maxHeight}

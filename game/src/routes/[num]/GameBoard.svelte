@@ -1,56 +1,34 @@
 <script lang="ts">
+	import { getGameContext } from '$lib/state';
 	import { NUMBER_TRIES, TILE_GAP, WORD_LENGTH, type IGuess } from '$lib/types';
 
 	interface IProps {
+		gameIndex: number;
+		rowIndex: number; 
 		numberOfGames: number;
-		won: boolean;
-		allWon: boolean;
-		winIndex: number;
-		badGuess: boolean;
-		invalid: boolean;
-		guesses: IGuess[];
 		currentGuess: string;
-		rowIndex: number;
+		invalid: boolean;
+		badGuess: boolean;
 		tileWidth: number;
+		allWon: boolean;
 	}
 
 	let {
-		numberOfGames,
-		won,
-		allWon,
-		winIndex,
-		badGuess,
-		invalid,
-		guesses,
-		currentGuess,
+		gameIndex,
 		rowIndex,
-		tileWidth
+		numberOfGames,
+		currentGuess,
+		invalid,
+		badGuess,
+		tileWidth,
+		allWon,
 	}: IProps = $props();
 
-	let previousGuessLength = $state(0);
+	const game = getGameContext();
 
-	const animateLetterClassName = 'animate-letter';
-
-	// Manually add letter animation so it doesn't trigger when opening a game
-	$effect(() => {
-		const currentGuessLength = currentGuess.length;
-		if (currentGuessLength === 0 && previousGuessLength === 0) {
-			return;
-		}
-
-		const currentRows = document.querySelectorAll('.playing .current-row');
-		currentRows.forEach((currentRow) => {
-			if (previousGuessLength > currentGuessLength) {
-				const letter = currentRow.children[previousGuessLength - 1];
-				letter.classList.remove(animateLetterClassName);
-			} else {
-				const letter = currentRow.children[currentGuessLength - 1];
-				letter.classList.add(animateLetterClassName);
-			}
-		});
-
-		previousGuessLength = currentGuessLength;
-	});
+	const won = $derived(game.value[gameIndex]?.status === 'won');
+	const winIndex = $derived(game.value[gameIndex]?.winIndex ?? -1);
+	const guesses = $derived(game.value[gameIndex]?.guesses ?? []);
 </script>
 
 <div
@@ -59,12 +37,11 @@
 	class:won={allWon}
 	class:bad-guess={badGuess}
 	class:invalid
-	style={`--tile-gap: ${TILE_GAP}px;`}
 >
 	{#each { length: numberOfGames + NUMBER_TRIES } as _, row (row)}
 		{@const current = !won ? row === rowIndex : row === winIndex}
 		<h2 class="visually-hidden">Row {row + 1}</h2>
-		<div class="row" class:current-row={current} style={`--_tile-base-size: ${tileWidth}px;`}>
+		<div class="row" class:current-row={current}>
 			{#if !won || (won && row <= winIndex)}
 				{#each { length: WORD_LENGTH } as _, column (column)}
 					{@const guess = !won && current ? currentGuess : guesses[row]?.guess}
@@ -75,7 +52,7 @@
 					{@const close = answer === 'c'}
 					{@const missing = answer === '_'}
 					<div
-						style={`--_letter-anim-delay: ${column};`}
+						style:--_letter-anim-delay={`${column}`}
 						class="letter"
 						class:exact
 						class:close
@@ -114,13 +91,13 @@
 		display: flex;
 		flex-direction: column;
 		font-size: var(--letter-size);
-		gap: var(--tile-gap);
+		gap: var(--_tile-gap);
 	}
 
 	.row {
 		height: var(--_tile-base-size);
 		display: flex;
-		gap: var(--tile-gap);
+		gap: var(--_tile-gap);
 	}
 
 	.current-row {

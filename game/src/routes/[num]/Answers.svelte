@@ -1,21 +1,28 @@
 <script lang="ts">
+	import { getGameContext } from '$lib/state';
+
 	interface IProps {
 		gameFinished: boolean;
-		answers: { [gameIndex: string]: string | null };
-		winIndexes: { [gameId: string]: number | undefined };
 	}
 
-	let { gameFinished, answers, winIndexes }: IProps = $props();
+	const { gameFinished }: IProps = $props();
+
+	const game = getGameContext();
+
+	const { answers, winIndexes } = $derived.by(() => ({
+		answers: game.getAnswers(),
+		winIndexes: game.getWinIndexes()
+	}));
 </script>
 
 {#if gameFinished && answers['0'] && winIndexes['0']}
 	<div class="container">
-		{#each Object.entries(answers) as [gameIndex, answer]}
+		{#each Object.entries(answers) as [gameIndex, answer] (gameIndex)}
 			{@const numberOfGuesses = (winIndexes[gameIndex] ?? -1) + 1}
 			{@const missed = numberOfGuesses === 0}
 			<div class="answer">
 				<span>{answer}</span>
-				<span class="guesses" class:missed>{!missed ? numberOfGuesses: ''}</span>
+				<span class="guesses" class:missed>{!missed ? numberOfGuesses : ''}</span>
 			</div>
 		{/each}
 	</div>

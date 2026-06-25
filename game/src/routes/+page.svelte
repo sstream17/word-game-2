@@ -8,7 +8,7 @@
 	{#snippet card({ title, number }: { title: string; number: number })}
 		<div class="card">
 			<div class="game-rep">
-				{#each { length: number } as _}
+				{#each { length: number }}
 					<div class="fake-game"></div>
 				{/each}
 			</div>

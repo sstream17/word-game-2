@@ -21,7 +21,7 @@
 <svelte:window bind:innerWidth={screenWidth} />
 
 <div class="container">
-	{#each gameModes as game}
+	{#each gameModes as game (game[0])}
 		{@const title = game[0]}
 		{@const numberOfGames = game[1]}
 		<SingleGameStats
@@ -40,7 +40,7 @@
 		gap: 64px;
 		padding: 32px;
 		align-items: center;
-		justify-content: center;
+		justify-content: flex-start;
 		overflow-y: auto;
 		text-align: center;
 		height: 100%;
