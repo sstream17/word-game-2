@@ -21,7 +21,7 @@
 <svelte:window bind:innerWidth={screenWidth} />
 
 <div class="container">
-	{#each gameModes as game}
+	{#each gameModes as game (game[0])}
 		{@const title = game[0]}
 		{@const numberOfGames = game[1]}
 		<SingleGameStats

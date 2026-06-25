@@ -103,14 +103,14 @@
 	{/snippet}
 
 	<div class="row">
-		{#each 'qwertyuiop' as key}
+		{#each 'qwertyuiop' as key (key)}
 			{@render letter(key)}
 		{/each}
 	</div>
 
 	<div class="row">
 		<div class="spacer"></div>
-		{#each 'asdfghjkl' as key}
+		{#each 'asdfghjkl' as key (key)}
 			{@render letter(key)}
 		{/each}
 		<div class="spacer"></div>
@@ -127,7 +127,7 @@
 			<span class="visually-hidden">backspace</span>
 			<Icon path="back_icon.svg#icon_path" />
 		</button>
-		{#each 'zxcvbnm' as key}
+		{#each 'zxcvbnm' as key (key)}
 			{@render letter(key)}
 		{/each}
 		<button

@@ -17,7 +17,7 @@
 
 {#if gameFinished && answers['0'] && winIndexes['0']}
 	<div class="container">
-		{#each Object.entries(answers) as [gameIndex, answer]}
+		{#each Object.entries(answers) as [gameIndex, answer] (gameIndex)}
 			{@const numberOfGuesses = (winIndexes[gameIndex] ?? -1) + 1}
 			{@const missed = numberOfGuesses === 0}
 			<div class="answer">
