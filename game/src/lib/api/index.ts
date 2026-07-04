@@ -1,7 +1,9 @@
 export { createThemeState } from './createThemeState.svelte';
 export { getFinishIndex } from './getFinishIndex';
+export { getInitialStatsState } from './getInitialStatsState';
 export { getKeySizes } from './getKeySizes';
 export { getResult } from './getResult';
 export { getTileSizes } from './getTileSizes';
 export { isGameOver } from './isGameOver';
+export { mergeStats } from './mergeStats';
 export { storeWinStats } from './storeWinStats';

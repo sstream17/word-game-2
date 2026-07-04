@@ -1,15 +1,18 @@
 import { browser } from '$app/environment';
+import { getInitialStatsState, mergeStats } from '$lib/api';
 import { getData } from '$lib/storage';
-import { initialStatsState } from '$lib/types';
 import type { PageLoad } from './$types';
 
 export const load = (() => {
-    const storedState = browser ? getData()?.stats : undefined;
+	const storedValue = browser ? getData()?.stats?.value : undefined;
+	const initialValue = getInitialStatsState().value;
 
-    const stats = {
-        ...initialStatsState.value,
-        ...storedState?.value,
-    }
+	const stats = Object.fromEntries(
+		Object.entries(initialValue).map(([key, value]) => [
+			key,
+			mergeStats(value, storedValue?.[key as unknown as number])
+		])
+	);
 
-    return stats;
+	return stats;
 }) satisfies PageLoad;

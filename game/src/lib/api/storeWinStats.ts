@@ -1,7 +1,9 @@
 import { browser } from '$app/environment';
 import { getData, updateGameStats } from '$lib/storage';
-import { initialStats, type IStatsState } from '$lib/types';
+import { type IStatsState } from '$lib/types';
 import { getFinishIndex } from './getFinishIndex';
+import { getInitialStats } from './getInitialStats';
+import { mergeStats } from './mergeStats';
 
 interface IPayload {
 	numberOfGames: number;
@@ -20,15 +22,11 @@ export function storeWinStats(payload: IPayload): void {
 
 	const { numberOfGames, won, winIndexes } = payload;
 
-	const storedStats = getData()?.stats ?? { value: {} } as IStatsState;
+	const storedStats = getData()?.stats ?? ({ value: {} } as IStatsState);
 
 	const existingStats = storedStats.value[numberOfGames];
 
-
-	const newStats = {
-		...initialStats,
-		...existingStats,
-	}
+	const newStats = mergeStats(getInitialStats(), existingStats);
 
 	newStats.gamesPlayed = newStats.gamesPlayed + 1;
 
