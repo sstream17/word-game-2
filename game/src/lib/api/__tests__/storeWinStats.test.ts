@@ -19,7 +19,7 @@ describe('storeWinStats', () => {
 			it('increments the games played count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 3 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 3 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -32,7 +32,7 @@ describe('storeWinStats', () => {
 			it('increments the games won count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 3 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 3 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -45,7 +45,7 @@ describe('storeWinStats', () => {
 			it('increments the current streak count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 3 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 3 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -58,7 +58,7 @@ describe('storeWinStats', () => {
 			it('increments the max streak count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 3 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 3 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -71,7 +71,7 @@ describe('storeWinStats', () => {
 			it('updates the sum of finishes', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 3 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 3 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -84,7 +84,7 @@ describe('storeWinStats', () => {
 			it('updates the finish counts', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 3 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 3 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -107,7 +107,7 @@ describe('storeWinStats', () => {
 			it('increments the games played count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: false, winIndexes: { 1: undefined } });
+				storeWinStats({ numberOfGames, won: false, winIndexes: { 0: undefined } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -120,7 +120,7 @@ describe('storeWinStats', () => {
 			it('clears the current streak count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: false, winIndexes: { 1: undefined } });
+				storeWinStats({ numberOfGames, won: false, winIndexes: { 0: undefined } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -133,7 +133,7 @@ describe('storeWinStats', () => {
 			it('updates the sum of finishes', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: false, winIndexes: { 1: undefined } });
+				storeWinStats({ numberOfGames, won: false, winIndexes: { 0: undefined } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -146,7 +146,7 @@ describe('storeWinStats', () => {
 			it('updates the finish counts', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: false, winIndexes: { 1: undefined } });
+				storeWinStats({ numberOfGames, won: false, winIndexes: { 0: undefined } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -192,7 +192,7 @@ describe('storeWinStats', () => {
 			it('increments the games played count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 4 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 4 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -205,7 +205,7 @@ describe('storeWinStats', () => {
 			it('increments the games won count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 4 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 4 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -218,7 +218,7 @@ describe('storeWinStats', () => {
 			it('increments the current streak count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 4 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 4 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -231,7 +231,7 @@ describe('storeWinStats', () => {
 			it('keeps the same max streak count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 4 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 4 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -244,7 +244,7 @@ describe('storeWinStats', () => {
 			it('updates the sum of finishes', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 4 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 4 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -257,7 +257,7 @@ describe('storeWinStats', () => {
 			it('updates the finish counts', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: true, winIndexes: { 1: 4 } });
+				storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 4 } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -301,7 +301,7 @@ describe('storeWinStats', () => {
 			it('increments the games played count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: false, winIndexes: { 1: undefined } });
+				storeWinStats({ numberOfGames, won: false, winIndexes: { 0: undefined } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -314,7 +314,7 @@ describe('storeWinStats', () => {
 			it('keeps the games won count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: false, winIndexes: { 1: undefined } });
+				storeWinStats({ numberOfGames, won: false, winIndexes: { 0: undefined } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -327,7 +327,7 @@ describe('storeWinStats', () => {
 			it('clears the current streak count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: false, winIndexes: { 1: undefined } });
+				storeWinStats({ numberOfGames, won: false, winIndexes: { 0: undefined } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -340,7 +340,7 @@ describe('storeWinStats', () => {
 			it('keeps the same max streak count', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: false, winIndexes: { 1: undefined } });
+				storeWinStats({ numberOfGames, won: false, winIndexes: { 0: undefined } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -353,7 +353,7 @@ describe('storeWinStats', () => {
 			it('updates the sum of finishes', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: false, winIndexes: { 1: undefined } });
+				storeWinStats({ numberOfGames, won: false, winIndexes: { 0: undefined } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -366,7 +366,7 @@ describe('storeWinStats', () => {
 			it('updates the finish counts', () => {
 				const numberOfGames = 1;
 
-				storeWinStats({ numberOfGames, won: false, winIndexes: { 1: undefined } });
+				storeWinStats({ numberOfGames, won: false, winIndexes: { 0: undefined } });
 
 				expect(mockedUpdateGameStats).toHaveBeenCalledWith(
 					expect.objectContaining({
@@ -375,6 +375,114 @@ describe('storeWinStats', () => {
 					numberOfGames
 				);
 			});
+		});
+	});
+
+	describe('when saving the first stats for multiple games', () => {
+		// This test case ensures the finish counts are saved correctly for each game.
+		// Previously, a bug caused finish counts to be mangled due to shallow/deep-copy issues.
+		it('saves the correct finish counts each time', () => {
+			// First, simulate no existing stats in storage and store stats for a single game
+			mockedGetData.mockReturnValueOnce(undefined);
+
+			let numberOfGames = 1;
+
+			storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 3 } });
+
+			expect(mockedUpdateGameStats).toHaveBeenCalledWith(
+				expect.objectContaining({
+					finishCounts: { 0: 0, 1: 0, 2: 0, 3: 1, 4: 0, 5: 0, 6: 0 }
+				}),
+				numberOfGames
+			);
+
+			// Next, simulate the previous saved stats and store stats for two-game
+			jest.clearAllMocks();
+			mockedGetData.mockReturnValueOnce({
+				stats: {
+					value: {
+						'1': {
+							gamesPlayed: 1,
+							gamesWon: 1,
+							sumOfFinishes: 4,
+							currentWinStreak: 1,
+							maxWinStreak: 1,
+							finishCounts: {
+								'0': 0,
+								'1': 0,
+								'2': 0,
+								'3': 1,
+								'4': 0,
+								'5': 0,
+								'6': 0
+							}
+						}
+					}
+				}
+			});
+
+			numberOfGames = 2;
+
+			storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 4, 1: 5 } });
+
+			expect(mockedUpdateGameStats).toHaveBeenCalledWith(
+				expect.objectContaining({
+					finishCounts: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 1, 5: 0, 6: 0 }
+				}),
+				numberOfGames
+			);
+
+			// Finally, simulate both previously saved stats and store stats for four-game
+			jest.clearAllMocks();
+			mockedGetData.mockReturnValueOnce({
+				stats: {
+					value: {
+						'1': {
+							gamesPlayed: 1,
+							gamesWon: 1,
+							sumOfFinishes: 4,
+							currentWinStreak: 1,
+							maxWinStreak: 1,
+							finishCounts: {
+								'0': 0,
+								'1': 0,
+								'2': 0,
+								'3': 1,
+								'4': 0,
+								'5': 0,
+								'6': 0
+							}
+						},
+						'2': {
+							gamesPlayed: 1,
+							gamesWon: 1,
+							sumOfFinishes: 6,
+							currentWinStreak: 1,
+							maxWinStreak: 1,
+							finishCounts: {
+								'0': 0,
+								'1': 0,
+								'2': 0,
+								'3': 0,
+								'4': 1,
+								'5': 0,
+								'6': 0
+							}
+						}
+					}
+				}
+			});
+
+			numberOfGames = 4;
+
+			storeWinStats({ numberOfGames, won: true, winIndexes: { 0: 5, 1: 6, 2: 7, 3: 8 } });
+
+			expect(mockedUpdateGameStats).toHaveBeenCalledWith(
+				expect.objectContaining({
+					finishCounts: { 0: 0, 1: 0, 2: 0, 3: 0, 4: 0, 5: 1, 6: 0 }
+				}),
+				numberOfGames
+			);
 		});
 	});
 });
