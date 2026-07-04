@@ -9,7 +9,6 @@
 		currentGuess: string;
 		invalid: boolean;
 		badGuess: boolean;
-		tileWidth: number;
 		allWon: boolean;
 	}
 
@@ -20,7 +19,6 @@
 		currentGuess,
 		invalid,
 		badGuess,
-		tileWidth,
 		allWon,
 	}: IProps = $props();
 

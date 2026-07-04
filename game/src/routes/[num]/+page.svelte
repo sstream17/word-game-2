@@ -131,7 +131,6 @@
 						currentGuess={storedGame.currentGuess}
 						invalid={storedGame.isGuessInvalid}
 						{badGuess}
-						{tileWidth}
 						allWon={storedGame.status === 'won'}
 					/>
 				{/each}
