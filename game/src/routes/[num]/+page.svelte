@@ -124,13 +124,18 @@
 				style:--_tile-base-size={`${tileWidth}px`}
 			>
 				{#each { length: numberOfGames } as _, board (board)}
+					{@const won = storedGame.value[board]?.status === 'won'}
+					{@const winIndex = storedGame.value[board]?.winIndex ?? -1}
+					{@const guesses = storedGame.value[board]?.guesses ?? []}
 					<GameBoard
-						gameIndex={board}
+						{guesses}
 						rowIndex={storedGame.guessIndex}
 						{numberOfGames}
 						currentGuess={storedGame.currentGuess}
 						invalid={storedGame.isGuessInvalid}
 						{badGuess}
+						{won}
+						{winIndex}
 						allWon={storedGame.status === 'won'}
 					/>
 				{/each}

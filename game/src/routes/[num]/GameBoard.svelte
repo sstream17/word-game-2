@@ -1,26 +1,30 @@
 <script lang="ts">
-	import { getGameContext } from '$lib/state';
-	import { NUMBER_TRIES } from '$lib/types';
+	import { NUMBER_TRIES, type IGuess } from '$lib/types';
 	import GuessRow from './GuessRow.svelte';
 
 	interface IProps {
-		gameIndex: number;
+		guesses: IGuess[];
 		rowIndex: number;
 		numberOfGames: number;
 		currentGuess: string;
 		invalid: boolean;
 		badGuess: boolean;
+		won: boolean;
+		winIndex: number;
 		allWon: boolean;
 	}
 
-	const { gameIndex, rowIndex, numberOfGames, currentGuess, invalid, badGuess, allWon }: IProps =
-		$props();
-
-	const game = getGameContext();
-
-	const won = $derived(game.value[gameIndex]?.status === 'won');
-	const winIndex = $derived(game.value[gameIndex]?.winIndex ?? -1);
-	const guesses = $derived(game.value[gameIndex]?.guesses ?? []);
+	const {
+		guesses,
+		rowIndex,
+		numberOfGames,
+		currentGuess,
+		invalid,
+		badGuess,
+		won,
+		winIndex,
+		allWon
+	}: IProps = $props();
 </script>
 
 <div class="game" class:playing={!won} class:won={allWon} class:bad-guess={badGuess} class:invalid>
