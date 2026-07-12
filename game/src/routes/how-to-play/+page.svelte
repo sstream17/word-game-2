@@ -31,14 +31,14 @@
 		style:--_tile-base-size={`${singleTileWidth}px`}
 		style:--_tile-gap={`${TILE_GAP}px`}
 	>
-		<GuessRow guess={'ritzy'} result={'c_c_x'} isCurrentRow />
+		<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow />
 	</div>
 
 	<p>
-		The <span class="letter exact">y</span> is in the right place.
-		<span class="letter close">r</span>
-		and
+		The <span class="letter exact">c</span> is in the right place.
 		<span class="letter close">t</span>
+		and
+		<span class="letter close">a</span>
 		are the right letters, but in the wrong place. The other letters are wrong, and can be discarded.
 		Let's make another guess:
 	</p>
@@ -49,8 +49,8 @@
 		style:--_tile-base-size={`${singleTileWidth}px`}
 		style:--_tile-gap={`${TILE_GAP}px`}
 	>
-		<GuessRow guess={'ritzy'} result={'c_c_x'} isCurrentRow={false} />
-		<GuessRow guess={'party'} result={'xxxxx'} isCurrentRow />
+		<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow={false} />
+		<GuessRow guess={'match'} result={'xxxxx'} isCurrentRow />
 	</div>
 
 	<p>This time we guessed right! You have <strong>six</strong> guesses to get the word.</p>
