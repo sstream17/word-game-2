@@ -20,8 +20,10 @@
 	</div>
 
 	<p>
-		The <span class="exact">y</span> is in the right place. <span class="close">r</span> and
-		<span class="close">t</span>
+		The <span class="letter exact">y</span> is in the right place.
+		<span class="letter close">r</span>
+		and
+		<span class="letter close">t</span>
 		are the right letters, but in the wrong place. The other letters are wrong, and can be discarded.
 		Let's make another guess:
 	</p>
@@ -35,52 +37,22 @@
 </div>
 
 <style>
-	span {
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-		font-size: 0.8em;
-		width: 2.4em;
-		height: 2.4em;
-		background-color: white;
-		box-sizing: border-box;
-		border-radius: 2px;
-		border-width: 2px;
-		color: rgba(0, 0, 0, 0.7);
-	}
-
-	.missing {
-		background: rgba(255, 255, 255, 0.5);
-		color: rgba(0, 0, 0, 0.5);
-	}
-
-	.close {
-		border-style: solid;
-		border-color: var(--color-theme-2);
-	}
-
-	.exact {
-		background: var(--color-theme-2);
-		color: white;
-	}
-
-	.example {
-		display: flex;
-		justify-content: flex-start;
-		margin: 1rem 0;
-		gap: 0.2rem;
-	}
-
-	.example span {
-		font-size: 1.4rem;
-	}
-
-	p span {
+	.letter {
+		/* Styles shared with game board letters */
 		position: relative;
-		border-width: 1px;
-		border-radius: 1px;
-		font-size: 0.4em;
-		transform: scale(2) translate(0, -10%);
-		margin: 0 1em;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		text-transform: lowercase;
+		border: none;
+		border-radius: 2px;
+		
+		/* Styles specific to how-to-play letters */
+		display: inline-flex;
+		margin: 0 0.2rem;
+		width: 1rem;
+		height: 1rem;
+		font-size: 1.1rem;
+		padding: 0.75rem;
 	}
 </style>
