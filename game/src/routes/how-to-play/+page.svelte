@@ -79,4 +79,8 @@
 		font-size: 1.1rem;
 		padding: 0.75rem;
 	}
+
+	p {
+		padding: 16px;
+	}
 </style>
