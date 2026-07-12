@@ -4,7 +4,7 @@
 </svelte:head>
 
 <div class="text-column">
-	<h1>How to play Word Game</h1>
+	<h1>How to play</h1>
 
 	<p>
 		Word Game is a clone of <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>, the
