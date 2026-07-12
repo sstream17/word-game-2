@@ -1,3 +1,7 @@
+<script>
+	import GuessRow from '$lib/components/GuessRow.svelte';
+</script>
+
 <svelte:head>
 	<title>How to play Word Game</title>
 	<meta name="description" content="How to play Word Game" />
@@ -7,16 +11,12 @@
 	<h1>How to play</h1>
 
 	<p>
-		Word Game is a clone of <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>, the
-		word guessing game. To play, enter a five-letter English word. For example:
+		Word Game is a clone of <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>,
+		the word guessing game. To play, enter a five-letter English word. For example:
 	</p>
 
-	<div class="example">
-		<span class="close">r</span>
-		<span class="missing">i</span>
-		<span class="close">t</span>
-		<span class="missing">z</span>
-		<span class="exact">y</span>
+	<div class="game playing" style:--_tile-base-size={'85.2px'} style:--_tile-gap={'4px'}>
+		<GuessRow guess={'ritzy'} result={'c_c_x'} isCurrentRow />
 	</div>
 
 	<p>
@@ -26,12 +26,9 @@
 		Let's make another guess:
 	</p>
 
-	<div class="example">
-		<span class="exact">p</span>
-		<span class="exact">a</span>
-		<span class="exact">r</span>
-		<span class="exact">t</span>
-		<span class="exact">y</span>
+	<div class="game playing" style:--_tile-base-size={'85.2px'} style:--_tile-gap={'4px'}>
+		<GuessRow guess={'ritzy'} result={'c_c_x'} isCurrentRow={false} />
+		<GuessRow guess={'party'} result={'xxxxx'} isCurrentRow />
 	</div>
 
 	<p>This time we guessed right! You have <strong>six</strong> guesses to get the word.</p>
