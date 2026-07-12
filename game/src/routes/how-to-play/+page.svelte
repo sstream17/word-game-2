@@ -43,12 +43,12 @@
 		</div>
 
 		<p>
-			The <span class="letter exact">c</span> is in the right place.
+			The <span class="letter exact">c</span> is in the correct place.
 			<span class="letter close">t</span>
 			and
 			<span class="letter close">a</span>
-			are the right letters, but in the wrong place. The other letters are wrong, and can be discarded.
-			Let's make another guess:
+			are in the word, but in the wrong place. The other letters are missing, and can be discarded. Let's
+			make another guess:
 		</p>
 
 		<div
@@ -217,7 +217,7 @@
 		</div>
 
 		<p>
-			Four words plus five extra tries means you have <strong>nine</strong> guesses to get all four words.
+			Four words plus five more tries means you have <strong>nine</strong> guesses to get all four words.
 		</p>
 
 		<p>Good luck solving!</p>
