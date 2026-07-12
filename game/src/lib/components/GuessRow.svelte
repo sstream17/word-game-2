@@ -79,19 +79,4 @@
 		color: var(--color-text);
 		box-shadow: 0 0 2px var(--color-box-shadow);
 	}
-
-	.letter.missing {
-		background-color: var(--color-missing);
-		color: var(--color-text-missing);
-	}
-
-	.letter.exact {
-		background-color: var(--color-exact);
-		color: var(--color-text-exact);
-	}
-
-	.letter.close {
-		background-color: var(--color-close);
-		border: 2px solid var(--color-close-border);
-	}
 </style>
