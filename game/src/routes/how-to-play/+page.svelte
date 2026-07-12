@@ -22,97 +22,205 @@
 
 <svelte:window bind:innerWidth={screenWidth} />
 
-<div class="text-column">
-	<h1>How to play</h1>
+<div class="scroll-area">
+	<div class="text-column">
+		<h1>How to play</h1>
 
-	<p>
-		Word Game is a clone of <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>,
-		the word guessing game. To play, enter a five-letter English word. For example:
-	</p>
+		<p>
+			Word Game is a clone of <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>,
+			the word guessing game. To play, enter a five-letter English word. For example:
+		</p>
 
-	<div
-		class="boards-container"
-		style:max-width={`${singleMaxWidth}px`}
-		style:--_tile-base-size={`${singleTileWidth}px`}
-		style:--_tile-gap={`${TILE_GAP}px`}
-	>
-		<div class="game playing">
-			<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow />
+		<div
+			class="boards-container"
+			style:max-width={`${singleMaxWidth}px`}
+			style:--_tile-base-size={`${singleTileWidth}px`}
+			style:--_tile-gap={`${TILE_GAP}px`}
+		>
+			<div class="game playing">
+				<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow />
+			</div>
 		</div>
-	</div>
 
-	<p>
-		The <span class="letter exact">c</span> is in the right place.
-		<span class="letter close">t</span>
-		and
-		<span class="letter close">a</span>
-		are the right letters, but in the wrong place. The other letters are wrong, and can be discarded.
-		Let's make another guess:
-	</p>
+		<p>
+			The <span class="letter exact">c</span> is in the right place.
+			<span class="letter close">t</span>
+			and
+			<span class="letter close">a</span>
+			are the right letters, but in the wrong place. The other letters are wrong, and can be discarded.
+			Let's make another guess:
+		</p>
 
-	<div
-		class="boards-container"
-		style:max-width={`${singleMaxWidth}px`}
-		style:--_tile-base-size={`${singleTileWidth}px`}
-		style:--_tile-gap={`${TILE_GAP}px`}
-	>
-		<div class="game playing">
-			<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow={false} />
-			<GuessRow guess={'match'} result={'xxxxx'} isCurrentRow />
+		<div
+			class="boards-container"
+			style:max-width={`${singleMaxWidth}px`}
+			style:--_tile-base-size={`${singleTileWidth}px`}
+			style:--_tile-gap={`${TILE_GAP}px`}
+		>
+			<div class="game playing">
+				<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow={false} />
+				<GuessRow guess={'match'} result={'xxxxx'} isCurrentRow />
+			</div>
 		</div>
-	</div>
 
-	<p>This time we guessed right! You have <strong>six</strong> guesses to get the word.</p>
+		<p>This time the guess was right! You have <strong>six</strong> guesses to get the word.</p>
 
-	<h2>Duo</h2>
+		<h2>Duo</h2>
 
-	<p>
-		Word Game also includes modes where you guess multiple words at once. In Duo mode, you try to
-		reveal two words with the same guesses. For example:
-	</p>
+		<p>
+			Word Game also includes modes where you play multiple words at once. In Duo mode, you try to
+			reveal two words with the same guesses. For example:
+		</p>
 
-	<div
-		class="boards-container"
-		style:--_vertical-scroll-padding={'0px'}
-		style:--_flex-gap={`${TILE_GAP * 3}px`}
-		style:max-width={`${doubleMaxWidth}px`}
-		style:--_tile-gap={`${TILE_GAP}px`}
-		style:--_tile-base-size={`${doubleTileWidth}px`}
-	>
-		<GameBoard
-			guesses={[
-				{ guess: 'trace', result: 'c_cx_' },
-				{ guess: 'match', result: 'xxxxx' },
-				{ guess: '', result: '_____' },
-				{ guess: '', result: '_____' },
-				{ guess: '', result: '_____' },
-				{ guess: '', result: '_____' },
-				{ guess: '', result: '_____' }
-			]}
-			rowIndex={1}
-			numberOfGames={2}
-			currentGuess={''}
-			invalid={false}
-			badGuess={false}
-			won={true}
-			winIndex={1}
-			allWon={false}
-		/>
-		<GameBoard
-			guesses={[
-				{ guess: 'trace', result: '____x' },
-				{ guess: 'match', result: '_____' },
-				{ guess: 'novel', result: '_xccc' }
-			]}
-			rowIndex={3}
-			numberOfGames={2}
-			currentGuess={''}
-			invalid={false}
-			badGuess={false}
-			won={false}
-			winIndex={-1}
-			allWon={false}
-		/>
+		<div
+			class="boards-container"
+			style:--_vertical-scroll-padding={'0px'}
+			style:--_flex-gap={`${TILE_GAP * 3}px`}
+			style:max-width={`${doubleMaxWidth}px`}
+			style:--_tile-gap={`${TILE_GAP}px`}
+			style:--_tile-base-size={`${doubleTileWidth}px`}
+		>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: 'c_cx_' },
+					{ guess: 'match', result: 'xxxxx' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' }
+				]}
+				rowIndex={1}
+				numberOfGames={2}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={true}
+				winIndex={1}
+				allWon={false}
+			/>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: '____x' },
+					{ guess: 'match', result: '_____' },
+					{ guess: 'novel', result: '_xccc' }
+				]}
+				rowIndex={3}
+				numberOfGames={2}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={false}
+				winIndex={-1}
+				allWon={false}
+			/>
+		</div>
+
+		<p>
+			The first word is already correct, but the second word still needs to be guessed. You continue
+			guessing until all words are complete.
+		</p>
+
+		<p>
+			You have 5 more tries than the number of words you are trying to guess. For Duo mode, you have
+			<strong>seven</strong> guesses to get both words.
+		</p>
+
+		<h2>Quad</h2>
+
+		<p>Quad mode is like Duo mode, but you are playing four words at once.</p>
+
+		<div
+			class="boards-container"
+			style:--_vertical-scroll-padding={'0px'}
+			style:--_flex-gap={`${TILE_GAP * 3}px`}
+			style:max-width={`${doubleMaxWidth}px`}
+			style:--_tile-gap={`${TILE_GAP}px`}
+			style:--_tile-base-size={`${doubleTileWidth}px`}
+		>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: 'c_cx_' },
+					{ guess: 'match', result: 'xxxxx' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' }
+				]}
+				rowIndex={1}
+				numberOfGames={4}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={true}
+				winIndex={1}
+				allWon={false}
+			/>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: '___xx' },
+					{ guess: 'match', result: '___x_' },
+					{ guess: 'novel', result: '___c_' },
+					{ guess: 'solve', result: '____x' },
+					{ guess: 'glyph', result: '___c_' }
+				]}
+				rowIndex={5}
+				numberOfGames={4}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={false}
+				winIndex={-1}
+				allWon={false}
+			/>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: '___c_' },
+					{ guess: 'match', result: '___c_' },
+					{ guess: 'novel', result: '_x__c' },
+					{ guess: 'solve', result: '_xc__' },
+					{ guess: 'glyph', result: 'cc___' }
+				]}
+				rowIndex={5}
+				numberOfGames={4}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={false}
+				winIndex={-1}
+				allWon={false}
+			/>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: '____x' },
+					{ guess: 'match', result: '_____' },
+					{ guess: 'novel', result: '_xccc' },
+					{ guess: 'solve', result: 'xxxxx' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' }
+				]}
+				rowIndex={3}
+				numberOfGames={4}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={true}
+				winIndex={3}
+				allWon={false}
+			/>
+		</div>
+
+		<p>
+			Four words plus five extra tries means you have <strong>nine</strong> guesses to get all four words.
+		</p>
+
+		<p>Good luck solving!</p>
 	</div>
 </div>
 
