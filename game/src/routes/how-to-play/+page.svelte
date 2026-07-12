@@ -57,6 +57,10 @@
 </div>
 
 <style>
+	.game {
+		margin-inline: auto;
+	}
+
 	.letter {
 		/* Styles shared with game board letters */
 		position: relative;
