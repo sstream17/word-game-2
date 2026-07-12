@@ -1,4 +1,13 @@
 /* Styles used for game boards */
+.game {
+	--_current-row-scale: 1.2;
+	--_animation-grow-scale: 1.08;
+	display: flex;
+	flex-direction: column;
+	font-size: var(--letter-size);
+	gap: var(--_tile-gap);
+}
+
 .playing .current-row {
 	z-index: 1;
 	filter: drop-shadow(4px 4px 8px var(--color-shadow));

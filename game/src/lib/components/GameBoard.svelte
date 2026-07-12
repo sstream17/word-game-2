@@ -36,14 +36,3 @@
 		<GuessRow guess={guessToDisplay} result={resultToDisplay} isCurrentRow={current} />
 	{/each}
 </div>
-
-<style>
-	.game {
-		--_current-row-scale: 1.2;
-		--_animation-grow-scale: 1.08;
-		display: flex;
-		flex-direction: column;
-		font-size: var(--letter-size);
-		gap: var(--_tile-gap);
-	}
-</style>
