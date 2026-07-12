@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { getTileSizes } from '$lib/api';
+	import GameBoard from '$lib/components/GameBoard.svelte';
 	import GuessRow from '$lib/components/GuessRow.svelte';
 	import { TILE_GAP } from '$lib/types';
 
@@ -7,6 +8,10 @@
 
 	const { maxWidth: singleMaxWidth, tileWidth: singleTileWidth } = $derived.by(() =>
 		getTileSizes(1, screenWidth)
+	);
+
+	const { maxWidth: doubleMaxWidth, tileWidth: doubleTileWidth } = $derived.by(() =>
+		getTileSizes(2, screenWidth)
 	);
 </script>
 
@@ -26,12 +31,14 @@
 	</p>
 
 	<div
-		class="game playing"
+		class="boards-container"
 		style:max-width={`${singleMaxWidth}px`}
 		style:--_tile-base-size={`${singleTileWidth}px`}
 		style:--_tile-gap={`${TILE_GAP}px`}
 	>
-		<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow />
+		<div class="game playing">
+			<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow />
+		</div>
 	</div>
 
 	<p>
@@ -44,23 +51,72 @@
 	</p>
 
 	<div
-		class="game playing"
+		class="boards-container"
 		style:max-width={`${singleMaxWidth}px`}
 		style:--_tile-base-size={`${singleTileWidth}px`}
 		style:--_tile-gap={`${TILE_GAP}px`}
 	>
-		<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow={false} />
-		<GuessRow guess={'match'} result={'xxxxx'} isCurrentRow />
+		<div class="game playing">
+			<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow={false} />
+			<GuessRow guess={'match'} result={'xxxxx'} isCurrentRow />
+		</div>
 	</div>
 
 	<p>This time we guessed right! You have <strong>six</strong> guesses to get the word.</p>
+
+	<h2>Duo</h2>
+
+	<p>
+		Word Game also includes modes where you guess multiple words at once. In Duo mode, you try to
+		reveal two words with the same guesses. For example:
+	</p>
+
+	<div
+		class="boards-container"
+		style:--_vertical-scroll-padding={'0px'}
+		style:--_flex-gap={`${TILE_GAP * 3}px`}
+		style:max-width={`${doubleMaxWidth}px`}
+		style:--_tile-gap={`${TILE_GAP}px`}
+		style:--_tile-base-size={`${doubleTileWidth}px`}
+	>
+		<GameBoard
+			guesses={[
+				{ guess: 'trace', result: 'c_cx_' },
+				{ guess: 'match', result: 'xxxxx' },
+				{ guess: '', result: '_____' },
+				{ guess: '', result: '_____' },
+				{ guess: '', result: '_____' },
+				{ guess: '', result: '_____' },
+				{ guess: '', result: '_____' }
+			]}
+			rowIndex={1}
+			numberOfGames={2}
+			currentGuess={''}
+			invalid={false}
+			badGuess={false}
+			won={true}
+			winIndex={1}
+			allWon={false}
+		/>
+		<GameBoard
+			guesses={[
+				{ guess: 'trace', result: '____x' },
+				{ guess: 'match', result: '_____' },
+				{ guess: 'novel', result: '_xccc' }
+			]}
+			rowIndex={3}
+			numberOfGames={2}
+			currentGuess={''}
+			invalid={false}
+			badGuess={false}
+			won={false}
+			winIndex={-1}
+			allWon={false}
+		/>
+	</div>
 </div>
 
 <style>
-	.game {
-		margin-inline: auto;
-	}
-
 	.letter {
 		/* Styles shared with game board letters */
 		position: relative;
@@ -80,7 +136,9 @@
 		padding: 0.75rem;
 	}
 
+	h1,
+	h2,
 	p {
-		padding: 16px;
+		padding-inline: 16px;
 	}
 </style>
