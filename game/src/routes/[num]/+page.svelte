@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { getTileSizes, storeWinStats } from '$lib/api';
+	import GameBoard from '$lib/components/GameBoard.svelte';
 	import { GamesState, setGameContext } from '$lib/state';
 	import { clearGameProgress, updateGameProgress } from '$lib/storage';
 	import { BOARD_GAP, TILE_GAP, WORD_LENGTH } from '$lib/types';
 	import type { PageData } from './$types';
 	import Controls from './Controls.svelte';
-	import GameBoard from './GameBoard.svelte';
 
 	interface IProps {
 		data: PageData;
