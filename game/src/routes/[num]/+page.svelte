@@ -178,17 +178,4 @@
 		overflow-y: auto;
 		overflow-x: hidden;
 	}
-
-	.boards-container {
-		align-self: center;
-		display: flex;
-		flex-wrap: wrap;
-		flex-grow: 1;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		gap: var(--_flex-gap);
-		padding-block: var(--_vertical-scroll-padding);
-		padding-block-start: calc(var(--_vertical-scroll-padding) * 4);
-	}
 </style>
