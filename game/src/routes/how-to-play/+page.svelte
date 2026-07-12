@@ -1,11 +1,21 @@
-<script>
+<script lang="ts">
+	import { getTileSizes } from '$lib/api';
 	import GuessRow from '$lib/components/GuessRow.svelte';
+	import { TILE_GAP } from '$lib/types';
+
+	let screenWidth: number | null | undefined = $state();
+
+	const { maxWidth: singleMaxWidth, tileWidth: singleTileWidth } = $derived.by(() =>
+		getTileSizes(1, screenWidth)
+	);
 </script>
 
 <svelte:head>
 	<title>How to play Word Game</title>
 	<meta name="description" content="How to play Word Game" />
 </svelte:head>
+
+<svelte:window bind:innerWidth={screenWidth} />
 
 <div class="text-column">
 	<h1>How to play</h1>
@@ -15,7 +25,12 @@
 		the word guessing game. To play, enter a five-letter English word. For example:
 	</p>
 
-	<div class="game playing" style:--_tile-base-size={'85.2px'} style:--_tile-gap={'4px'}>
+	<div
+		class="game playing"
+		style:max-width={`${singleMaxWidth}px`}
+		style:--_tile-base-size={`${singleTileWidth}px`}
+		style:--_tile-gap={`${TILE_GAP}px`}
+	>
 		<GuessRow guess={'ritzy'} result={'c_c_x'} isCurrentRow />
 	</div>
 
@@ -28,7 +43,12 @@
 		Let's make another guess:
 	</p>
 
-	<div class="game playing" style:--_tile-base-size={'85.2px'} style:--_tile-gap={'4px'}>
+	<div
+		class="game playing"
+		style:max-width={`${singleMaxWidth}px`}
+		style:--_tile-base-size={`${singleTileWidth}px`}
+		style:--_tile-gap={`${TILE_GAP}px`}
+	>
 		<GuessRow guess={'ritzy'} result={'c_c_x'} isCurrentRow={false} />
 		<GuessRow guess={'party'} result={'xxxxx'} isCurrentRow />
 	</div>
@@ -46,7 +66,7 @@
 		text-transform: lowercase;
 		border: none;
 		border-radius: 2px;
-		
+
 		/* Styles specific to how-to-play letters */
 		display: inline-flex;
 		margin: 0 0.2rem;
