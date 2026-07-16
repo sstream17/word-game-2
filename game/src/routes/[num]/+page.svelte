@@ -1,12 +1,12 @@
 <script lang="ts">
 	import { invalidateAll } from '$app/navigation';
 	import { getTileSizes, storeWinStats } from '$lib/api';
+	import GameBoard from '$lib/components/GameBoard.svelte';
 	import { GamesState, setGameContext } from '$lib/state';
 	import { clearGameProgress, updateGameProgress } from '$lib/storage';
 	import { BOARD_GAP, TILE_GAP, WORD_LENGTH } from '$lib/types';
 	import type { PageData } from './$types';
 	import Controls from './Controls.svelte';
-	import GameBoard from './GameBoard.svelte';
 
 	interface IProps {
 		data: PageData;
@@ -124,14 +124,18 @@
 				style:--_tile-base-size={`${tileWidth}px`}
 			>
 				{#each { length: numberOfGames } as _, board (board)}
+					{@const won = storedGame.value[board]?.status === 'won'}
+					{@const winIndex = storedGame.value[board]?.winIndex ?? -1}
+					{@const guesses = storedGame.value[board]?.guesses ?? []}
 					<GameBoard
-						gameIndex={board}
+						{guesses}
 						rowIndex={storedGame.guessIndex}
 						{numberOfGames}
 						currentGuess={storedGame.currentGuess}
 						invalid={storedGame.isGuessInvalid}
 						{badGuess}
-						{tileWidth}
+						{won}
+						{winIndex}
 						allWon={storedGame.status === 'won'}
 					/>
 				{/each}
@@ -161,30 +165,5 @@
 		justify-content: center;
 		width: 100%;
 		height: 100%;
-	}
-
-	.scroll-area {
-		display: flex;
-		flex-direction: column;
-		flex-grow: 1;
-		flex-shrink: 1;
-
-		width: 100%;
-		height: 100%;
-		overflow-y: auto;
-		overflow-x: hidden;
-	}
-
-	.boards-container {
-		align-self: center;
-		display: flex;
-		flex-wrap: wrap;
-		flex-grow: 1;
-		flex-direction: row;
-		justify-content: center;
-		align-items: center;
-		gap: var(--_flex-gap);
-		padding-block: var(--_vertical-scroll-padding);
-		padding-block-start: calc(var(--_vertical-scroll-padding) * 4);
 	}
 </style>

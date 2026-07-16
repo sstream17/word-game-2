@@ -18,31 +18,36 @@
 	const maxWidth = $derived(Math.min(screenWidth ?? Infinity, 500));
 </script>
 
+<svelte:head>
+	<title>Word Game stats</title>
+	<meta name="description" content="Word Game stats" />
+</svelte:head>
+
 <svelte:window bind:innerWidth={screenWidth} />
 
-<div class="container">
-	{#each gameModes as game (game[0])}
-		{@const title = game[0]}
-		{@const numberOfGames = game[1]}
-		<SingleGameStats
-			{title}
-			{numberOfGames}
-			maxWidth={maxWidth}
-			stats={data[numberOfGames]}
-		/>
-	{/each}
+<div class="scroll-area">
+	<h1>Stats</h1>
+	<div class="container">
+		{#each gameModes as game (game[0])}
+			{@const title = game[0]}
+			{@const numberOfGames = game[1]}
+			<SingleGameStats {title} {numberOfGames} {maxWidth} stats={data[numberOfGames]} />
+		{/each}
+	</div>
 </div>
 
 <style>
+	.scroll-area {
+		padding-block: 32px;
+	}
+
 	.container {
 		display: flex;
 		flex-direction: column;
 		gap: 64px;
-		padding: 32px;
 		align-items: center;
 		justify-content: flex-start;
-		overflow-y: auto;
 		text-align: center;
-		height: 100%;
+		margin-bottom: 16px;
 	}
 </style>

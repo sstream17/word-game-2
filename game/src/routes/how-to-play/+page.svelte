@@ -1,95 +1,252 @@
+<script lang="ts">
+	import { getTileSizes } from '$lib/api';
+	import GameBoard from '$lib/components/GameBoard.svelte';
+	import GuessRow from '$lib/components/GuessRow.svelte';
+	import { TILE_GAP } from '$lib/types';
+
+	let screenWidth: number | null | undefined = $state();
+
+	const { maxWidth: singleMaxWidth, tileWidth: singleTileWidth } = $derived.by(() =>
+		getTileSizes(1, screenWidth)
+	);
+
+	const { maxWidth: doubleMaxWidth, tileWidth: doubleTileWidth } = $derived.by(() =>
+		getTileSizes(2, screenWidth)
+	);
+</script>
+
 <svelte:head>
 	<title>How to play Word Game</title>
 	<meta name="description" content="How to play Word Game" />
 </svelte:head>
 
-<div class="text-column">
-	<h1>How to play Word Game</h1>
+<svelte:window bind:innerWidth={screenWidth} />
 
-	<p>
-		Word Game is a clone of <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>, the
-		word guessing game. To play, enter a five-letter English word. For example:
-	</p>
+<div class="scroll-area">
+	<div class="text-column">
+		<h1>How to play</h1>
 
-	<div class="example">
-		<span class="close">r</span>
-		<span class="missing">i</span>
-		<span class="close">t</span>
-		<span class="missing">z</span>
-		<span class="exact">y</span>
+		<p>
+			Word Game is a clone of <a href="https://www.nytimes.com/games/wordle/index.html">Wordle</a>,
+			the word guessing game. To play, enter a five-letter English word. For example:
+		</p>
+
+		<div
+			class="boards-container"
+			style:max-width={`${singleMaxWidth}px`}
+			style:--_tile-base-size={`${singleTileWidth}px`}
+			style:--_tile-gap={`${TILE_GAP}px`}
+		>
+			<div class="game playing">
+				<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow />
+			</div>
+		</div>
+
+		<p>
+			The <span class="letter exact">c</span> is in the correct place.
+			<span class="letter close">t</span>
+			and
+			<span class="letter close">a</span>
+			are in the word, but in the wrong place. The other letters are missing, and can be discarded. Let's
+			make another guess:
+		</p>
+
+		<div
+			class="boards-container"
+			style:max-width={`${singleMaxWidth}px`}
+			style:--_tile-base-size={`${singleTileWidth}px`}
+			style:--_tile-gap={`${TILE_GAP}px`}
+		>
+			<div class="game playing">
+				<GuessRow guess={'trace'} result={'c_cx_'} isCurrentRow={false} />
+				<GuessRow guess={'match'} result={'xxxxx'} isCurrentRow />
+			</div>
+		</div>
+
+		<p>This time the guess was right! You have <strong>six</strong> guesses to get the word.</p>
+
+		<h2>Duo</h2>
+
+		<p>
+			Word Game also includes modes where you play multiple words at once. In Duo mode, you try to
+			reveal two words with the same guesses. For example:
+		</p>
+
+		<div
+			class="boards-container"
+			style:--_vertical-scroll-padding={'0px'}
+			style:--_flex-gap={`${TILE_GAP * 3}px`}
+			style:max-width={`${doubleMaxWidth}px`}
+			style:--_tile-gap={`${TILE_GAP}px`}
+			style:--_tile-base-size={`${doubleTileWidth}px`}
+		>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: 'c_cx_' },
+					{ guess: 'match', result: 'xxxxx' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' }
+				]}
+				rowIndex={1}
+				numberOfGames={2}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={true}
+				winIndex={1}
+				allWon={false}
+			/>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: '____x' },
+					{ guess: 'match', result: '_____' },
+					{ guess: 'novel', result: '_xccc' }
+				]}
+				rowIndex={3}
+				numberOfGames={2}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={false}
+				winIndex={-1}
+				allWon={false}
+			/>
+		</div>
+
+		<p>
+			The first word is already correct, but the second word still needs to be guessed. You continue
+			guessing until all words are complete.
+		</p>
+
+		<p>
+			You have 5 more tries than the number of words you are trying to guess. For Duo mode, you have
+			<strong>seven</strong> guesses to get both words.
+		</p>
+
+		<h2>Quad</h2>
+
+		<p>Quad mode is like Duo mode, but you are playing four words at once.</p>
+
+		<div
+			class="boards-container"
+			style:--_vertical-scroll-padding={'0px'}
+			style:--_flex-gap={`${TILE_GAP * 3}px`}
+			style:max-width={`${doubleMaxWidth}px`}
+			style:--_tile-gap={`${TILE_GAP}px`}
+			style:--_tile-base-size={`${doubleTileWidth}px`}
+		>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: 'c_cx_' },
+					{ guess: 'match', result: 'xxxxx' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' }
+				]}
+				rowIndex={1}
+				numberOfGames={4}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={true}
+				winIndex={1}
+				allWon={false}
+			/>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: '___xx' },
+					{ guess: 'match', result: '___x_' },
+					{ guess: 'novel', result: '___c_' },
+					{ guess: 'solve', result: '____x' },
+					{ guess: 'glyph', result: '___c_' }
+				]}
+				rowIndex={5}
+				numberOfGames={4}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={false}
+				winIndex={-1}
+				allWon={false}
+			/>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: '___c_' },
+					{ guess: 'match', result: '___c_' },
+					{ guess: 'novel', result: '_x__c' },
+					{ guess: 'solve', result: '_xc__' },
+					{ guess: 'glyph', result: 'cc___' }
+				]}
+				rowIndex={5}
+				numberOfGames={4}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={false}
+				winIndex={-1}
+				allWon={false}
+			/>
+			<GameBoard
+				guesses={[
+					{ guess: 'trace', result: '____x' },
+					{ guess: 'match', result: '_____' },
+					{ guess: 'novel', result: '_xccc' },
+					{ guess: 'solve', result: 'xxxxx' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' },
+					{ guess: '', result: '_____' }
+				]}
+				rowIndex={3}
+				numberOfGames={4}
+				currentGuess={''}
+				invalid={false}
+				badGuess={false}
+				won={true}
+				winIndex={3}
+				allWon={false}
+			/>
+		</div>
+
+		<p>
+			Four words plus five more tries means you have <strong>nine</strong> guesses to get all four words.
+		</p>
+
+		<p>Good luck solving!</p>
 	</div>
-
-	<p>
-		The <span class="exact">y</span> is in the right place. <span class="close">r</span> and
-		<span class="close">t</span>
-		are the right letters, but in the wrong place. The other letters are wrong, and can be discarded.
-		Let's make another guess:
-	</p>
-
-	<div class="example">
-		<span class="exact">p</span>
-		<span class="exact">a</span>
-		<span class="exact">r</span>
-		<span class="exact">t</span>
-		<span class="exact">y</span>
-	</div>
-
-	<p>This time we guessed right! You have <strong>six</strong> guesses to get the word.</p>
-
-	<p>
-		Unlike the original Wordle, Word Game runs on the server instead of in the browser, making it
-		impossible to cheat. It uses <code>&lt;form&gt;</code> and cookies to submit data, meaning you can
-		even play with JavaScript disabled!
-	</p>
 </div>
 
 <style>
-	span {
-		display: inline-flex;
-		justify-content: center;
-		align-items: center;
-		font-size: 0.8em;
-		width: 2.4em;
-		height: 2.4em;
-		background-color: white;
-		box-sizing: border-box;
-		border-radius: 2px;
-		border-width: 2px;
-		color: rgba(0, 0, 0, 0.7);
-	}
-
-	.missing {
-		background: rgba(255, 255, 255, 0.5);
-		color: rgba(0, 0, 0, 0.5);
-	}
-
-	.close {
-		border-style: solid;
-		border-color: var(--color-theme-2);
-	}
-
-	.exact {
-		background: var(--color-theme-2);
-		color: white;
-	}
-
-	.example {
-		display: flex;
-		justify-content: flex-start;
-		margin: 1rem 0;
-		gap: 0.2rem;
-	}
-
-	.example span {
-		font-size: 1.4rem;
-	}
-
-	p span {
+	.letter {
+		/* Styles shared with game board letters */
 		position: relative;
-		border-width: 1px;
-		border-radius: 1px;
-		font-size: 0.4em;
-		transform: scale(2) translate(0, -10%);
-		margin: 0 1em;
+		align-items: center;
+		justify-content: center;
+		text-align: center;
+		text-transform: lowercase;
+		border: none;
+		border-radius: 2px;
+
+		/* Styles specific to how-to-play letters */
+		display: inline-flex;
+		margin: 0 0.2rem;
+		width: 1rem;
+		height: 1rem;
+		font-size: 1.1rem;
+		padding: 0.75rem;
+	}
+
+	h1,
+	h2,
+	p {
+		padding-inline: 16px;
 	}
 </style>
