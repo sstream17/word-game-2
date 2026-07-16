@@ -18,6 +18,11 @@
 	const maxWidth = $derived(Math.min(screenWidth ?? Infinity, 500));
 </script>
 
+<svelte:head>
+	<title>Word Game stats</title>
+	<meta name="description" content="Word Game stats" />
+</svelte:head>
+
 <svelte:window bind:innerWidth={screenWidth} />
 
 <div class="scroll-area">
