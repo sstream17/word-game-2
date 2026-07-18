@@ -1,4 +1,4 @@
-import { WORD_LENGTH, TILE_GAP } from "$lib/types";
+import { GAME_MAX_WIDTH, TILE_GAP, WORD_LENGTH } from '$lib/types';
 
 /**
  * Get the tile sizes for this game based on the current screen size
@@ -8,20 +8,25 @@ import { WORD_LENGTH, TILE_GAP } from "$lib/types";
  * - The maxWidth of the available boards area
  * - The tileWidth for each tile in a board
  */
-export const getTileSizes = (numberOfGames: number, screenWidth: number | null | undefined): {
-    /**
-    * The max width of the game boards area
-    */
-   maxWidth: number, 
-   /**
-    * The width of an individual tile in a game board
-    */
-   tileWidth: number
+export const getTileSizes = (
+	numberOfGames: number,
+	screenWidth: number | null | undefined
+): {
+	/**
+	 * The max width of the game boards area
+	 */
+	maxWidth: number;
+	/**
+	 * The width of an individual tile in a game board
+	 */
+	tileWidth: number;
 } => {
-    const numberOfColumns = numberOfGames === 1 ? 1 : 2;
-    const availableWidth = screenWidth == null ? screenWidth : numberOfColumns === 1 ? screenWidth * 0.8 : screenWidth;
-    const maxWidth = Math.min(availableWidth ?? Infinity, 450);
-    const tileWidth = (maxWidth - (WORD_LENGTH + 1) * numberOfColumns * TILE_GAP) / (WORD_LENGTH * numberOfColumns);
+	const numberOfColumns = numberOfGames === 1 ? 1 : 2;
+	const availableWidth =
+		screenWidth == null ? screenWidth : numberOfColumns === 1 ? screenWidth * 0.8 : screenWidth;
+	const maxWidth = Math.min(availableWidth ?? Infinity, GAME_MAX_WIDTH);
+	const tileWidth =
+		(maxWidth - (WORD_LENGTH + 1) * numberOfColumns * TILE_GAP) / (WORD_LENGTH * numberOfColumns);
 
-    return { maxWidth, tileWidth };
-}
+	return { maxWidth, tileWidth };
+};
