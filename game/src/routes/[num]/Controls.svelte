@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { getKeySizes } from '$lib/api';
-	import { type GameStatus, type IHints } from '$lib/types';
+	import { GAME_MAX_WIDTH, type GameStatus } from '$lib/types';
 	import Answers from './Answers.svelte';
 	import Keyboard from './Keyboard.svelte';
 
@@ -81,9 +81,11 @@
 <div class="controls" style:height={`${keyboardHeight}px`} style:padding-top={`${keyGap}px`}>
 	{#if gameStatus === 'won' || gameStatus === 'lost'}
 		<Answers gameFinished={gameStatus === 'won' || gameStatus === 'lost'} />
-		<button onclick={restart} data-key="enter" class="restart selected">
-			{gameStatus === 'won' ? 'you won :)' : `game over :(`} play again?
-		</button>
+		<div class="restart-bg" style:--_max-width={`${GAME_MAX_WIDTH}px`}>
+			<button onclick={restart} data-key="enter" class="restart selected">
+				{gameStatus === 'won' ? 'you won :)' : `game over :(`} play again?
+			</button>
+		</div>
 	{:else}
 		<Keyboard {submittable} {invalid} {keyGap} {keyHeight} {keyWidth} onKeyClick={update} />
 	{/if}
@@ -105,17 +107,21 @@
 		flex-shrink: 0;
 	}
 
-	.restart {
-		width: 75%;
-		padding: 8px 16px;
+	.restart-bg {
+		max-width: var(--_max-width);
 		background-color: var(--color-unknown);
+	}
+
+	.restart {
+		width: 100%;
+		padding: 8px 16px;
+		background-color: transparent;
 		border-radius: 4px;
 		border: none;
 	}
 
 	.restart:focus,
 	.restart:hover {
-		background-color: var(--color-theme-1);
-		outline: none;
+		background-color: var(--color-menu-hover);
 	}
 </style>
