@@ -22,7 +22,7 @@
     "alias": "android"
   },
   "appVersionName": "5.3.0",
-  "appVersionCode": 1,
+  "appVersionCode": 2,
   "shortcuts": [],
   "generatorApp": "bubblewrap-cli",
   "webManifestUrl": "https://sstream17.github.io/word-game-2/manifest.json",
@@ -37,12 +37,16 @@
   "fullScopeUrl": "https://sstream17.github.io/word-game-2/",
   "minSdkVersion": 21,
   "orientation": "portrait",
-  "fingerprints": [],
+  "fingerprints": [
+    {
+      "value": "5E:68:71:2C:11:BF:10:E4:71:C4:AF:D2:C2:A4:AF:45:A0:19:C9:F5:B4:1F:D3:B7:81:F6:61:A0:BC:BF:41:E7"
+    }
+  ],
   "additionalTrustedOrigins": [],
   "retainedBundles": [],
   "protocolHandlers": [],
   "fileHandlers": [],
   "launchHandlerClientMode": "",
   "displayOverride": [],
-  "appVersion": "1"
+  "appVersion": "2"
 }
