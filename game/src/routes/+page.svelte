@@ -2,25 +2,32 @@
 	import { base } from '$app/paths';
 </script>
 
-<h1>Word Game</h1>
+<div class="scroll-area">
+	<h1>Word Game</h1>
 
-<div class="container">
-	{#snippet card({ title, number }: { title: string; number: number })}
-		<div class="card">
-			<div class="game-rep">
-				{#each { length: number }}
-					<div class="fake-game"></div>
-				{/each}
+	<div class="container">
+		{#snippet card({ title, number }: { title: string; number: number })}
+			<div class="card">
+				<div class="game-rep">
+					{#each { length: number }}
+						<div class="fake-game"></div>
+					{/each}
+				</div>
+				<span class="card-text">{title}</span>
 			</div>
-			<span class="card-text">{title}</span>
-		</div>
-	{/snippet}
-	<a href={`${base}/1`}>{@render card({ title: 'Classic', number: 1 })}</a>
-	<a href={`${base}/2`}>{@render card({ title: 'Duo', number: 2 })}</a>
-	<a href={`${base}/4`}>{@render card({ title: 'Quad', number: 4 })}</a>
+		{/snippet}
+		<a href={`${base}/1`}>{@render card({ title: 'Classic', number: 1 })}</a>
+		<a href={`${base}/2`}>{@render card({ title: 'Duo', number: 2 })}</a>
+		<a href={`${base}/4`}>{@render card({ title: 'Quad', number: 4 })}</a>
+	</div>
 </div>
 
 <style>
+	.scroll-area {
+		padding-top: calc(16px + var(--safe-area-inset-top));
+		padding-bottom: calc(16px + var(--safe-area-inset-bottom));
+	}
+
 	.container {
 		display: flex;
 		flex-direction: row;
@@ -29,8 +36,6 @@
 		align-items: center;
 		gap: 32px;
 		margin: 32px;
-		padding-top: var(--safe-area-inset-top);
-		padding-bottom: var(--safe-area-inset-bottom);
 	}
 
 	.card {
