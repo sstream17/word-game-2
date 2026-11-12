@@ -13,7 +13,7 @@
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-end;
-		bottom: 0;
+		bottom: var(--safe-area-inset-bottom);
 		right: 2px;
 		width: 100%;
 	}

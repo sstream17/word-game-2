@@ -203,6 +203,7 @@
 		border-radius: 4px;
 		position: absolute;
 		right: var(--menu-container-padding);
+		top: var(--safe-area-inset-top);
 		z-index: 999;
 		/* reset button styles */
 		background: none;

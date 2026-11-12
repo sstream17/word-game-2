@@ -29,6 +29,8 @@
 		align-items: center;
 		gap: 32px;
 		margin: 32px;
+		padding-top: var(--safe-area-inset-top);
+		padding-bottom: var(--safe-area-inset-bottom);
 	}
 
 	.card {

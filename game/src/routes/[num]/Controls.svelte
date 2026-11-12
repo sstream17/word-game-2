@@ -78,7 +78,11 @@
 
 <svelte:window onkeydown={keydown} bind:innerWidth={screenWidth} />
 
-<div class="controls" style:height={`${keyboardHeight}px`} style:padding-top={`${keyGap}px`}>
+<div
+	class="controls"
+	style:height={`calc(${keyboardHeight}px + var(--safe-area-inset-bottom))`}
+	style:padding-top={`${keyGap}px`}
+>
 	{#if gameStatus === 'won' || gameStatus === 'lost'}
 		<Answers gameFinished={gameStatus === 'won' || gameStatus === 'lost'} />
 		<div class="restart-bg" style:--_max-width={`${GAME_MAX_WIDTH}px`}>

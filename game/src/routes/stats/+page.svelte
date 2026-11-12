@@ -38,7 +38,8 @@
 
 <style>
 	.scroll-area {
-		padding-block: 32px;
+		padding-top: calc(16px + var(--safe-area-inset-top));
+		padding-bottom: calc(16px + var(--safe-area-inset-bottom));
 	}
 
 	.container {

@@ -225,6 +225,11 @@
 </div>
 
 <style>
+	.scroll-area {
+		padding-top: calc(var(--safe-area-inset-top));
+		padding-bottom: calc(16px + var(--safe-area-inset-bottom));
+	}
+
 	.letter {
 		/* Styles shared with game board letters */
 		position: relative;

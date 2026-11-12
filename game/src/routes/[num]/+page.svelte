@@ -166,4 +166,8 @@
 		width: 100%;
 		height: 100%;
 	}
+
+	.scroll-area {
+		padding-top: var(--safe-area-inset-top);
+	}
 </style>
