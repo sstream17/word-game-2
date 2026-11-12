@@ -26,7 +26,7 @@ def twaManifest = [
     launchUrl: '/word-game-2/', // The start path for the TWA. Must be relative to the domain.
     name: 'Word Game', // The application name.
     launcherName: 'Word Game', // The name shown on the Android Launcher.
-    themeColor: '#CAD8E4', // The color used for the status bar.
+    themeColor: '#000000', // The color used for the status bar.
     themeColorDark: '#000000', // The color used for the dark status bar.
     navigationColor: '#000000', // The color used for the navigation bar.
     navigationColorDark: '#000000', // The color used for the dark navbar.
@@ -51,14 +51,14 @@ def twaManifest = [
 ]
 
 android {
-    compileSdkVersion 36
+    compileSdkVersion 37
     namespace "io.github.sstream17.twa"
     defaultConfig {
         applicationId "io.github.sstream17.twa"
-        minSdkVersion 21
-        targetSdkVersion 35
-        versionCode 2
-        versionName "5.3.0"
+        minSdkVersion 23
+        targetSdkVersion 37
+        versionCode 3
+        versionName "3"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name
@@ -159,7 +159,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    lintOptions {
+    lint {
         checkReleaseBuilds false
     }
 }
@@ -209,5 +209,6 @@ dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
     
         implementation 'com.google.androidbrowserhelper:androidbrowserhelper:2.6.2'
+        implementation 'androidx.core:core-ktx:1.19.0'
     
 }
