@@ -52,6 +52,10 @@
 		bottom: 0;
 		left: 0;
 		right: 0;
+		padding-top: var(--safe-area-inset-top);
+		padding-right: var(--safe-area-inset-right);
+		padding-bottom: var(--safe-area-inset-bottom);
+		padding-left: var(--safe-area-inset-left);
 	}
 
 	main {
